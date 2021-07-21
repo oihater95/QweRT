@@ -1,4 +1,3 @@
-
 ### ✅  Code Convention
 #### 코드 마다 이 코드는 **어떤 목적**으로 작성되었는지 주석을 답니다.
 #### 변수와 함수 이름은 어떤 역할을 하는지 알 수 있도록 붙입니다.
@@ -10,29 +9,28 @@
 docs : README.md 등 문서 작성 및 수정
 code : 코드 작성
 fix : 코드 수정
-add : 기존에 푼 문제 대한 또 다른 솔루션 코드 추가
 merge : 내 레포에서 올린 pull request를 현재 organization의 alogorithm-study 레포에 합치기
 ```
 commit type 'code'인 경우 commit message에는 다음과 같은 정보를 명시하는 걸 지향합니다.
 ```
-git commit -m "code : 자기이름 문제플랫폼 문제번호 문제유형 문제이름"  
+git commit -m "code : 자기아이디 내용" 
 ```
 예시는 다음과 같습니다.
 
-곰팅이라는 사람이 있습니다. 곰팅이의 github ID는 gomting2입니다. 곰팅이는 백준에서 다이나믹 프로그래밍 유형인 1000번을 풀엇습니다.
+곰팅이라는 사람이 있습니다. 곰팅이의 github ID는 gomting2입니다. 곰팅이는 
 우선 코드를 하나의 커밋으로 분리합니다.
 ```bash
 git add answer.java
-git commit -m "code : boj 1000"
+git commit -m "code : lim8662 회원가입 기능 구현"
 ```
 코드에 대한 설명을 작성한 문서를 하나의 커밋으로 분리합니다. 
 ```bash
 git add README.md
-git commit -m "docs : boj 1000"
+git commit -m "docs : lim8662 Git 컨벤션 작성 "
 ```
 
 ### ✅ Review Convention
-#### Pull Request 를 작성할 때 제목에는 "본인 이름: 문제플랫폼 문제번호 문제유형 문제이름"을 작성하는 것을 지향합니다.
+#### Pull Request 를 작성할 때 제목에는 "본인 아이디: "을 작성하는 것을 지향합니다.
 ```
 곰팅이 : BOJ 1000 dp 꿀단지를 찾아서
 ```
