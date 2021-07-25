@@ -1,98 +1,39 @@
-### ✅  Code Convention
-#### 코드 마다 이 코드는 **어떤 목적**으로 작성되었는지 주석을 답니다.
-#### 변수와 함수 이름은 어떤 역할을 하는지 알 수 있도록 붙입니다.
-#### code 마지막 줄에는 한 줄을 비웁니다. git add + git commit 하기 전에 확인해보는 걸 추천합니다.
+### ✅  Git branch 구조
+
+![image-20210725190910020](Git Convention.assets/image-20210725190910020.png)
+
+Feature branch 예시
+
+feature/navbar
+
+featrue/gridSystem (camel style)
+
+<br>
 
 ### ✅ Commit Convention
+
 #### 한 번에 git add . 하는 것보다 commit type에 맞게 분리하는 걸 지향합니다.
 ```
 docs : README.md 등 문서 작성 및 수정
 code : 코드 작성
 fix : 코드 수정
-merge : 내 레포에서 올린 pull request를 현재 organization의 alogorithm-study 레포에 합치기
+merge : merge request할 때
 ```
-commit type 'code'인 경우 commit message에는 다음과 같은 정보를 명시하는 걸 지향합니다.
-```
-git commit -m "code : 자기아이디 내용" 
-```
-예시는 다음과 같습니다.
+git convention : commit message
 
-곰팅이라는 사람이 있습니다. 곰팅이의 github ID는 gomting2입니다. 곰팅이는 
-우선 코드를 하나의 커밋으로 분리합니다.
-```bash
-git add answer.java
-git commit -m "code : lim8662 회원가입 기능 구현"
-```
-코드에 대한 설명을 작성한 문서를 하나의 커밋으로 분리합니다. 
-```bash
-git add README.md
-git commit -m "docs : lim8662 Git 컨벤션 작성 "
-```
+<br>
 
-### ✅ Review Convention
-#### Pull Request 를 작성할 때 제목에는 "본인 아이디: "을 작성하는 것을 지향합니다.
-```
-곰팅이 : BOJ 1000 dp 꿀단지를 찾아서
-```
-#### Pull Request 를 작성할 때 메시지에는 "본인이 작성한 README.md의 내용"을 추가하는 것을 지향합니다.
-```
-열심히 풀었습니다 (X)
-```
-#### 자신이 푼 문제 유형을 자신의 pull request에 label을 붙입니다.
+commit message 규칙
 
-#### 자신의 pull request의 assignee에 자신을 추가합니다.
+한글로 적기, 마지막에 점 안 찍기
 
-#### 자신이 받고 싶은 review 받고 싶은 reviewr가 있을 경우, 자신의 pull request에 reviewer로 추가합니다.
+무엇을 왜 위주로 적기
 
-#### 1개의 Pull request에는 1개의 문제관련 commit만 추가하는 것을 지향합니다. 
+<br>
 
-#### 기존에 Pull Request를 작성했지만 새로운 문제를 풀었을 경우, 새로운 문제에 대한 commit을 하기 전 다음과 같은 과정을 수행하는 것을 지향합니다.
-#### 상황1. 자신의 PR에 대한 적절한 리뷰를 받았다고 생각했을 경우,
-1. 해당 오가니제이션의 레포의 github issue에 자기가 푼 문제에 대한 issue를 생성합니다. 이슈 제목에는 "본인 이름: 문제플랫폼 문제번호 문제유형 문제이름"을 작성하는 것을 지향합니다.
-```
-곰팅이 : BOJ 1000 dp 꿀단지를 찾아서
-```
-2. 자신이 작성했던 Pull Request에서 초록색 merge버튼을 눌러서 merge합니다.
+#### ✅ 추가적으로
 
-3. 자신이 작성했던 Pull Request에서 issue로 앞서 생성한 이슈를 연결합니다. 이슈는 닫히지 않았는지 확인합니다.
+- 지금까지 나오지 않았던, 다른 사람이 이해하기에 어려울 수 있는 코드에는 친절하게 주석 달아주기
 
-#### 상황2. 새로운 문제를 풀 경우,
-1. 자신의 로컬에서 clone한 폴더에서 새로 푼 문제에 대한 브랜치를 생성합니다. (git checkout과 branch 이용)
-브랜치 이름은 다음과 같은 이름을 지향합니다.
-```
-git checkout -b feature/문제플랫폼-문제번호-문제유형
-
-IMplay@Joylish-LAPTOP MINGW64 /c/SSAFY/2_Java/workspace/hw/0127 (main)
-git checkout -b feature/boj-2000-greedy
-
-IMplay@Joylish-LAPTOP MINGW64 /c/SSAFY/2_Java/workspace/hw/0127 (feature/boj-2000-greedy)
-
-```
-2. 새로운 문제에 대한 code와 README.md에 대한 commit을 추가하고 push합니다. 이 때 반드시 터미널에서 브랜치 이름이 지정되어있는지 확인합니다.
-```bash
-IMplay@Joylish-LAPTOP MINGW64 /c/SSAFY/2_Java/workspace/hw/0127 (feature/boj-2000-greedy)
-git commit -m "code : boj 2000"
-
-IMplay@Joylish-LAPTOP MINGW64 /c/SSAFY/2_Java/workspace/hw/0127 (feature/boj-2000-greedy)
-git commit -m "docs : boj 2000"
-
-IMplay@Joylish-LAPTOP MINGW64 /c/SSAFY/2_Java/workspace/hw/0127 (feature/boj-2000-greedy)
-git push
-```
-3. 본인 계정에 있는 algorithm-study 레포에서 pull request를 작성할 때, 자신이 push한 브랜치(feature/boj-2000-greedy)를 현재 oraganization의 레포의 브랜치(main)에 pull request에 보냅니다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- 1일 1커밋 권장
 
