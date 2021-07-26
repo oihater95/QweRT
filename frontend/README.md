@@ -1,5 +1,10 @@
 # frontend
 
+vue code 작성 순서
+name components prop data methods computed watch lifecycle
+
+components import 시 @ 사용
+
 ## Project setup
 ```
 npm install
