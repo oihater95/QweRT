@@ -1,13 +1,12 @@
-.dragNdrop-region {
+#dragNdrop-region {
   display: block;
-    height: 400px;
-    width: 400px;
-    background: #ccc;
-    margin: auto;
-    margin-top: 40px;
-    text-align: center;
-    line-height: 400px;
-      border-radius: 4px;
+  height: 100px;
+  width: 300px;
+  background: #ccc;
+  margin: auto;
+  text-align: center;
+  line-height: 400px;
+  border-radius: 4px;
 }
 .file-button input[type="file"] { 
   position: absolute; 
@@ -20,7 +19,7 @@
   border: 0; 
 }
 
-img {
+#previewImg {
   width: 500px;
   height: 500px;
   object-fit: scale-down;

@@ -1,30 +1,45 @@
 <template>
-  <div>
+  <div class="container">
   <div class="input-group my-5">
-    <v-card>
+    <!-- 1. @drop : 드롭 영역 영역에 항목을 드롭 하는 시점 감지
+        2. @dragover : 항목이 드롭 영역 위로 드래그되는 시점 감지
+        3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
+        4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
+    <div  v-show="imageSrc" class="upload-image">
+      <img id="previewImg" :src="imageSrc">
+    </div>
+    <v-card class="d-inline-block">
       <input
         id = "dragNdrop-region"
+        @dragover.prevent
+        @dragenter.prevent
+        @drop.prevent="onDrop"
         type="text"
         class="form-control"
         placeholder="Drag & Drop or Select"
         v-model="filename"
-        @dragover.prevent
-        @dragenter.prevent
-        @drop.prevent="onDrop">
+        >
     </v-card>
-    <div class="input-group-append">
-        <button
-          class="btn btn-outline-info"
-          @click="onClickUpload">Upload</button>
+    <div class="file-button d-inline-block mx-5">
+      <label for="ex_file">
+        <i class="fa fa-paperclip">Search</i>
+        </label>
+      <input 
+        id="ex_file" 
+        type=file 
+        class="file-input"  
+        accept="image/*" 
+        ref="fileInput" 
+        @change="onFileChange">
     </div>
-    <div class="file-button">
-      <label for="ex_file"><i class="fa fa-paperclip">Search</i></label>
-      <input id="ex_file" type=file class="file-input"  accept="image/*" ref="fileInput" @change="onFileChange">
+    <div class="input-group-append d-inline-block justify-content-end">
+        <v-btn
+          color="primary"
+          elevation="1"
+          @click="onClickUpload">Upload
+        </v-btn>
     </div>
 
-  </div>
-  <div v-show="imageSrc" class="upload-image">
-    <img :src="imageSrc">
   </div>
 </div>
 </template>
@@ -132,7 +147,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
