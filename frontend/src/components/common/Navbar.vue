@@ -35,10 +35,10 @@
                 </template>
                 <v-list>
                   <v-list-item>
-                    <v-list-item-title>그림 업로드</v-list-item-title>
+                    <v-list-item-title class="tab">그림 업로드</v-list-item-title>
                   </v-list-item>
                   <v-list-item>
-                    <v-list-item-title>새 큐레이션</v-list-item-title>
+                    <v-list-item-title class="tab">새 큐레이션</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -57,13 +57,13 @@
                 </template>
                 <v-list>
                   <v-list-item>
-                    <v-list-item-title>내 프로필</v-list-item-title>
+                    <v-list-item-title class="tab">내 프로필</v-list-item-title>
                   </v-list-item>
                   <v-list-item>
-                    <v-list-item-title>알림</v-list-item-title>
+                    <v-list-item-title class="tab">알림</v-list-item-title>
                   </v-list-item>
                   <v-list-item>
-                    <v-list-item-title>로그아웃</v-list-item-title>
+                    <v-list-item-title class="tab">로그아웃</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
