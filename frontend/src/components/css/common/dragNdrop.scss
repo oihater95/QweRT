@@ -1,0 +1,27 @@
+.dragNdrop-region {
+  display: block;
+    height: 400px;
+    width: 400px;
+    background: #ccc;
+    margin: auto;
+    margin-top: 40px;
+    text-align: center;
+    line-height: 400px;
+      border-radius: 4px;
+}
+.file-button input[type="file"] { 
+  position: absolute; 
+  width: 1px; 
+  height: 1px; 
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden; 
+  clip:rect(0,0,0,0); 
+  border: 0; 
+}
+
+img {
+  width: 500px;
+  height: 500px;
+  object-fit: scale-down;
+}

@@ -39,14 +39,23 @@
 
     <v-main>
       <router-view/>
+      <div class="container">
+        <dragNdrop/>
+        
+      </div>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import dragNdrop from '@/components/common/dragNdrop'
 
 export default {
   name: 'App',
+  components: {
+    dragNdrop,
+    
+  },
 
   data: () => ({
     //
