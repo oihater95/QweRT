@@ -1,4 +1,4 @@
-package com.web.curation;
+package com.web.qwert;
 
 import org.junit.jupiter.api.Test;
 

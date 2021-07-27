@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import "../../css/common/Navbar.scss"
+import "@/css/common/Navbar.scss"
 
 export default {
   name: 'Navbar',

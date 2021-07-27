@@ -1,0 +1,26 @@
+.v-card {
+  overflow: hidden;
+  .feed-image__div {
+    display: inline;
+    position: relative;
+    img {
+      width: 400px;
+      height: 375px;
+      object-fit: contain;
+      background-color: floralwhite;
+    }
+    // background-color: white;
+    // background-color: gray;
+  }
+  .info-div {
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 15px;
+      object-fit: contain;
+    }
+  }
+  i.v-icon.v-icon {
+    color: rgb(230, 129, 62);
+  }
+}
