@@ -1,0 +1,45 @@
+#dragNdrop-region {
+  display: block;
+  background: #ccc;
+  text-align: center;
+  line-height: 500px;
+  border-radius: 4px;
+}
+
+#dragNdrop-region-hidden {
+  display: none;
+  text-align: center;
+  line-height: 500px;
+  border-radius: 4px;
+}
+
+.file-button input[type="file"] { 
+  position: absolute; 
+  width: 1px; 
+  height: 1px; 
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden; 
+  clip:rect(0,0,0,0); 
+  border: 0; 
+}
+
+.upload-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+#previewImg {
+  width: auto; height: auto;
+  max-width: 550px;
+  max-height: 550px;
+  object-fit: scale-down;
+}
+
+
+#component-row {
+  display: flex;
+  justify-content: center;
+}
