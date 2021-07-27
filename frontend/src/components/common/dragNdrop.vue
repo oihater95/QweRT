@@ -1,43 +1,63 @@
 <template>
-  <div class="container">
-  <div class="input-group my-5">
-    <!-- 1. @drop : 드롭 영역 영역에 항목을 드롭 하는 시점 감지
+  <div class="container text-align-center">
+  <div id="component-row" class="input-group my-5 d-flex row">
+    <!--1. @drop : 드롭 영역 영역에 항목을 드롭 하는 시점 감지
         2. @dragover : 항목이 드롭 영역 위로 드래그되는 시점 감지
         3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
         4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
-    <div  v-show="imageSrc" class="upload-image">
-      <img id="previewImg" :src="imageSrc">
-    </div>
-    <v-card class="d-inline-block">
+    <v-card id="drop-card" class="col-6">
+      <div  v-if="imageSrc" class="upload-image">
+        <img id="previewImg" 
+        :src="imageSrc" 
+        class="col-12"
+        @dragover.prevent="dragover = true"
+        @dragenter.prevent="dragover = true"
+        @dragleave.prevent="dragover = false"
+        @drop.prevent="onDrop"
+        :class="{ 'grey lighten-3': dragover }"
+        >
+      </div>
       <input
         id = "dragNdrop-region"
-        @dragover.prevent
-        @dragenter.prevent
+        v-else
+        @dragover.prevent="dragover = true"
+        @dragenter.prevent="dragover = true"
+        @dragleave.prevent="dragover = false"
         @drop.prevent="onDrop"
         type="text"
-        class="form-control"
+        class="form-control col-12"
+        :class="{ 'grey lighten-3': dragover }"
         placeholder="Drag & Drop or Select"
-        v-model="filename"
         >
     </v-card>
-    <div class="file-button d-inline-block mx-5">
-      <label for="ex_file">
-        <i class="fa fa-paperclip">Search</i>
+    <div class="col-2 mx-3">
+      <div class="file-button">
+        <label for="ex_file">
+          <i class="fa fa-paperclip"> Search</i>
         </label>
-      <input 
-        id="ex_file" 
-        type=file 
-        class="file-input"  
-        accept="image/*" 
-        ref="fileInput" 
-        @change="onFileChange">
-    </div>
-    <div class="input-group-append d-inline-block justify-content-end">
+        <input 
+          id="ex_file" 
+          type=file 
+          class="file-input"  
+          accept="image/*" 
+          ref="fileInput" 
+          @change="onFileChange">
+      </div>
+      <br>
+      <div class="input-group-append">
+        <v-btn 
+          color="error"
+          elevation="1"
+          class="mb-2"
+          @click.stop="clearInput">CLEAR
+        </v-btn>
         <v-btn
           color="primary"
           elevation="1"
+          class="my-2"
           @click="onClickUpload">Upload
         </v-btn>
+      </div>
     </div>
 
   </div>
@@ -52,6 +72,7 @@ export default {
   name: "dragNdrop",
   data () {
       return {
+        dragover: false,
         filename: '',
         imageSrc: '',
       }
@@ -59,6 +80,7 @@ export default {
   methods: {
     // 드래그 앤 드랍 이미지 입력하기
     onDrop (event) {
+      this.dragover = false
       this.inputImageFile(event.dataTransfer.files)
     },
     // 파일 선택으로 이미지 입력하기

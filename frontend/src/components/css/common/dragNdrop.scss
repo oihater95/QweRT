@@ -1,13 +1,18 @@
 #dragNdrop-region {
   display: block;
-  height: 100px;
-  width: 300px;
   background: #ccc;
-  margin: auto;
   text-align: center;
-  line-height: 400px;
+  line-height: 500px;
   border-radius: 4px;
 }
+
+#dragNdrop-region-hidden {
+  display: none;
+  text-align: center;
+  line-height: 500px;
+  border-radius: 4px;
+}
+
 .file-button input[type="file"] { 
   position: absolute; 
   width: 1px; 
@@ -19,8 +24,22 @@
   border: 0; 
 }
 
+.upload-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
 #previewImg {
-  width: 500px;
-  height: 500px;
+  width: auto; height: auto;
+  max-width: 550px;
+  max-height: 550px;
   object-fit: scale-down;
+}
+
+
+#component-row {
+  display: flex;
+  justify-content: center;
 }
