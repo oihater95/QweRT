@@ -66,7 +66,7 @@
 
 <script>
 // import axios from'axios'
-import "@/components/css/common/dragNdrop.scss"
+import "@/css/common/dragNdrop.scss"
 
 export default {
   name: "dragNdrop",
