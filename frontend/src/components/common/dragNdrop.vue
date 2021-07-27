@@ -51,6 +51,7 @@
           class="mb-2"
           @click.stop="clearInput">CLEAR
         </v-btn>
+        <br>
         <v-btn
           color="primary"
           elevation="1"
@@ -105,12 +106,14 @@ export default {
     onClickUpload () {
       // 로컬 스토리지 저장
       if (0 < this.imageSrc.length) {
-        var image = {
-          filename: this.filename + `${new Date().getMonth() + 1}/${new Date().getDate()}`,
-          imageSrc: this.imageSrc
-        }
-        localStorage.setItem(this.filename, JSON.stringify(image))
+        // var image = {
+        //   filename: this.filename + `${new Date().getMonth() + 1}/${new Date().getDate()}`,
+        //   imageSrc: this.imageSrc
+        // }
+        // localStorage.setItem(this.filename, JSON.stringify(image))
+        localStorage.setItem(this.filename, this.imageSrc)
         console.log('OK')
+        this.$router.push({name: 'PostingDetail', params: {filename: this.filename, imageSrc: this.imageSrc}})
         this.clearInput()
         } else {
           alert('파일이 없습니다')
