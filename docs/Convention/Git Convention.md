@@ -48,7 +48,9 @@ commit message 규칙
  2. 작업 commit 2~3일 몇개 커밋 
 
 
+
  3. 원격으로 올리기
+ - git pull 다시 한번 더 하기!!!
  - git push origin feature/login (그래프에 브랜치가 기록됨)
 
 
