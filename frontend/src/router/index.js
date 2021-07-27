@@ -1,9 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import MainPage from '@/views/postings/MainPage.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/',
+    name: 'MainPage',
+    component: MainPage
+  },
 ]
 
 const router = new VueRouter({
