@@ -8,7 +8,10 @@
           rounded="xl"
           color="#FDF3BD"
         >
-          <v-form class="m-5">
+          <v-form
+            v-model="validForm"
+            class="m-5"
+          >
             <v-container>
               <v-row justify="center">
                 <h1 class="my-5">회원가입</h1>
@@ -26,11 +29,11 @@
                         v-model="credentials.email"
                         :rules="[rules.required, rules.emailForm]"
                         label="이메일"
-                        required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="2">
                       <v-btn
+                        :disabled="!/.+@.+/.test(credentials.email)"
                         small
                         depressed
                         color="#FDF3BD"
@@ -55,11 +58,11 @@
                         v-model="credentials.nickname"
                         :rules="[rules.required]"
                         label="닉네임"
-                        required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="2">
                       <v-btn
+                        :disabled="!credentials.nickname"
                         small
                         depressed
                         color="#FDF3BD"
@@ -116,6 +119,7 @@
                   <v-row align="center">
                     <v-checkbox
                       v-model="tos"
+                      :rules="[rules.required]"
                       label="이용약관에 동의합니다."
                       color="orange"
                     ></v-checkbox>
@@ -135,6 +139,7 @@
                 >
                   <v-row justify="center">
                     <v-btn
+                      :disabled="!validForm"
                       x-large
                       color="#FAD280"
                       @click="signup"
@@ -169,11 +174,13 @@
 
 <script>
 import '@/css/accounts/Signup.scss'
+import axios from 'axios'
 
 export default {
   name: 'Signup',
   data: function () {
     return {
+      validForm: false,
       credentials: {
         email: '',
         nickname: '',
@@ -194,16 +201,44 @@ export default {
   },
   methods: {
     emailcheck: function () {
-      
+      axios ({
+        method: 'get',
+        url: `http://localhost/qwert/accounts/emailcheck/${this.credentials.email}`
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     nicknamecheck: function () {
-
+      axios ({
+        method: 'get',
+        url: `http://localhost/qwert/accounts/nicknamecheck/${this.credentials.nickname}`
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     showTos: function () {
 
     },
     signup: function () {
-
+      axios ({
+        method: 'post',
+        url: 'http://localhost/qwert/accounts/signup/',
+        data: this.credentials
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
