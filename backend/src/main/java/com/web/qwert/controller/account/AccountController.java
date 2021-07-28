@@ -1,6 +1,8 @@
 package com.web.qwert.controller.account;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -9,14 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.qwert.dao.user.UserDao;
 import com.web.qwert.model.BasicResponse;
+import com.web.qwert.model.user.LoginRequest;
 import com.web.qwert.model.user.SignupRequest;
 import com.web.qwert.model.user.User;
+import com.web.qwert.model.user.UserDto;
+import com.web.qwert.service.JwtService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.swagger.annotations.ApiResponse;
@@ -36,7 +42,10 @@ public class AccountController {
 
     @Autowired
     UserDao userDao;
-
+    
+	@Autowired
+	private JwtService jwtService;
+	
     @PostMapping("/accounts/signup")
     @ApiOperation(value = "회원가입")
     public Object signup(@Valid @RequestBody User request) {
@@ -89,20 +98,35 @@ public class AccountController {
     }
     
 	
-	  @GetMapping("/accounts/login")
+	  @PostMapping("/accounts/login")
 	  @ApiOperation(value = "이메일과 비밀번호로 로그인합니다.") 
-	  public Object login(@RequestParam(required = true) final String email,
+	  public Object login(@RequestBody LoginRequest request) {
 	  
-	  @RequestParam(required = true) final String password) {
-	  
-	  Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
+	  Optional<User> userOpt = userDao.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
 	  ResponseEntity response = null;
+	  Map<String, Object> resultMap = new HashMap<>();
+	  System.out.println("로그인");
+	  if (userOpt.isPresent()) { 
+//      	jwt.io에서 확인
+//			로그인 성공했다면 토큰을 생성한다.
+			User user = userOpt.get();
+			UserDto userDto = new UserDto();
+			BeanUtils.copyProperties(user, userDto);
+			String token = jwtService.create(userDto);
+
+			resultMap.put("token", token);
+			resultMap.put("user_id", user.getUser_id());
+			resultMap.put("nickname", user.getNickname());
+			resultMap.put("profile_image", user.getProfile_img());
+	
+		  
+		  response = new ResponseEntity<>(resultMap, HttpStatus.OK); 
+	  } 
+	  else { 
+		  response = new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+	  }
 	  
-	  if (userOpt.isPresent()) { final BasicResponse result = new BasicResponse();
-	  result.status = true; result.data = "success"; response = new
-	  ResponseEntity<>(result, HttpStatus.OK); } else { response = new
-	  ResponseEntity<>(null, HttpStatus.NOT_FOUND); }
-	  
-	  return response; }
+	  return response; 
+   }
 	 
 }
