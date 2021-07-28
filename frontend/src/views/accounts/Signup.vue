@@ -230,6 +230,7 @@ export default {
       showOverlay: false,
       checkResult: '',
       modalMsg: {
+        name: '',
         triggerBtn: '',
         title: '',
         text: '',
