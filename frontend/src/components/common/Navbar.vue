@@ -9,7 +9,7 @@
           <div>
             <v-icon @click="toggleNavbar">mdi-chevron-up</v-icon>
           </div>
-          <div>
+          <div @click="clickHomeIcon">
             <v-img
               @click.native="clickHome"
               alt="Logo"
