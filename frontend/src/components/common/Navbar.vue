@@ -11,6 +11,7 @@
           </div>
           <div>
             <v-img
+              @click.native="clickHome"
               alt="Logo"
               class="logo shrink mr-2"
               contain
@@ -20,8 +21,8 @@
             />
           </div>
           <div class="icon-div">
-            <v-icon>far fa-images</v-icon>
-            <v-icon>mdi-home</v-icon>
+            <v-icon @click.native="clickCuration">far fa-images</v-icon>
+            <v-icon @click.native="clickHome">mdi-home</v-icon>
             <div class="text-center">
               <!-- offset-y가 있어야 클릭 시에 드롭다운이 아래로 내려온다. -->
               <v-menu offset-y open-on-hover>
@@ -101,7 +102,13 @@ export default {
       } else {
         navbar.style.display = "none"
       }
-    }
+    },
+    clickCuration: function () {
+      this.$router.push({ name: 'CurationPage' })
+    },
+    clickHome: function () {
+      this.$router.push({ name: 'MainPage' })
+    },
   }
 }
 </script>
