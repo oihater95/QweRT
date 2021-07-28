@@ -9,7 +9,7 @@
           <div>
             <v-icon @click="toggleNavbar">mdi-chevron-up</v-icon>
           </div>
-          <div>
+          <div @click="clickHomeIcon">
             <v-img
               alt="Logo"
               class="logo shrink mr-2"
@@ -20,8 +20,8 @@
             />
           </div>
           <div class="icon-div">
-            <v-icon>far fa-images</v-icon>
-            <v-icon>mdi-home</v-icon>
+            <v-icon @click.native="clickCurationIcon">far fa-images</v-icon>
+            <v-icon @click.native="clickHomeIcon">mdi-home</v-icon>
             <div class="text-center">
               <!-- offset-y가 있어야 클릭 시에 드롭다운이 아래로 내려온다. -->
               <v-menu offset-y open-on-hover>
@@ -101,7 +101,13 @@ export default {
       } else {
         navbar.style.display = "none"
       }
-    }
+    },
+    clickCurationIcon: function () {
+      this.$router.push({name: 'CurationPage'})
+    },
+    clickHomeIcon: function () {
+      this.$router.push({name: 'MainPage'})
+    },
   }
 }
 </script>

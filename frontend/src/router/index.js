@@ -12,7 +12,7 @@ const routes = [
     component: MainPage
   },
   {
-    path: '/',
+    path: '/curation',
     name: 'CurationPage',
     component: CurationPage
   },
