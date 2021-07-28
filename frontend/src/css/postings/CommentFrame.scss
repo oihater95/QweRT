@@ -1,0 +1,28 @@
+#comment-card {
+  max-width: 1050px;
+  margin: 0 auto;
+}
+
+.comment-nickname {
+  font-weight: bolder;
+  font-size: large;
+  text-decoration: none;
+  &:link {
+    color: black;
+  }
+  &:visited {
+    color: black;
+  }
+  &:hover {
+    color: skyblue;
+  }
+}
+
+.comment-content {
+  line-height: 1.5;
+}
+
+.update-time {
+  text-align: right;
+  color: darkgray;
+}

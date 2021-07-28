@@ -119,7 +119,7 @@ export default {
           alert('파일이 없습니다')
       }
     },
-    // 업로드 후 입력칸 비우기
+    // 업로드 후 입력칸 비우기 or Clear 버튼 클릭 시 입력 비우기
     clearInput() {
       this.filename = '',
       this.imageSrc = ''
@@ -147,7 +147,7 @@ export default {
     //   }
     //   return config
     // },
-    // createTodo: function () {
+    // onClickUpload: function () {
     //   const img = {
     //     id: this.id,
     //     imageSrc: this.imageSrc,
@@ -156,7 +156,7 @@ export default {
     //   if (img.id) {
     //     axios({
     //       method: 'post',
-    //       url: 'http://127.0.0.1:8000/postings',
+    //       url: 'http://127.0.0.1:8000/postings/{$this.img.id}',
     //       data: img,
     //       headers: this.setToken()
     //     })
