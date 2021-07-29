@@ -33,7 +33,7 @@
                 <!-- 비밀번호 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl mb-3 login-input"
+                  class="rounded-xl login-input"
                 >
                   <v-row justify="center">
                     <v-col cols="10">
@@ -47,6 +47,19 @@
                         @click:append="showPW = !showPW"
                       ></v-text-field>
                     </v-col>
+                  </v-row>
+                </v-col>
+                <!-- 이메일 기억하기 -->
+                <v-col
+                  cols="10"
+                  class="py-2"
+                >
+                  <v-row align="center">
+                    <v-checkbox
+                      v-model="wannaSave"
+                      label="이메일 저장"
+                      color="orange"
+                    ></v-checkbox>
                   </v-row>
                 </v-col>
                 <!-- 로그인 버튼 -->
@@ -116,6 +129,7 @@ export default {
       },
       validForm: false,
       showPW: false,
+      wannaSave: false,
       modalMsg: {
         name: '',
         triggerBtn: '',
@@ -127,6 +141,7 @@ export default {
     }
   },
   methods: {
+    // 로그인 함수
     login: function () {
       axios ({
         method: 'post',
@@ -135,10 +150,18 @@ export default {
       })
         .then(res => {
           console.log(res)
+          // 유저정보 state에 저장
           this.$store.dispatch('setUserInfo', res.data)
+          // 이메일을 cookie에 90일 동안 저장 또는 삭제
+          if (this.wannaSave) {
+            this.rememberEmail(90)
+          } else {
+            this.rememberEmail(0)
+          }
         })
         .catch(err => {
           console.log(err)
+          // 로그인 실패 모달 창
           this.modalMsg.name='loginFailure'
           this.modalMsg.triggerBtn = ''
           this.modalMsg.title = ''
@@ -149,7 +172,35 @@ export default {
           modalBtn.click()
         })
     },
+    // 이메일을 cookie에 저장하는 함수
+    rememberEmail: function (term) {
+      const expirationDate = new Date()
+      expirationDate.setDate(expirationDate.getDate() + term)
+      document.cookie = `email=${escape(this.credentials.email)}; path=/; expires=${expirationDate.toGMTString()};`
+    },
+    // cookie에서 저장된 이메일을 불러오는 함수
+    recallEmail: function () {
+      const target = 'email='
+      if (document.cookie.length > 0) {
+        const offset = document.cookie.indexOf(target)
+        if (offset != -1) {
+          const start = offset + target.length
+          let end = document.cookie.indexOf(';', start)
+          if (end == -1) {
+            end = document.cookie.length
+          }
+          return unescape(document.cookie.substring(start, end))
+        }
+      }
+    },
   },
+  // cookie에 저장된 이메일이 있다면 자동으로 불러오기
+  created: function () {
+    if (this.recallEmail()) {
+      this.credentials.email = this.recallEmail()
+      this.wannaSave = true
+    }
+  }
 }
 </script>
 
