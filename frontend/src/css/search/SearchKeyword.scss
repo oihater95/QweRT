@@ -1,0 +1,42 @@
+.search-keyword__result {
+  font-size: 30px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.search-keyword__select {
+  font-size: 20px;
+  margin-top: 45px;
+  margin-right: 120px;
+  span {
+    &:first-child {
+      margin-left: 30px;
+    }
+    &:last-child {
+      color: skyblue;
+    }
+    &:hover {
+      color: skyblue !important;
+      cursor: pointer;
+    }
+  }
+}
+
+.search-keyword__tab {
+  font-size: 20px;
+  margin-top: 15px;
+  margin-right: 120px;
+  margin-bottom: 30px;
+  span {
+    &:first-child {
+      margin-left: 30px;
+    }
+    &:last-child {
+      color: skyblue;
+    }
+    &:hover {
+      color: skyblue !important;
+      cursor: pointer;
+    }
+  }
+}
