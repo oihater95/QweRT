@@ -41,10 +41,6 @@
                       >
                         중복확인
                       </v-btn>
-                      <v-checkbox
-                        v-model="uniqueEmail"
-                        class="d-none"
-                      ></v-checkbox>
                     </v-col>
                   </v-row>
                 </v-col>
@@ -74,10 +70,6 @@
                       >
                         중복확인
                       </v-btn>
-                      <v-checkbox
-                        v-model="uniqueNickname"
-                        class="d-none"
-                      ></v-checkbox>
                     </v-col>
                   </v-row>
                 </v-col>
@@ -91,11 +83,11 @@
                       <v-text-field
                         v-model="credentials.password"
                         :rules="[rules.required, rules.min, rules.include]"
-                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                        :type="show1 ? 'text' : 'password'"
+                        :append-icon="showPW1 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPW1 ? 'text' : 'password'"
                         label="비밀번호"
                         counter
-                        @click:append="show1 = !show1"
+                        @click:append="showPW1 = !showPW1"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -110,11 +102,11 @@
                       <v-text-field
                         v-model="credentials.passwordConfirmation"
                         :rules="[rules.required, rules.match]"
-                        :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-                        :type="show2 ? 'text' : 'password'"
+                        :append-icon="showPW2 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPW2 ? 'text' : 'password'"
                         label="비밀번호 확인"
                         counter
-                        @click:append="show2 = !show2"
+                        @click:append="showPW2 = !showPW2"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -186,6 +178,7 @@
       </v-card>
     </v-overlay>
     <!-- 모달 -->
+    <!-- 회원가입 성공 시 모달 창에서 버튼을 클릭하면 로그인 창으로 이동 -->
     <Modal
       :msg="modalMsg"
       @signup-ok-sign="$router.push({ name: 'Login' })"
@@ -224,8 +217,8 @@ export default {
       validForm: false,
       uniqueEmail: false,
       uniqueNickname: false,
-      show1: false,
-      show2: false,
+      showPW1: false,
+      showPW2: false,
       tos: false,   //tos : terms of service (이용약관)
       showOverlay: false,
       checkResult: '',
@@ -240,6 +233,7 @@ export default {
     }
   },
   methods: {
+    // 이메일 중복확인하는 함수
     emailcheck: function () {
       axios ({
         method: 'get',
@@ -247,31 +241,40 @@ export default {
       })
         .then(res => {
           console.log(res)
+          // 중복확인 rules를 갱신하기 위한 꼼수 (뒤에 공백을 붙였다가)
           this.uniqueEmail = true
           this.credentials.email = this.credentials.email + ' '
+          // 중복되지 않음을 오버레이로 알림
           this.checkResult = '가입 가능한 이메일입니다.'
           this.showOverlay = true
         })
         .then(() => {
+          // 중복확인 rules를 갱신하기 위한 꼼수 (다시 공백을 지워서 email 입력을 갱신)
           this.credentials.email = this.credentials.email.trim()
+          // 1초 후 오버레이 내리기
           setTimeout(() => {
             this.showOverlay = false
           }, 1000)
         })
         .catch(err => {
           console.log(err)
+          // 중복확인 rules를 갱신하기 위한 꼼수 (뒤에 공백을 붙였다가)
           this.uniqueEmail = false
           this.credentials.email = this.credentials.email + ' '
+          // 중복되었음을 오버레이로 알림
           this.checkResult = '이미 가입된 이메일입니다.'
           this.showOverlay = true
         })
         .then(() => {
+          // 중복확인 rules를 갱신하기 위한 꼼수 (다시 공백을 지워서 email 입력을 갱신)
           this.credentials.email = this.credentials.email.trim()
+          // 1초 후 오버레이 내리기
           setTimeout(() => {
             this.showOverlay = false
           }, 1000)
         })
     },
+    // 닉네임 중복확인하는 함수 (이메일 중복확인 함수와 같은 원리)
     nicknamecheck: function () {
       axios ({
         method: 'get',
@@ -304,6 +307,7 @@ export default {
           }, 1000)
         })
     },
+    // 이용약관을 모달 창으로 보여주는 함수
     showTos: function () {
       this.modalMsg.name='showTos'
       this.modalMsg.triggerBtn = ''
@@ -314,6 +318,7 @@ export default {
       const modalBtn = document.querySelector('#modalBtn')
       modalBtn.click()
     },
+    // 회원가입 함수
     signup: function () {
       axios ({
         method: 'post',
@@ -322,6 +327,7 @@ export default {
       })
         .then(res => {
           console.log(res)
+          // 회원가입 성공 모달 창
           this.modalMsg.name='signup'
           this.modalMsg.triggerBtn = ''
           this.modalMsg.title = ''
@@ -333,6 +339,7 @@ export default {
         })
         .catch(err => {
           console.log(err)
+          // 회원가입 실패 모달 창
           this.modalMsg.name='signupFailure'
           this.modalMsg.triggerBtn = ''
           this.modalMsg.title = ''
