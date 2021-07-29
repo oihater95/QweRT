@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div id="posting-detail__contaioner" class="container">
   <DetailImage filename="filename" imageSrc="imageSrc"/>
   <div id="posting-icon__buttons">
     <div class="me-5 my-5 icon-buttons">
