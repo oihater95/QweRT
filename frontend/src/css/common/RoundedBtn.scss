@@ -1,0 +1,15 @@
+.rounded-btn {
+  width: 150px;
+  height: 40px;
+  font-size: 20px;
+  color: black;
+  text-align: center;
+  background: floralwhite;
+  border: solid 0.1px gray;
+  border-radius: 20px;
+  margin-left: 70px;
+  &:hover {
+    color: skyblue;
+    cursor: pointer;
+  }
+}

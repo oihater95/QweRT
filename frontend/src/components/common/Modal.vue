@@ -25,7 +25,7 @@
           <v-spacer></v-spacer>
         </v-card-title>
         <!-- 내용 -->
-        <v-card-text class="text-center">
+        <v-card-text class="text-center text-body-1">
           <p v-html="msg.text"></p>
         </v-card-text>
         <v-divider></v-divider>
