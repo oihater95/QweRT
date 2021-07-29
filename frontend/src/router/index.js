@@ -6,6 +6,10 @@ import MainPage from '@/views/postings/MainPage.vue'
 import CurationPage from '@/views/curations/CurationPage.vue'
 import PostingDetail from '@/views/postings/PostingDetail'
 import dragNdrop from '@/components/common/dragNdrop'  // 확인용 (업로드 페이지 대체)
+import SearchPage from '@/views/search/SearchPage'
+import SearchCategory from '@/views/search/SearchCategory'
+import SearchKeyword from '@/views/search/SearchKeyword'
+import NotifyPage from '@/views/notify/NotifyPage'
 
 Vue.use(VueRouter)
 
@@ -41,6 +45,26 @@ const routes = [
     path: '/postings',  // 확인용 임시 path
     name: 'dragNdrop',
     component: dragNdrop,
+  },
+  {
+    path: '/search',
+    name: 'SearchPage',
+    component: SearchPage
+  },
+  {
+    path: '/search/category/:category',
+    name: 'SearchCategory',
+    component: SearchCategory
+  },
+  {
+    path: '/search/keyword/:keyword',
+    name: 'SearchKeyword',
+    component: SearchKeyword
+  },
+  {
+    path: '/notify',
+    name: 'NotifyPage',
+    component: NotifyPage
   },
 ]
 
