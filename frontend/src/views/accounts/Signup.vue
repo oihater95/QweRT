@@ -309,8 +309,8 @@ export default {
       this.modalMsg.triggerBtn = ''
       this.modalMsg.title = 'QweRT 이용약관'
       this.modalMsg.text = '<<이용약관입니다.>>'
-      this.modalMsg.positiveBtn = '확인'
-      this.modalMsg.negativeBtn = ''
+      this.modalMsg.positiveBtn = ''
+      this.modalMsg.negativeBtn = '닫기'
       const modalBtn = document.querySelector('#modalBtn')
       modalBtn.click()
     },
