@@ -160,6 +160,7 @@ export default {
     },
     // clickNickname: function (e) {
     // },
+    // 스크롤 시 위로가기 버튼 구현
     // onScroll (e) {
     //   if (typeof window === 'undefined') return
     //   const top = window.pageYOffset ||   e.target.scrollTop || 0
@@ -168,6 +169,8 @@ export default {
     // toTop () {
     //   this.$vuetify.goTo(0)
     // },
+
+    // 현재시간과 비교하여 몇분, 몇시간, 며칠 전인지 출력
     displayTimeAt: function(update_date) {  // computed로
       const timeNow = new Date()
       const milliSeconds = timeNow - update_date
