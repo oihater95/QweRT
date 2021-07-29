@@ -2,7 +2,7 @@
 <div class="container">
   <DetailImage filename="filename" imageSrc="imageSrc"/>
   <div id="posting-icon__buttons">
-    <div class="me-5 pe-5 my-5 icon-buttons">
+    <div class="me-5 my-5 icon-buttons">
       <v-btn
         class="mx-2"
         fab
@@ -35,7 +35,7 @@
       </v-btn>
     </div>
   </div>
- 
+
   <CommentFrame />
 </div>
 

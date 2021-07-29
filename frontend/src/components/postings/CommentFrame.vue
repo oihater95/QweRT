@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-card 
     id="comment-card"
+    color="#FFFFF0"
     elevation="2">
       <div class="d-flex justify-center menu-tab">
         <div @click="clickComment">Comment</div>
