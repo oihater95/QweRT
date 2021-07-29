@@ -6,13 +6,11 @@
 
 .search-keyword__select {
   font-size: 20px;
-  margin-top: 45px;
-  margin-right: 120px;
+  margin-top: 25px;
+  margin-bottom: 25px;
   span {
     &:first-child {
-      margin-left: 30px;
-    }
-    &:last-child {
+      margin-right: 30px;
       color: skyblue;
     }
     &:hover {
@@ -26,7 +24,7 @@
   font-size: 20px;
   margin-top: 15px;
   margin-right: 120px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   span {
     &:first-child {
       margin-left: 30px;

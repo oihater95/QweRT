@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="search-keyword__result">검색어 (호랑이) 검색 결과</div>
-    <div class="d-flex flex-row-reverse search-keyword__select">
-      <span @click="clickArtist">아티스트</span>
+    <div class="d-flex justify-center search-keyword__select">
       <span @click="clickImage">작품</span>
+      <span @click="clickArtist">아티스트</span>
     </div>
     <div class="d-flex flex-row-reverse search-keyword__tab">
       <span @click="clickNew">최신순</span>
@@ -117,12 +117,12 @@ export default {
     clickImage: function (e) {
       this.first_tab=1
       e.target.style.color="skyblue"
-      e.target.previousSibling.style.color="black"
+      e.target.nextSibling.style.color="black"
     },
     clickArtist: function (e) {
       this.first_tab=2
       e.target.style.color="skyblue"
-      e.target.nextSibling.style.color="black"
+      e.target.previousSibling.style.color="black"
     },
     clickPopular: function (e) {
       this.second_tab=1
