@@ -44,7 +44,6 @@ import io.swagger.annotations.ApiResponses;
 
 // CORS 허용
 //@CrossOrigin(origins = { "http://localhost:8080" })
-@CrossOrigin
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {

@@ -3,7 +3,7 @@
     <h1>Test</h1>
     <Modal
       :msg="msg"
-      @ok-sign="myFunction"
+      @modalExample-ok-sign="myFunction"
     />
   </div>
 </template>
@@ -20,6 +20,7 @@ export default {
     return {
       // positiveBtn과 negativeBtn은 선택사항
       msg: {
+        name: 'modalExample',
         triggerBtn: '버튼',
         title: '타이틀',
         text: '내용<br/>줄바꿈 가능',

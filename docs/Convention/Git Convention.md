@@ -37,3 +37,32 @@ commit message 규칙
 
 - 1일 1커밋 권장
 
+#### ✅ 작업 후 push하는 방법
+
+ 0. git pull origin develop
+
+ 1. feature 브랜치 생성  및 이동: git switch -C feature/login
+
+                                git checkout -b feature/signup
+
+ 2. 작업 commit 2~3일 몇개 커밋 
+
+
+
+ 3. 원격으로 올리기
+ - git pull 다시 한번 더 하기!!!
+ - git push origin feature/login (그래프에 브랜치가 기록됨)
+
+
+ 4. 머지 리퀘스트 작성
+ - feature -> develop으로 변경 후 작성
+
+
+ 5. 승인 과 머지 (본인이나 팀원)
+
+
+ 6. 브랜치 삭제
+ 
+
+
+

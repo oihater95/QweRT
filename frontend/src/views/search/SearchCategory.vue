@@ -1,51 +1,42 @@
 <template>
-  <v-container fluid>
-    <div class="d-flex justify-center menu-tab">
-      <div @click="clickMy">피드</div>
-      <div @click="clickPopular">인기</div>
-      <div @click="clickNew">최신</div>
+  <div>
+    <div class="search-category__result">카테고리 (인물) 검색 결과</div>
+    <div class="d-flex flex-row-reverse search-category__tab">
+      <span @click="clickNew">최신순</span>
+      <span @click="clickPopular">인기순</span>
     </div>
-     <v-row v-if="tab===1">
-      <FeedImage
-        v-for="(image, idx) in myImages" 
+    <!-- 인기순 -->
+    <v-row v-if="tab===1">
+      <MainImage
+        v-for="(image, idx) in results" 
         :key="1-idx"
         :image="image"
       />
     </v-row>
     <v-row v-if="tab===2">
       <MainImage
-        v-for="(image, idx) in myImages" 
+        v-for="(image, idx) in results" 
         :key="2-idx"
         :image="image"
       />
     </v-row>
-    <v-row v-if="tab===3">
-      <MainImage
-        v-for="(image, idx) in myImages" 
-        :key="3-idx"
-        :image="image"
-      />
-    </v-row>
-
-  </v-container>
+  </div>
 </template>
 
 <script>
-import "@/css/postings/MainPage.scss"
-import FeedImage from "@/components/postings/FeedImage"
+import "@/css/search/SearchCategory.scss"
 import MainImage from "@/components/postings/MainImage"
 
 export default {
-  name: "MainPage",
+  name: "SearchCategory",
   components: {
-    FeedImage,
     MainImage
   },
   data:  function () {
     return {
       tab: 1,
-      // myImages: []
-      myImages: [
+      // results: []
+      results: [
         {
         posting_image: "http://weekly.chosun.com/up_fd/wc_news/2116/bimg_org/2116_74_01.jpg",
         profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
@@ -98,33 +89,24 @@ export default {
     }
   },
   methods: {
-    getMyImages: function () {
-      // myImages에 이미지 집어넣기
-    },
-    clickMy: function (e) {
-      this.tab= 1
-      e.target.style.color="skyblue"
-      e.target.nextSibling.style.color="black"
-      e.target.nextSibling.nextSibling.style.color="black"
+    getResults: function () {
+      // results 이미지 집어넣기
     },
     clickPopular: function (e) {
-      this.tab= 2
+      this.tab= 1
       e.target.style.color="skyblue"
       e.target.previousSibling.style.color="black"
-      e.target.nextSibling.style.color="black"
-
     },
     clickNew: function (e) {
-      this.tab= 3
+      this.tab= 2
       e.target.style.color="skyblue"
-      e.target.previousSibling.style.color="black"
-      e.target.previousSibling.previousSibling.style.color="black"
+      e.target.nextSibling.style.color="black"
     },
-  },
-  // 처음엔 피드 이미지
-  created() {
-    this.getMyImages()
-  }, 
+    // 검색 결과 받아오기
+    created() {
+      this.getResults()
+    }, 
+  }
 }
 </script>
 

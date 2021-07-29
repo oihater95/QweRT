@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col>
         <v-sheet
-          class="sheet"
+          class="signup-sheet"
           elevation="20"
           rounded="xl"
           color="#FDF3BD"
@@ -18,7 +18,7 @@
                 <!-- 이메일 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl mb-3 input"
+                  class="rounded-xl mb-3 signup-input"
                 >
                   <v-row
                     justify="center"
@@ -27,7 +27,7 @@
                     <v-col cols="8">
                       <v-text-field
                         v-model="credentials.email"
-                        :rules="[rules.required, rules.emailForm]"
+                        :rules="[rules.required, rules.emailForm, rules.emailChecked]"
                         label="이메일"
                       ></v-text-field>
                     </v-col>
@@ -41,13 +41,17 @@
                       >
                         중복확인
                       </v-btn>
+                      <v-checkbox
+                        v-model="uniqueEmail"
+                        class="d-none"
+                      ></v-checkbox>
                     </v-col>
                   </v-row>
                 </v-col>
                 <!-- 닉네임 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl mb-3 input"
+                  class="rounded-xl mb-3 signup-input"
                 >
                   <v-row
                     justify="center"
@@ -56,7 +60,7 @@
                     <v-col cols="8">
                       <v-text-field
                         v-model="credentials.nickname"
-                        :rules="[rules.required]"
+                        :rules="[rules.required, rules.nicknameChecked]"
                         label="닉네임"
                       ></v-text-field>
                     </v-col>
@@ -70,13 +74,17 @@
                       >
                         중복확인
                       </v-btn>
+                      <v-checkbox
+                        v-model="uniqueNickname"
+                        class="d-none"
+                      ></v-checkbox>
                     </v-col>
                   </v-row>
                 </v-col>
                 <!-- 비밀번호 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl mb-3 input"
+                  class="rounded-xl mb-3 signup-input"
                 >
                   <v-row justify="center">
                     <v-col cols="10">
@@ -95,7 +103,7 @@
                 <!-- 비밀번호 확인 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl input"
+                  class="rounded-xl signup-input"
                 >
                   <v-row justify="center">
                     <v-col cols="10">
@@ -169,34 +177,66 @@
         </v-sheet>
       </v-col>
     </v-row>
+    <!-- 중복 확인 결과 오버레이 -->
+    <v-overlay :value="showOverlay" opacity="0.78">
+      <v-card height="100" width="400" color="#FFFFF0">
+        <v-card-text class="black--text text-h5 text-center my-5">
+          {{ checkResult }}
+        </v-card-text>
+      </v-card>
+    </v-overlay>
+    <!-- 모달 -->
+    <Modal
+      :msg="modalMsg"
+      @signup-ok-sign="$router.push({ name: 'Login' })"
+      class="d-none"
+    />
   </v-container>
 </template>
 
 <script>
+import Modal from '@/components/common/Modal'
 import '@/css/accounts/Signup.scss'
 import axios from 'axios'
 
 export default {
   name: 'Signup',
+  components: {
+    Modal,
+  },
   data: function () {
     return {
-      validForm: false,
       credentials: {
         email: '',
         nickname: '',
         password: '',
         passwordConfirmation: '',
       },
-      show1: false,
-      show2: false,
       rules: {
         required: v => !!v || '필수 사항',
+        emailChecked: () => this.uniqueEmail || '중복 확인이 필요합니다.',
+        nicknameChecked: () => this.uniqueNickname || '중복 확인이 필요합니다.',
         emailForm: v => /.+@.+/.test(v) || '올바른 이메일 형식이어야 합니다.',
         min: v => v.length >= 8 || '8자 이상이어야 합니다.',
         include: v => (/[a-zA-Z]/.test(v) && /[0-9]/.test(v)) || '영문, 숫자를 모두 포함해야 합니다.',
         match: v => v === this.credentials.password || '비밀번호와 일치하지 않습니다.',
       },
+      validForm: false,
+      uniqueEmail: false,
+      uniqueNickname: false,
+      show1: false,
+      show2: false,
       tos: false,   //tos : terms of service (이용약관)
+      showOverlay: false,
+      checkResult: '',
+      modalMsg: {
+        name: '',
+        triggerBtn: '',
+        title: '',
+        text: '',
+        positiveBtn: '',
+        negativeBtn: '',
+      },
     }
   },
   methods: {
@@ -207,9 +247,29 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.uniqueEmail = true
+          this.credentials.email = this.credentials.email + ' '
+          this.checkResult = '가입 가능한 이메일입니다.'
+          this.showOverlay = true
+        })
+        .then(() => {
+          this.credentials.email = this.credentials.email.trim()
+          setTimeout(() => {
+            this.showOverlay = false
+          }, 1000)
         })
         .catch(err => {
           console.log(err)
+          this.uniqueEmail = false
+          this.credentials.email = this.credentials.email + ' '
+          this.checkResult = '이미 가입된 이메일입니다.'
+          this.showOverlay = true
+        })
+        .then(() => {
+          this.credentials.email = this.credentials.email.trim()
+          setTimeout(() => {
+            this.showOverlay = false
+          }, 1000)
         })
     },
     nicknamecheck: function () {
@@ -219,13 +279,40 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.uniqueNickname = true
+          this.credentials.nickname = this.credentials.nickname + ' '
+          this.checkResult = '사용 가능한 닉네임입니다.'
+          this.showOverlay = true
+        })
+        .then(() => {
+          this.credentials.nickname = this.credentials.nickname.trim()
+          setTimeout(() => {
+            this.showOverlay = false
+          }, 1000)
         })
         .catch(err => {
           console.log(err)
+          this.uniqueNickname = false
+          this.credentials.nickname = this.credentials.nickname + ' '
+          this.checkResult = '이미 사용 중인 닉네임입니다.'
+          this.showOverlay = true
+        })
+        .then(() => {
+          this.credentials.nickname = this.credentials.nickname.trim()
+          setTimeout(() => {
+            this.showOverlay = false
+          }, 1000)
         })
     },
     showTos: function () {
-
+      this.modalMsg.name='showTos'
+      this.modalMsg.triggerBtn = ''
+      this.modalMsg.title = 'QweRT 이용약관'
+      this.modalMsg.text = '<<이용약관입니다.>>'
+      this.modalMsg.positiveBtn = ''
+      this.modalMsg.negativeBtn = '닫기'
+      const modalBtn = document.querySelector('#modalBtn')
+      modalBtn.click()
     },
     signup: function () {
       axios ({
@@ -235,11 +322,27 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.modalMsg.name='signup'
+          this.modalMsg.triggerBtn = ''
+          this.modalMsg.title = ''
+          this.modalMsg.text = '회원가입이 완료되었습니다.'
+          this.modalMsg.positiveBtn = '로그인'
+          this.modalMsg.negativeBtn = ''
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
         })
         .catch(err => {
           console.log(err)
+          this.modalMsg.name='signupFailure'
+          this.modalMsg.triggerBtn = ''
+          this.modalMsg.title = ''
+          this.modalMsg.text = '회원가입에 실패했습니다.'
+          this.modalMsg.positiveBtn = '확인'
+          this.modalMsg.negativeBtn = ''
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
         })
-    }
+    },
   }
 }
 </script>
