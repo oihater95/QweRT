@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col>
         <v-sheet
-          class="sheet"
+          class="signup-sheet"
           elevation="20"
           rounded="xl"
           color="#FDF3BD"
@@ -18,7 +18,7 @@
                 <!-- 이메일 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl mb-3 input"
+                  class="rounded-xl mb-3 signup-input"
                 >
                   <v-row
                     justify="center"
@@ -51,7 +51,7 @@
                 <!-- 닉네임 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl mb-3 input"
+                  class="rounded-xl mb-3 signup-input"
                 >
                   <v-row
                     justify="center"
@@ -84,7 +84,7 @@
                 <!-- 비밀번호 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl mb-3 input"
+                  class="rounded-xl mb-3 signup-input"
                 >
                   <v-row justify="center">
                     <v-col cols="10">
@@ -103,7 +103,7 @@
                 <!-- 비밀번호 확인 -->
                 <v-col
                   cols="10"
-                  class="rounded-xl input"
+                  class="rounded-xl signup-input"
                 >
                   <v-row justify="center">
                     <v-col cols="10">
