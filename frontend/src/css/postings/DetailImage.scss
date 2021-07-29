@@ -1,0 +1,12 @@
+#DetailImg {
+  width: auto; height: auto;
+  max-width: 1000px;
+  max-height: 1000px;
+  object-fit: scale-down;
+}
+
+#DetailImg-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
