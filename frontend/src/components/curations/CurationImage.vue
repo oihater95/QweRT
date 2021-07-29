@@ -2,7 +2,7 @@
     <!-- 한 행에 2개씩 -->
   <v-col 
     cols=6
-    class="col">
+    class="curation-image__col">
     <!-- elevation: 테두리 -->
     <v-card
       elevation=1
@@ -19,7 +19,7 @@
         <v-row
           v-else
           no-gutters
-          class="curation-three__images d-flex justify-space-around">
+          class="curation-three__images d-flex">
           <v-col 
             cols=4
             v-for="(image, idx) in curation.images"  

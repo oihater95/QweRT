@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div class="d-flex justify-center menu-tab">
-      <div @click="clickMy">My</div>
+      <div @click="clickMy">피드</div>
       <div @click="clickPopular">인기</div>
       <div @click="clickNew">최신</div>
     </div>
