@@ -185,20 +185,27 @@
         </v-card-text>
       </v-card>
     </v-overlay>
+    <!-- 모달 -->
+    <Modal
+      :msg="modalMsg"
+      @signup-ok-sign="$router.push({ name: 'Login' })"
+      class="d-none"
+    />
   </v-container>
 </template>
 
 <script>
+import Modal from '@/components/common/Modal'
 import '@/css/accounts/Signup.scss'
 import axios from 'axios'
 
 export default {
   name: 'Signup',
+  components: {
+    Modal,
+  },
   data: function () {
     return {
-      validForm: false,
-      uniqueEmail: false,
-      uniqueNickname: false,
       credentials: {
         email: '',
         nickname: '',
@@ -214,11 +221,22 @@ export default {
         include: v => (/[a-zA-Z]/.test(v) && /[0-9]/.test(v)) || '영문, 숫자를 모두 포함해야 합니다.',
         match: v => v === this.credentials.password || '비밀번호와 일치하지 않습니다.',
       },
+      validForm: false,
+      uniqueEmail: false,
+      uniqueNickname: false,
       show1: false,
       show2: false,
       tos: false,   //tos : terms of service (이용약관)
       showOverlay: false,
       checkResult: '',
+      modalMsg: {
+        name: '',
+        triggerBtn: '',
+        title: '',
+        text: '',
+        positiveBtn: '',
+        negativeBtn: '',
+      },
     }
   },
   methods: {
@@ -287,7 +305,14 @@ export default {
         })
     },
     showTos: function () {
-
+      this.modalMsg.name='showTos'
+      this.modalMsg.triggerBtn = ''
+      this.modalMsg.title = 'QweRT 이용약관'
+      this.modalMsg.text = '<<이용약관입니다.>>'
+      this.modalMsg.positiveBtn = '확인'
+      this.modalMsg.negativeBtn = ''
+      const modalBtn = document.querySelector('#modalBtn')
+      modalBtn.click()
     },
     signup: function () {
       axios ({
@@ -297,9 +322,25 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.modalMsg.name='signup'
+          this.modalMsg.triggerBtn = ''
+          this.modalMsg.title = ''
+          this.modalMsg.text = '회원가입이 완료되었습니다.'
+          this.modalMsg.positiveBtn = '로그인'
+          this.modalMsg.negativeBtn = ''
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
         })
         .catch(err => {
           console.log(err)
+          this.modalMsg.name='signupFailure'
+          this.modalMsg.triggerBtn = ''
+          this.modalMsg.title = ''
+          this.modalMsg.text = '회원가입에 실패했습니다.'
+          this.modalMsg.positiveBtn = '확인'
+          this.modalMsg.negativeBtn = ''
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
         })
     },
   }

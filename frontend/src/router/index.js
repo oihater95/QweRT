@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Signup from '@/views/accounts/Signup'
+import Login from '@/views/accounts/Login'
 import MainPage from '@/views/postings/MainPage.vue'
 import CurationPage from '@/views/curations/CurationPage.vue'
 import PostingDetail from '@/views/postings/PostingDetail'
@@ -15,12 +16,17 @@ const routes = [
     component: Signup,
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+  },
+  {
     path: '/',
     name: 'MainPage',
     component: MainPage
   },
   {
-    path: '/',
+    path: '/curation',
     name: 'CurationPage',
     component: CurationPage
   },
