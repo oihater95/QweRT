@@ -8,7 +8,7 @@
     max-height="1050px"
     >
       <img 
-      id="DetailImageSection"
+      id="DetailImage"
       class="col-12"
       :src="$route.params.imageSrc">
     </v-card>

@@ -10,3 +10,9 @@
   justify-content: center;
   align-items: center;
 }
+
+#DetailImage {
+  max-width: 1050px;
+  max-height: 1050px;
+  object-fit: scale-down;
+}
