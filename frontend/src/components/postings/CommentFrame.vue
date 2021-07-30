@@ -7,7 +7,7 @@
       id="comment-menu__tab"
       class="d-flex justify-center menu-tab my-0"
       >
-        <div class="mt-3" @click="clickComment">Comment</div>
+        <div class="mt-3" @click="clickComment">Comment {{ this.nonDocentsArray.length }}</div>
         <div class="mt-3" @click="clickDocent">Docent</div>
       </div>
       <div class="comment-create__section" align="right">
@@ -223,6 +223,8 @@ export default {
       commentForm: {
         comment_content : null,
       },
+      docentsArray: [],
+      nonDocentsArray: []
       
     }
   },
@@ -324,7 +326,7 @@ export default {
     //       nonDocents.push(comments[i])
     //     }
     //   }
-    //   return 1
+    //   return nonDocents
     // },
 
     // docentsCreate: function () {
@@ -353,6 +355,16 @@ export default {
   //     }
   //   }
   // }
+  mounted() {
+    const newArr = []
+    for (var i=0; i <this.comments.length; i++) {
+      if (this.comments[i].docent_flag === 0) {
+        newArr.push(this.comments[i])
+      }
+    }
+    this.nonDocentsArray = newArr
+    
+  }
 }
 
 </script>
