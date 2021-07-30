@@ -2,51 +2,121 @@
   <v-container fluid>
     <v-card 
     id="comment-card"
-    color="#FFFFF0"
     elevation="2">
-      <div class="d-flex justify-center menu-tab">
-        <div @click="clickComment">Comment</div>
-        <div @click="clickDocent">Docent</div>
+      <div
+      id="comment-menu__tab"
+      class="d-flex justify-center menu-tab my-0"
+      >
+        <div class="mt-3" @click="clickComment">Comment {{ this.nonDocentsArray.length }}</div>
+        <div class="mt-3" @click="clickDocent">Docent</div>
       </div>
-      <v-row v-if="tab===1">
+      <div class="comment-create__section" align="right">
+        <v-btn 
+          icon 
+          class="mb-4 me-3"
+          @click="clickCommentBtn">
+          <v-icon>mdi-chat-plus</v-icon>
+        </v-btn>
+      </div>
+      <v-row 
+      id="scroll-target__comment"
+      v-if="tab===1"
+      class="overflow-y-auto comment-row pe-0">
+        <v-btn
+          fab
+          v-show="fab"
+          v-scroll:#scroll-target__comment="onScroll"
+          icon
+          fixed
+          bottom
+          right
+          @click="toTopComment"
+          class="comment-topBtn"
+        >
+          <v-icon class="dark">mdi-arrow-up-drop-circle-outline</v-icon>
+        </v-btn>
         <v-list 
-        id="scroll-target"
-        class="col overflow-y-auto scroll-y"
+        class="col"
         max-height="600">
 
           <template v-for="(comment, idx) in comments">
             <v-list-item-content
-            v-show="comment.docent_flag==0"
+            :class="`comment-id__${idx}`"
+            v-if="comment.docent_flag===0"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
                 <a class="comment-nickname mb-0" href="#">{{ comment.nickname }}</a>
               </v-list-item-subtitle>
               <div>
                 <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.comment_content }}</p>
-                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.update_date) }}</p>
+                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.create_date) }}</p>
                 <v-divider></v-divider>
               </div>
             </v-list-item-content>
           </template>
         </v-list>
       </v-row>
-      <v-row v-if="tab===2">
+      <v-row 
+      v-if="tab===2"
+      class="overflow-y-auto comment-row pe-0">
+        <v-btn
+          v-scroll="onScroll"
+          v-show="fab"
+          fab
+          fixed
+          bottom
+          right
+          @click="toTopComment"
+        >
+          <v-icon>mdi-arrow-up-drop-circle-outline</v-icon>
+        </v-btn>
         <v-list class="col">
           <template v-for="(comment, idx) in comments">
             <v-list-item-content 
-            v-show="comment.docent_flag==1"
+            :class="`docent-id__${idx}`"
+            v-if="comment.docent_flag===1"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
                 <a class="comment-nickname mb-0" href="#">{{ comment.nickname }}</a>
               </v-list-item-subtitle>
               <div>
                 <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.comment_content }}</p>
-                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.update_date) }}</p>
+                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.create_date) }}</p>
                 <v-divider></v-divider>
               </div>
             </v-list-item-content>
           </template>
         </v-list>
+      </v-row>
+    </v-card>
+    <br>
+    <br>
+    <v-card
+      v-show="commentFormToggle"
+      min-height="100px">
+      <v-row
+        justify="center"
+        align="center"
+        class="mt-5">
+        <v-col 
+        cols="11"
+        class="ms-5">
+          <v-text-field
+          class="d-inline"
+          cols="10"
+          v-model="commentForm.comment_content"
+          label="Comment"
+          :rules="rules"
+          hide-details="auto"
+          ></v-text-field>
+        </v-col>
+        <v-col class="me-1">
+          <v-btn 
+          icon
+          @click="clickCommentForm">
+            <v-icon>mdi-check-bold</v-icon>  
+          </v-btn>
+        </v-col>
       </v-row>
     </v-card>
   </v-container>
@@ -144,6 +214,18 @@ export default {
           docent_flag: 0
         },
       ],
+      fab: false,
+      scrollPosition: 0,
+      commentFormToggle: false,
+      rules: [
+        value => !!value || 'Required.',
+      ],
+      commentForm: {
+        comment_content : null,
+      },
+      docentsArray: [],
+      nonDocentsArray: []
+      
     }
   },
 
@@ -160,20 +242,26 @@ export default {
     },
     // clickNickname: function (e) {
     // },
-    // 스크롤 시 위로가기 버튼 구현
-    // onScroll (e) {
-    //   if (typeof window === 'undefined') return
-    //   const top = window.pageYOffset ||   e.target.scrollTop || 0
-    //   this.fab = top > 20
-    // },
-    // toTop () {
-    //   this.$vuetify.goTo(0)
-    // },
+    // 스크롤 감지 및 위로가기 버튼 보이기/숨기기
+    onScroll (e) {
+      this.scrollPosition = e.target.scrollTop;
+      if (this.scrollPosition > 200) {
+        this.fab = true
+      } else {
+        this.fab = false
+      }
+    },
+    
+    // 수정 필요
+    toTopComment () {
+      const topComment = document.querySelector('.comment-id__0')
+      topComment.scrollIntoView(true)
+    },
 
     // 현재시간과 비교하여 몇분, 몇시간, 며칠 전인지 출력
-    displayTimeAt: function(update_date) {  // computed로
+    displayTimeAt: function(create_date) {  // computed로
       const timeNow = new Date()
-      const milliSeconds = timeNow - update_date
+      const milliSeconds = timeNow - create_date
       const seconds = milliSeconds / 1000
       if (seconds < 60) return `방금 전`
       const minutes = seconds / 60
@@ -189,17 +277,94 @@ export default {
       const years = days / 365
       return `${Math.floor(years)}년 전`
     },
+    clickCommentBtn: function(e) {
+      if (this.commentFormToggle === false) {
+        e.target.style.color="skyblue"
+        this.commentFormToggle = true
+      } else {
+        e.target.style.color=""
+        this.commentFormToggle = false
+      }
+    },
 
-    getComments() {
-      // 게시글의 댓글 가져오기
+    clickCommentForm: function() {
+      const commentItem = {
+        comment_id: this.comments[this.comments.length-1].id + 1,
+        comment_content : this.commentForm.comment_content,
+        create_date : new Date(), 
+        update_date : new Date(),
+        user_id : 1,
+        nickname : 'OiHater',
+        docent_flag: this.tab - 1
+      }
+      this.comments.push(commentItem)
     }
+
+  // pushNonDocents: function() {
+  //   this.nonDocents = nonDocentsArray
+  //   return this.nonDocents
+  // },
+
+  // pushDocents: function() {
+  //   this.docents = docentsArray
+  // },
+  // nonDocentsCreate: function () {
+  //   for (var i; i < this.comments.length; i++) {
+  //     if (this.comments[i].docent_flag == 0) {
+  //       this.nonDocents.push(this.comments[i])
+  //     }
+  //   }
+  // },
+
   },
-  
-  created() {
-    this.getComments()
-  }, 
 
+  // computed: {
+    // nonDocentsCreate: function (comments) {
+    //   let nonDocents = []
+    //   for (var i; i < comments.length; i++) {
+    //     if (comments[i].docent_flag === 0) {
+    //       nonDocents.push(comments[i])
+    //     }
+    //   }
+    //   return nonDocents
+    // },
 
+    // docentsCreate: function () {
+    //   let docentsArray = []
+    //   for (var i; i < this.comments.length; i++) {
+    //     if (this.comments[i].docent_flag === 1) {
+    //       let obj = this.comments[i]
+    //       docentsArray.push(obj)
+    //     }
+    //   }
+    //   return docentsArray
+    // }
+  // },
+
+  // watch: {
+  //   nonDocentsCreate: {
+  //     deep: true,
+  //     handler: function (nonDocentsArray) {
+  //       this.nonDocents = nonDocentsArray
+  //     }
+  //   },
+  //   docentsCreate: {
+  //     deep: true,
+  //     handler: function (docentsArray) {
+  //       this.Docents = docentsArray
+  //     }
+  //   }
+  // }
+  mounted() {
+    const newArr = []
+    for (var i=0; i <this.comments.length; i++) {
+      if (this.comments[i].docent_flag === 0) {
+        newArr.push(this.comments[i])
+      }
+    }
+    this.nonDocentsArray = newArr
+    
+  }
 }
 
 </script>

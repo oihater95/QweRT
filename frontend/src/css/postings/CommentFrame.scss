@@ -3,6 +3,11 @@
   margin: 0 auto;
 }
 
+#comment-menu__tab {
+  background-color: #FFFFF0;
+  min-height: 50px;
+  align-items: center;
+}
 
 .comment-nickname {
   font-weight: bolder;
@@ -26,4 +31,32 @@
 .update-time {
   text-align: right;
   color: darkgray;
+}
+
+.comment-row {
+  max-width: 1015px;
+}
+
+.comment-row::-webkit-scrollbar {
+  width: 15px;
+}
+
+.comment-row::-webkit-scrollbar-track {
+  background: #e6e6e6;
+  border-left: 1px solid #dadada;
+}
+
+.comment-row::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border: solid 3px #e6e6e6;
+  border-radius: 7px;
+}
+
+.comment-row::-webkit-scrollbar-thumb:hover {
+  background: #6e6e6e;
+}
+
+.comment-create__section {
+  align-items: right;
+  background-color: #FFFFF0;
 }

@@ -10,6 +10,7 @@ import SearchPage from '@/views/search/SearchPage'
 import SearchCategory from '@/views/search/SearchCategory'
 import SearchKeyword from '@/views/search/SearchKeyword'
 import NotifyPage from '@/views/notify/NotifyPage'
+import Drawing from '@/components/postings/Drawing'
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,12 @@ const routes = [
     name: 'PostingDetail',
     component: PostingDetail,
     props: true,
+  },
+  {
+    
+    path: '/postings/drawing',
+    name: 'Drawing',
+    component: Drawing,
   },
   {
     path: '/postings',  // 확인용 임시 path
