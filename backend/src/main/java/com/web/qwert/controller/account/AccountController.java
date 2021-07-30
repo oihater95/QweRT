@@ -18,12 +18,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.qwert.dao.user.UserDao;
+import com.web.qwert.model.user.ChangePwdRequest;
 import com.web.qwert.model.user.LoginRequest;
 import com.web.qwert.model.user.User;
 import com.web.qwert.model.user.UserDto;
@@ -126,7 +130,6 @@ public class AccountController {
 			User user = userOpt.get();
 			UserDto userDto = new UserDto();
 			BeanUtils.copyProperties(user, userDto);
-			System.out.println(userDto.getUser_id());
 			String token = jwtService.create(userDto);
 
 			resultMap.put("token", token);
@@ -161,5 +164,41 @@ public class AccountController {
 	   }
 	   return response; 
    }
+   
+   @PutMapping("{user_id}/pwd")
+   @ApiOperation(value = "비밀번호 변경")
+   public Object changePwd (@PathVariable int user_id, @RequestHeader String token, @RequestBody ChangePwdRequest request) {
+	   
+	   ResponseEntity<?> response = null;
+	   Map<String, Object> resultMap = new HashMap<>();
+	   System.out.println(token);
+	   Optional<User> userOpt = userDao.findById(user_id);
+	   //userDao.getOne(user_id);
+	   if(userOpt.isPresent()) { // 가입된 회원이면
+		   try { 
+			   if(user_id == jwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면 
+				   User user = userOpt.get();
+				   System.out.println(user);
+				   if(user.getPassword().equals(request.getPassword())) { //입력한 비밀번호가 맞다면
+					   user.setPassword(request.getNew_password());
+					   userDao.save(user);
+					   response = new ResponseEntity<>(resultMap, HttpStatus.OK);
+				   }
+				   else {
+					   response = new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 비밀번호 오류
+				   }
+				   
+			   }
+		   } catch (Exception e) { // 유효하지 않은 토큰이면
+			   e.printStackTrace();
+			   response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		   }
+		   
+	   } else {
+		   response = new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 회원
+	   }   
+	   return response; 
+   }
 	 
+   
 }
