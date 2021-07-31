@@ -8,6 +8,7 @@ import NewCuration from '@/views/curations/NewCuration.vue'
 import ChangeCuration from '@/views/curations/ChangeCuration.vue'
 import PostingDetail from '@/views/postings/PostingDetail'
 import dragNdrop from '@/components/common/dragNdrop'  // 확인용 (업로드 페이지 대체)
+import FileUpload from '@/components/common/FileUpload'
 import SearchPage from '@/views/search/SearchPage'
 import SearchCategory from '@/views/search/SearchCategory'
 import SearchKeyword from '@/views/search/SearchKeyword'
@@ -84,6 +85,11 @@ const routes = [
     path: '/notify',
     name: 'NotifyPage',
     component: NotifyPage
+  },
+  {
+    path: '/upload',
+    name: 'FileUpload',
+    component: FileUpload
   },
 ]
 
