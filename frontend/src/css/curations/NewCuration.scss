@@ -1,0 +1,28 @@
+.new-curation__span {
+    font-size: 20px;
+    margin-top: 15px;
+    margin-right: 20px;
+}
+
+.new-thumbnail__div {
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.new-curation__component {
+    width: 500px;
+    margin-left: -80px;
+    // override
+    #dragNdrop-region {
+        line-height: 150px;
+    }
+}
+
+.curation-make__btn {
+    background-color: rgb(230, 129, 62);
+    color: white;
+    font-size: 20px;
+    margin-left: 650px;
+    padding: 3px 20px;
+    border-radius: 5px;
+}

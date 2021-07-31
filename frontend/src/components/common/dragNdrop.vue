@@ -33,7 +33,7 @@
     <div class="col-2 mx-3">
       <div class="file-button">
         <label for="ex_file">
-          <i class="fa fa-paperclip"> Search</i>
+          <i class="fa fa-paperclip drag-search__icon"> Search</i>
         </label>
         <input 
           id="ex_file" 
