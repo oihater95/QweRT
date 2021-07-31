@@ -4,7 +4,7 @@
     <!-- elevation: 테두리 -->
     <v-card
       elevation=0
-      class="v-card offset-1"
+      class="v-card offset-1 feed-image__card"
     >
       <div class="feed-image__div">
         <img

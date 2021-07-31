@@ -1,0 +1,40 @@
+.curation-image__col {
+    padding: 0px;
+    padding-left: 20px;
+    .curation-image__div {
+        background-color: floralwhite;
+        height: 425px;
+        &:hover {
+            // border로 하면 이미지가 흔들린다.
+            outline: 2px solid skyblue;
+            outline-offset: -2px;
+            cursor: pointer;
+        }
+        
+        h1 {
+            padding-top: 10px;
+            padding-left: 20px;
+        }
+        p {
+            padding-top: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            font-size: 20px;
+        }
+        .curation-thumbnail {
+            margin-left: 10px;
+            margin-right: 10px;
+            width: 650px;
+            height: 300px;
+            object-fit: contain;
+        }
+        .curation-three__images {
+            display: inline;
+            img {
+                width: 200px;
+                height: 220px;
+                object-fit: contain;
+            }
+        }
+    }
+}
