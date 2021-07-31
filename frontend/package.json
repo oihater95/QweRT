@@ -8,8 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "aws-sdk": "^2.958.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "dotenv": "^10.0.0",
     "vue": "^2.6.11",
     "vue-click-outside": "^1.1.0",
     "vue-router": "^3.2.0",
