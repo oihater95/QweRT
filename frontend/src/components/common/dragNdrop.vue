@@ -33,7 +33,7 @@
     <div class="col-2 mx-3">
       <div class="file-button">
         <label for="ex_file">
-          <i class="fa fa-paperclip"> Search</i>
+          <i class="fa fa-paperclip drag-search__icon"> Search</i>
         </label>
         <input 
           id="ex_file" 
@@ -51,6 +51,7 @@
           class="mb-2"
           @click.stop="clearInput">CLEAR
         </v-btn>
+        <br>
         <v-btn
           color="primary"
           elevation="1"
@@ -105,18 +106,20 @@ export default {
     onClickUpload () {
       // 로컬 스토리지 저장
       if (0 < this.imageSrc.length) {
-        var image = {
-          filename: this.filename + `${new Date().getMonth() + 1}/${new Date().getDate()}`,
-          imageSrc: this.imageSrc
-        }
-        localStorage.setItem(this.filename, JSON.stringify(image))
+        // var image = {
+        //   filename: this.filename + `${new Date().getMonth() + 1}/${new Date().getDate()}`,
+        //   imageSrc: this.imageSrc
+        // }
+        // localStorage.setItem(this.filename, JSON.stringify(image))
+        localStorage.setItem(this.filename, this.imageSrc)
         console.log('OK')
+        this.$router.push({name: 'PostingDetail', params: {filename: this.filename, imageSrc: this.imageSrc}})
         this.clearInput()
         } else {
           alert('파일이 없습니다')
       }
     },
-    // 업로드 후 입력칸 비우기
+    // 업로드 후 입력칸 비우기 or Clear 버튼 클릭 시 입력 비우기
     clearInput() {
       this.filename = '',
       this.imageSrc = ''
@@ -144,7 +147,7 @@ export default {
     //   }
     //   return config
     // },
-    // createTodo: function () {
+    // onClickUpload: function () {
     //   const img = {
     //     id: this.id,
     //     imageSrc: this.imageSrc,
@@ -153,7 +156,7 @@ export default {
     //   if (img.id) {
     //     axios({
     //       method: 'post',
-    //       url: 'http://127.0.0.1:8000/postings',
+    //       url: 'http://127.0.0.1:8000/postings/{$this.img.id}',
     //       data: img,
     //       headers: this.setToken()
     //     })

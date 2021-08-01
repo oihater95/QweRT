@@ -8,6 +8,7 @@
       <!-- 트리거 버튼 -->
       <template v-slot:activator="{ on, attrs }">
         <v-btn
+          id="modalBtn"
           color="red"
           dark
           v-bind="attrs"
@@ -24,7 +25,7 @@
           <v-spacer></v-spacer>
         </v-card-title>
         <!-- 내용 -->
-        <v-card-text class="text-center">
+        <v-card-text class="text-center text-body-1">
           <p v-html="msg.text"></p>
         </v-card-text>
         <v-divider></v-divider>
@@ -35,7 +36,7 @@
             v-if="msg.positiveBtn"
             color="orange darken-2"
             text
-            @click="[dialog = false, $emit('ok-sign')]"
+            @click="[dialog = false, $emit(`${msg.name}-ok-sign`)]"
           >
             {{ msg.positiveBtn }}
           </v-btn>

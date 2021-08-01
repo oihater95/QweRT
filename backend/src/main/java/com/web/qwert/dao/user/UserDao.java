@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.web.qwert.model.user.User;
 
-public interface UserDao extends JpaRepository<User, String> {
+public interface UserDao extends JpaRepository<User, Integer> {
     User getUserByEmail(String email);
     
     // 로그인시 email과 password로 User 찾는다.

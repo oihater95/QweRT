@@ -1,51 +1,49 @@
 <template>
-  <v-container fluid>
-    <div class="d-flex justify-center menu-tab">
-      <div @click="clickMy">피드</div>
-      <div @click="clickPopular">인기</div>
-      <div @click="clickNew">최신</div>
-    </div>
-     <v-row v-if="tab===1">
-      <FeedImage
-        v-for="(image, idx) in myImages" 
+  <div>
+    <v-form>
+      <v-container>
+        <div class="d-flex flex-row-reverse">
+          <span class="curation-delete__btn">DELETE</span>
+          <span class="curation-change__btn">SAVE</span>
+        </div>
+        <CurationInfo/>
+        <div class="new-thumbnail__div">
+          <div>큐레이션 썸네일</div>
+          <div class="d-flex new-thumbnail_last">
+            <dragNdrop class="new-curation__component" />
+          </div>
+        </div>
+      </v-container>
+    </v-form>
+    <div class="change-curation__div">전시작품 목록</div>
+    <br>    
+    <br>    
+    <v-row>
+      <MainImage
+        v-for="(image, idx) in curationImages" 
         :key="1-idx"
         :image="image"
       />
     </v-row>
-    <v-row v-if="tab===2">
-      <MainImage
-        v-for="(image, idx) in myImages" 
-        :key="2-idx"
-        :image="image"
-      />
-    </v-row>
-    <v-row v-if="tab===3">
-      <MainImage
-        v-for="(image, idx) in myImages" 
-        :key="3-idx"
-        :image="image"
-      />
-    </v-row>
-
-  </v-container>
+  </div>
 </template>
 
 <script>
-import "@/css/postings/MainPage.scss"
-import FeedImage from "@/components/postings/FeedImage"
+import "@/css/curations/ChangeCuration.scss"
+import CurationInfo from "@/components/curations/CurationInfo"
+import dragNdrop from "@/components/common/dragNdrop"
 import MainImage from "@/components/postings/MainImage"
 
 export default {
-  name: "MainPage",
+  name: "ChangeCuration",
   components: {
-    FeedImage,
+    CurationInfo,
+    dragNdrop,
     MainImage
   },
   data:  function () {
     return {
-      tab: 1,
-      // myImages: []
-      myImages: [
+      curationImages: [
         {
         posting_image: "http://weekly.chosun.com/up_fd/wc_news/2116/bimg_org/2116_74_01.jpg",
         profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
@@ -98,33 +96,31 @@ export default {
     }
   },
   methods: {
-    getMyImages: function () {
-      // myImages에 이미지 집어넣기
+    // 삭제 버튼에 마우스 올리면 하늘색 테두리
+    deleteHoverOn: function (e) {
+        e.target.nextSibling.classList.add("hover-for__delete")
     },
-    clickMy: function (e) {
-      this.tab= 1
-      e.target.style.color="skyblue"
-      e.target.nextSibling.style.color="black"
-      e.target.nextSibling.nextSibling.style.color="black"
+    // 하늘색 테두리 없애기
+    deleteHoverOff: function (e) {
+      e.target.nextSibling.classList.remove("hover-for__delete")
     },
-    clickPopular: function (e) {
-      this.tab= 2
-      e.target.style.color="skyblue"
-      e.target.previousSibling.style.color="black"
-      e.target.nextSibling.style.color="black"
-
-    },
-    clickNew: function (e) {
-      this.tab= 3
-      e.target.style.color="skyblue"
-      e.target.previousSibling.style.color="black"
-      e.target.previousSibling.previousSibling.style.color="black"
+    deleteImage: function (e) {
+      const target = e.target.parentNode.parentNode
+      target.remove()
     },
   },
-  // 처음엔 피드 이미지
-  created() {
-    this.getMyImages()
-  }, 
+  mounted: function () {
+    const cards = document.querySelectorAll(".v-card__main")  
+      for (let card of cards) {
+          const btnForDelete = document.createElement('button')
+          btnForDelete.classList.add("btn-for__delete")
+          btnForDelete.innerText = "DELETE"
+          card.prepend(btnForDelete)
+          btnForDelete.addEventListener("mouseover", this.deleteHoverOn)
+          btnForDelete.addEventListener("mouseout", this.deleteHoverOff)
+          btnForDelete.addEventListener("click", this.deleteImage)
+      }
+  }
 }
 </script>
 
