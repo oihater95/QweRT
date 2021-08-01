@@ -8,7 +8,7 @@
       <v-text-field
         v-model="title"
         :rules="titleRule"
-        :counter="128"
+        :counter="30"
         clearable
         required
       >
@@ -23,7 +23,7 @@
         name="input-7-1"
         v-model="description"
         :rules="descriptionRule"
-        :counter="1000"
+        :counter="100"
         clearable
         required
       >

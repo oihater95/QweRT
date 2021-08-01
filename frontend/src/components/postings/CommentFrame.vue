@@ -8,7 +8,7 @@
       class="d-flex justify-center menu-tab my-0"
       >
         <div class="mt-3" @click="clickComment">Comment {{ this.nonDocentsArray.length }}</div>
-        <div class="mt-3" @click="clickDocent">Docent</div>
+        <div class="mt-3" @click="clickDocent">Docent {{ this.docentsArray.length }}</div>
       </div>
       <div class="comment-create__section" align="right">
         <v-btn 
@@ -39,10 +39,9 @@
         class="col"
         max-height="600">
 
-          <template v-for="(comment, idx) in comments">
+          <template v-for="(comment, idx) in nonDocentsArray">
             <v-list-item-content
-            :class="`comment-id__${idx}`"
-            v-if="comment.docent_flag===0"
+            :class="`nonDocent-id__${idx}`"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
                 <a class="comment-nickname mb-0" href="#">{{ comment.nickname }}</a>
@@ -70,11 +69,10 @@
         >
           <v-icon>mdi-arrow-up-drop-circle-outline</v-icon>
         </v-btn>
-        <v-list class="col">
-          <template v-for="(comment, idx) in comments">
+        <v-list class="col" max-height="600">
+          <template v-for="(comment, idx) in docentsArray">
             <v-list-item-content 
             :class="`docent-id__${idx}`"
-            v-if="comment.docent_flag===1"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
                 <a class="comment-nickname mb-0" href="#">{{ comment.nickname }}</a>
@@ -254,8 +252,13 @@ export default {
     
     // 수정 필요
     toTopComment () {
-      const topComment = document.querySelector('.comment-id__0')
-      topComment.scrollIntoView(true)
+      if (this.tab === 1) {
+        const topComment = document.querySelector('.nonDocent-id__0')
+        topComment.scrollIntoView(true)
+      } else {
+        const topComment = document.querySelector('.docent-id__0')
+        topComment.scrollIntoView(true)
+      }
     },
 
     // 현재시간과 비교하여 몇분, 몇시간, 며칠 전인지 출력
@@ -297,74 +300,32 @@ export default {
         nickname : 'OiHater',
         docent_flag: this.tab - 1
       }
+      if (this.tab === 1) {
+        this.nonDocentsArray.push(commentItem)
+      } else {
+        this.docentsArray.push(commentItem)
+      }
       this.comments.push(commentItem)
+      this.commentForm.comment_content = ''
     }
-
-  // pushNonDocents: function() {
-  //   this.nonDocents = nonDocentsArray
-  //   return this.nonDocents
-  // },
-
-  // pushDocents: function() {
-  //   this.docents = docentsArray
-  // },
-  // nonDocentsCreate: function () {
-  //   for (var i; i < this.comments.length; i++) {
-  //     if (this.comments[i].docent_flag == 0) {
-  //       this.nonDocents.push(this.comments[i])
-  //     }
-  //   }
-  // },
 
   },
 
-  // computed: {
-    // nonDocentsCreate: function (comments) {
-    //   let nonDocents = []
-    //   for (var i; i < comments.length; i++) {
-    //     if (comments[i].docent_flag === 0) {
-    //       nonDocents.push(comments[i])
-    //     }
-    //   }
-    //   return nonDocents
-    // },
-
-    // docentsCreate: function () {
-    //   let docentsArray = []
-    //   for (var i; i < this.comments.length; i++) {
-    //     if (this.comments[i].docent_flag === 1) {
-    //       let obj = this.comments[i]
-    //       docentsArray.push(obj)
-    //     }
-    //   }
-    //   return docentsArray
-    // }
-  // },
-
-  // watch: {
-  //   nonDocentsCreate: {
-  //     deep: true,
-  //     handler: function (nonDocentsArray) {
-  //       this.nonDocents = nonDocentsArray
-  //     }
-  //   },
-  //   docentsCreate: {
-  //     deep: true,
-  //     handler: function (docentsArray) {
-  //       this.Docents = docentsArray
-  //     }
-  //   }
-  // }
   mounted() {
-    const newArr = []
+    const newNonDocentArr = []
+    const newDocentArr = []
     for (var i=0; i <this.comments.length; i++) {
       if (this.comments[i].docent_flag === 0) {
-        newArr.push(this.comments[i])
+        newNonDocentArr.push(this.comments[i])
+      } else {
+        newDocentArr.push(this.comments[i])
       }
     }
-    this.nonDocentsArray = newArr
+    this.nonDocentsArray = newNonDocentArr
+    this.docentsArray = newDocentArr
     
-  }
+  },
+
 }
 
 </script>

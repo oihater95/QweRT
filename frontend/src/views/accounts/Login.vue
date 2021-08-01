@@ -152,6 +152,7 @@ export default {
           console.log(res)
           // 유저정보 state에 저장
           this.$store.dispatch('setUserInfo', res.data)
+          this.$router.push({ name: 'MainPage' })
           // 이메일을 cookie에 90일 동안 저장 또는 삭제
           if (this.wannaSave) {
             this.rememberEmail(90)
