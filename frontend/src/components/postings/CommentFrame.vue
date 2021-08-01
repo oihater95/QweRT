@@ -8,7 +8,7 @@
       class="d-flex justify-center menu-tab my-0"
       >
         <div class="mt-3" @click="clickComment">Comment {{ this.nonDocentsArray.length }}</div>
-        <div class="mt-3" @click="clickDocent">Docent</div>
+        <div class="mt-3" @click="clickDocent">Docent {{ this.docentsArray.length }}</div>
       </div>
       <div class="comment-create__section" align="right">
         <v-btn 
@@ -300,71 +300,23 @@ export default {
       this.comments.push(commentItem)
     }
 
-  // pushNonDocents: function() {
-  //   this.nonDocents = nonDocentsArray
-  //   return this.nonDocents
-  // },
-
-  // pushDocents: function() {
-  //   this.docents = docentsArray
-  // },
-  // nonDocentsCreate: function () {
-  //   for (var i; i < this.comments.length; i++) {
-  //     if (this.comments[i].docent_flag == 0) {
-  //       this.nonDocents.push(this.comments[i])
-  //     }
-  //   }
-  // },
-
   },
 
-  // computed: {
-    // nonDocentsCreate: function (comments) {
-    //   let nonDocents = []
-    //   for (var i; i < comments.length; i++) {
-    //     if (comments[i].docent_flag === 0) {
-    //       nonDocents.push(comments[i])
-    //     }
-    //   }
-    //   return nonDocents
-    // },
-
-    // docentsCreate: function () {
-    //   let docentsArray = []
-    //   for (var i; i < this.comments.length; i++) {
-    //     if (this.comments[i].docent_flag === 1) {
-    //       let obj = this.comments[i]
-    //       docentsArray.push(obj)
-    //     }
-    //   }
-    //   return docentsArray
-    // }
-  // },
-
-  // watch: {
-  //   nonDocentsCreate: {
-  //     deep: true,
-  //     handler: function (nonDocentsArray) {
-  //       this.nonDocents = nonDocentsArray
-  //     }
-  //   },
-  //   docentsCreate: {
-  //     deep: true,
-  //     handler: function (docentsArray) {
-  //       this.Docents = docentsArray
-  //     }
-  //   }
-  // }
   mounted() {
-    const newArr = []
+    const newNonDocentArr = []
+    const newDocentArr = []
     for (var i=0; i <this.comments.length; i++) {
       if (this.comments[i].docent_flag === 0) {
-        newArr.push(this.comments[i])
+        newNonDocentArr.push(this.comments[i])
+      } else {
+        newDocentArr.push(this.comments[i])
       }
     }
-    this.nonDocentsArray = newArr
+    this.nonDocentsArray = newNonDocentArr
+    this. docentsArray = newDocentArr
     
-  }
+  },
+
 }
 
 </script>
