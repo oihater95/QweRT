@@ -58,7 +58,7 @@ public class AccountController {
     
 	@Autowired
 	private JwtService jwtService;
-	
+
     @PostMapping("signup")
     @ApiOperation(value = "회원가입")
     public Object signup(@Valid @RequestBody User request) {
@@ -66,7 +66,6 @@ public class AccountController {
         ResponseEntity response = null;
     	System.out.println("회원가입");
         // valid로 유효성 검증 실패시 403 return
-
     	if (!userOpt.isPresent()) { // 중복된 계정이 없다면
             User user = new User(request.getEmail(), request.getNickname(), request.getPassword());
             userDao.save(user);
