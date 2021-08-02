@@ -60,3 +60,28 @@
 .controls .controls__range {
   margin-bottom: 30px;
 }
+
+.controls__colors .verte__guide {
+  width: 50px;
+  height: 50px;
+}
+
+input[type=color] {
+  -webkit-appearance: none;
+  background: transparent;
+  border-radius: 5px;
+  outline: none;
+  width: 50px;
+  height: 50px;
+}
+input[type=color]::-webkit-color-swatch-wrapper {
+  padding: 1px 1px;
+  height: 50px;
+  width: 50px;
+  
+}
+input[type=color]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}

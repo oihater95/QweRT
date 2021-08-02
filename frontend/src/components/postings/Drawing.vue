@@ -35,6 +35,21 @@
           <div @click="handleColorClick" class="controls__color" style="background-color:#5AC8FA"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:#0579FF"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:#5856D6"></div>
+
+          <!-- <div class="controls__color">
+            <verte  @change="selectColorClick" picker="square" model="rgb">
+            </verte>
+          </div> -->
+          <input @input="selectColorChange" @change="selectColorChange" type="color">
+          
+          <!-- <v-color-picker
+            dot-size="10"
+            mode="rgba"
+            v-model="color"
+            swatches-max-height="200"
+          ></v-color-picker> -->
+          
+          
         </div>
 
       </div>
@@ -45,9 +60,15 @@
 
 <script>
 import "@/css/postings/Drawing.scss"
+// import Verte from 'verte'
+// import 'verte/dist/verte.css'
 
 export default {
   name: "Drawing",
+  // components : {
+  //   Verte,
+  // },
+
   data: function(){
     return{
       x: 0,
@@ -57,8 +78,10 @@ export default {
       canvasFrame: null,
       brushColor: null,
       filling: false,  // default는 그리기 (true => 채우기)
+
     }
   },
+
   methods: {
     // 마우스 움직이는 내내 발생
     onMouseMove: function(e) {
@@ -78,7 +101,7 @@ export default {
         this.vueCanvas.stroke()
       }
     },
-    // 색상 선택
+    // 주어진 색상 선택
     handleColorClick: function(e) {
       const selectedColor = e.target.style.backgroundColor
       const currentColor = document.getElementById("current-color")
@@ -86,6 +109,16 @@ export default {
       currentColor.style = "background-color:" + `${selectedColor}`
       this.vueCanvas.strokeStyle = selectedColor
       this.vueCanvas.fillStyle = selectedColor
+    },
+
+    // custom 색상 선택
+    selectColorChange: function(e) {
+      var color = e.target.value
+      const currentColor = document.getElementById("current-color")
+      // 현재 색상
+      currentColor.style = "background-color:" + `${color}`
+      this.vueCanvas.strokeStyle = color
+      this.vueCanvas.fillStyle = color
     },
 
     // 선 굵기
@@ -136,7 +169,7 @@ export default {
     },
     startPainting: function() {
       this.painting = true
-    }
+    },
   },
   mounted() {
   const canvas = document.getElementById("drawing-canvas")
@@ -157,6 +190,7 @@ export default {
   this.vueCanvas = ctx
   this.brushColor = colors
   this.canvasFrame = canvas
+
 },
 }
 </script>
