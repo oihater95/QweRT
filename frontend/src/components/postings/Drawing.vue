@@ -21,11 +21,41 @@
           @input="handleRangeChange">
         </div>
         <div class="controls__btns">
-          <button id="ModeBtn" @click="handleModeClick">Fill</button>
+          <v-row v-if="this.filling===false">
+          <button 
+            id="StrokeBtn" 
+            @click="handleStrokeClick" 
+            style="border-color: skyblue; border-width: 3px">
+            Stroke
+          </button>
+          <button id="PaintBtn" @click="handlePaintClick">Paint</button>
           <button id="saveBtn" @click="handleSaveClick">Save</button>
+          <button id="clearBtn" @click="handleClearClick">Clear</button>
+          </v-row>
+
+          <v-row v-else>
+          <button id="StrokeBtn" @click="handleStrokeClick" >Stroke</button>
+          <button 
+            id="PaintBtn" 
+            @click="handlePaintClick" 
+            style="border-color: skyblue; border-width: 3px">
+            Paint
+          </button>
+          <button id="saveBtn" @click="handleSaveClick">Save</button>
+          <button id="clearBtn" @click="handleClearClick">Clear</button>
+          </v-row>
+    
         </div>
         <div id="canvas-colors" class="controls__colors">
-          <div id="current-color" class="controls__color me-2" style="background-color:black"></div>
+          <div id="current-color__box" class="me-2">
+            <div id="current-color" class="controls__color" style="background-color:black"></div>
+          </div>
+          <input 
+          id="select-color"
+          @input="selectColorChange" 
+          @change="selectColorChange" 
+          type="color"
+          value="#A9A9A9">
           <div @click="handleColorClick" class="controls__color" style="background-color:black"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:white"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:#FF3B30"></div>
@@ -35,40 +65,16 @@
           <div @click="handleColorClick" class="controls__color" style="background-color:#5AC8FA"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:#0579FF"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:#5856D6"></div>
-
-          <!-- <div class="controls__color">
-            <verte  @change="selectColorClick" picker="square" model="rgb">
-            </verte>
-          </div> -->
-          <input @input="selectColorChange" @change="selectColorChange" type="color">
-          
-          <!-- <v-color-picker
-            dot-size="10"
-            mode="rgba"
-            v-model="color"
-            swatches-max-height="200"
-          ></v-color-picker> -->
-          
-          
         </div>
-
       </div>
-    
-
   </div>
 </template>
 
 <script>
 import "@/css/postings/Drawing.scss"
-// import Verte from 'verte'
-// import 'verte/dist/verte.css'
 
 export default {
   name: "Drawing",
-  // components : {
-  //   Verte,
-  // },
-
   data: function(){
     return{
       x: 0,
@@ -78,10 +84,8 @@ export default {
       canvasFrame: null,
       brushColor: null,
       filling: false,  // default는 그리기 (true => 채우기)
-
     }
   },
-
   methods: {
     // 마우스 움직이는 내내 발생
     onMouseMove: function(e) {
@@ -128,15 +132,16 @@ export default {
     },
 
     // Fill / Paint Mode Btn
-    handleModeClick: function(e) {
-      if(this.filling === true) {
-        this.filling = false
-        e.target.innerText = "Fill"
-      } else {
-        this.filling = true
-        e.target.innerText = "Paint"
-        
-      }
+    handleStrokeClick: function() {
+      this.filling = false
+    },
+    handlePaintClick: function() {
+      this.filling = true
+    },
+    // 전체 지우기
+    handleClearClick: function() {
+      var canvas = document.getElementById("drawing-canvas");
+      this.vueCanvas.clearRect(0, 0, canvas.width, canvas.height);
     },
 
     handleCanvasClick: function(e) {
@@ -175,17 +180,16 @@ export default {
   const canvas = document.getElementById("drawing-canvas")
   const ctx = canvas.getContext("2d")
   const colors = document.getElementsByClassName("controls__color")
-  const DEFAULT_COLOR = "000000"  // black
-
-  canvas.width = 700
-  canvas.height = 700
+  // const dpr = window.devicePixelRatio
+  canvas.width = 700 
+  canvas.height = 700 
+  // ctx.scale(dpr, dpr)
   // 배경화면 흰색
   ctx.fillStyle = "white"
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-
   // default 색상 검정색
-  ctx.strokeStyle = DEFAULT_COLOR  
-  ctx.fillStyle = DEFAULT_COLOR 
+  ctx.strokeStyle = "black" 
+  ctx.fillStyle = "black"
   ctx.lineWidth = 3.0
   this.vueCanvas = ctx
   this.brushColor = colors
