@@ -25,6 +25,7 @@
           <button id="saveBtn" @click="handleSaveClick">Save</button>
         </div>
         <div id="canvas-colors" class="controls__colors">
+          <div id="current-color" class="controls__color me-2" style="background-color:black"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:black"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:white"></div>
           <div @click="handleColorClick" class="controls__color" style="background-color:#FF3B30"></div>
@@ -80,6 +81,9 @@ export default {
     // 색상 선택
     handleColorClick: function(e) {
       const selectedColor = e.target.style.backgroundColor
+      const currentColor = document.getElementById("current-color")
+      // 현재 색상
+      currentColor.style = "background-color:" + `${selectedColor}`
       this.vueCanvas.strokeStyle = selectedColor
       this.vueCanvas.fillStyle = selectedColor
     },
