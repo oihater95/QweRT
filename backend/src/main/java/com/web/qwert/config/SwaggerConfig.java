@@ -20,7 +20,7 @@ public class SwaggerConfig {
         		.groupName("qwertAPIboard")
 				.apiInfo(apiInfo())
         		.select()
-                .apis(RequestHandlerSelectors.basePackage("com.web.qwert.controller.account"))
+                .apis(RequestHandlerSelectors.basePackage("com.web.qwert.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

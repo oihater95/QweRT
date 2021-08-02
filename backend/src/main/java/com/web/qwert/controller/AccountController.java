@@ -1,4 +1,4 @@
-package com.web.qwert.controller.account;
+package com.web.qwert.controller;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.qwert.dao.user.UserDao;
+import com.web.qwert.dao.UserDao;
 import com.web.qwert.model.user.ChangePwdRequest;
 import com.web.qwert.model.user.LoginRequest;
 import com.web.qwert.model.user.User;
@@ -149,13 +149,12 @@ public class AccountController {
    @ApiOperation(value = "회원 탈퇴")
    public Object signout (@PathVariable int user_id, HttpServletRequest request) {
 	   ResponseEntity<?> response = null;
-	   Map<String, Object> resultMap = new HashMap<>();
 	   System.out.println(request.getHeader("token"));
 	   try {
 		   if(user_id == jwtService.getUserId(request.getHeader("token"))) { //요청한 유저와 토큰 발급한 유저가 같다면 
 			   userDao.deleteById(user_id);
 		   	   System.out.println("탈퇴 성공");
-			   response = new ResponseEntity<>(resultMap, HttpStatus.OK);
+			   response = new ResponseEntity<>(HttpStatus.OK);
 		   }
 	   } catch (Exception e) {
 		   e.printStackTrace();
@@ -177,7 +176,7 @@ public class AccountController {
 		   try { 
 			   if(user_id == jwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면 
 				   User user = userOpt.get();
-				   System.out.println(user);
+
 				   if(user.getPassword().equals(request.getPassword())) { //입력한 비밀번호가 맞다면
 					   user.setPassword(request.getNew_password());
 					   userDao.save(user);

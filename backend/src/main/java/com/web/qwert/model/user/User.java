@@ -2,18 +2,23 @@
 
 package com.web.qwert.model.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
-import java.time.LocalDateTime;
+import com.web.qwert.model.posting.Posting;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -37,7 +42,7 @@ public class User {
     
     // 가입일은 자동 입력
     @Column(insertable = false, updatable = false)
-    private LocalDateTime createDate;
+    private LocalDateTime create_Date;
     
     // 소개와 프로필 사진은 회원 수정에서 입력
 	@Column(name = "introduction")
@@ -52,5 +57,8 @@ public class User {
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
-	} 
+	}
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Posting> postings;
 }
