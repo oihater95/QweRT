@@ -81,7 +81,6 @@ public static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 			e.printStackTrace();
 		}
         logger.info("claims : {}", claims);
-        System.out.println(claims.getBody());
         return (int) claims.getBody().get("user_id");
     }
 }
