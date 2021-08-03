@@ -32,6 +32,7 @@ import com.web.qwert.model.user.LoginRequest;
 import com.web.qwert.model.user.User;
 import com.web.qwert.model.user.UserDto;
 import com.web.qwert.service.JwtService;
+import com.web.qwert.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -52,9 +53,9 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
-
+	
     @Autowired
-    UserDao userDao;
+    UserService userService;
     
 	@Autowired
 	private JwtService jwtService;
@@ -62,13 +63,14 @@ public class AccountController {
     @PostMapping("signup")
     @ApiOperation(value = "회원가입")
     public Object signup(@Valid @RequestBody User request) {
-        Optional<User> userOpt = userDao.findUserByEmailOrNickname(request.getEmail(), request.getNickname());
+    	Optional<User> userOpt = userService.getUser(request.getEmail(), request.getNickname());
         ResponseEntity response = null;
-    	System.out.println("회원가입");
+        System.out.println("회원가입");
+        
         // valid로 유효성 검증 실패시 403 return
+        
     	if (!userOpt.isPresent()) { // 중복된 계정이 없다면
-            User user = new User(request.getEmail(), request.getNickname(), request.getPassword());
-            userDao.save(user);
+    		userService.setUser(request);
             response = new ResponseEntity<>(HttpStatus.OK);
         } else {
             response = new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -80,10 +82,9 @@ public class AccountController {
     @GetMapping("emailcheck")
     @ApiOperation(value = "이메일 중복 검사")
     public Object emailCheck(@RequestParam(required = true) final String email) {
-    	Optional<User> userOpt = userDao.findUserByEmail(email);
+    	Optional<User> userOpt = userService.getUserByEmail(email);
     	ResponseEntity response = null;
     	System.out.println("이메일 중복 검사");
-    	
     	
     	if (userOpt.isPresent()) { // 해당 이메일로 가입한 회원이 이미 있다면
     		response = new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -97,10 +98,7 @@ public class AccountController {
     @GetMapping("nicknamecheck")
     @ApiOperation(value = "닉네임 중복 검사")
     public Object nicknameCheck(@RequestParam(required = true) final String nickname) {
-    	Date expireTime = new Date();
-    	System.out.println(expireTime.getTime());
-    	
-    	Optional<User> userOpt = userDao.findUserByNickname(nickname);
+    	Optional<User> userOpt = userService.getUserByNickname(nickname);
     	ResponseEntity response = null;
     	System.out.println("닉네임 중복 검사");
     	
@@ -118,14 +116,13 @@ public class AccountController {
 	  @ApiOperation(value = "이메일과 비밀번호로 로그인합니다.") 
 	  public Object login(@RequestBody LoginRequest request) {
 	  
-	  Optional<User> userOpt = userDao.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
+	  Optional<User> userOpt = userService.getUserByEmailAndPassword(request.getEmail(), request.getPassword());
 	  ResponseEntity response = null;
 	  Map<String, Object> resultMap = new HashMap<>();
 	  System.out.println("로그인");
 	  
 	  if (userOpt.isPresent()) { 
-//      	jwt.io에서 확인
-//			로그인 성공했다면 토큰을 생성한다.
+
 			User user = userOpt.get();
 			UserDto userDto = new UserDto();
 			BeanUtils.copyProperties(user, userDto);
@@ -139,9 +136,8 @@ public class AccountController {
 		  response = new ResponseEntity<>(resultMap, HttpStatus.OK); 
 	  } 
 	  else { 
-		  response = new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		  response = new ResponseEntity<>(HttpStatus.UNAUTHORIZED); 
 	  }
-	  
 	  return response; 
    }
 	  
@@ -152,13 +148,14 @@ public class AccountController {
 	   System.out.println(request.getHeader("token"));
 	   try {
 		   if(user_id == jwtService.getUserId(request.getHeader("token"))) { //요청한 유저와 토큰 발급한 유저가 같다면 
-			   userDao.deleteById(user_id);
-		   	   System.out.println("탈퇴 성공");
+			   userService.deleteUser(user_id);
 			   response = new ResponseEntity<>(HttpStatus.OK);
+		   } else {
+			   response = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		   }
 	   } catch (Exception e) {
 		   e.printStackTrace();
-		   response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		   response = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	   }
 	   return response; 
    }
@@ -168,10 +165,8 @@ public class AccountController {
    public Object changePwd (@PathVariable int user_id, @RequestHeader String token, @RequestBody ChangePwdRequest request) {
 	   
 	   ResponseEntity<?> response = null;
-	   Map<String, Object> resultMap = new HashMap<>();
-	   System.out.println(token);
-	   Optional<User> userOpt = userDao.findById(user_id);
-	   //userDao.getOne(user_id);
+	   Optional<User> userOpt = userService.getUser(user_id);
+
 	   if(userOpt.isPresent()) { // 가입된 회원이면
 		   try { 
 			   if(user_id == jwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면 
@@ -179,17 +174,17 @@ public class AccountController {
 
 				   if(user.getPassword().equals(request.getPassword())) { //입력한 비밀번호가 맞다면
 					   user.setPassword(request.getNew_password());
-					   userDao.save(user);
-					   response = new ResponseEntity<>(resultMap, HttpStatus.OK);
+					   userService.setUser(user);
+					   response = new ResponseEntity<>(HttpStatus.OK);
 				   }
 				   else {
-					   response = new ResponseEntity<>(resultMap, HttpStatus.UNAUTHORIZED); // 비밀번호 오류
+					   response = new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 비밀번호 오류
 				   }
 				   
 			   }
 		   } catch (Exception e) { // 유효하지 않은 토큰이면
 			   e.printStackTrace();
-			   response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			   response = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		   }
 		   
 	   } else {

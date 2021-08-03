@@ -1,5 +1,6 @@
 package com.web.qwert.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,11 @@ public class PostingServiceImpl implements PostingService {
         }
 
 	}
+
+	@Override
+	public List<Posting> getPostingsByUser(User user, int page) {
+		return user.getPostings();
+	}
+
 
 }

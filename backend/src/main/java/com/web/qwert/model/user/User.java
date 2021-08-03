@@ -59,6 +59,6 @@ public class User {
 		this.password = password;
 	}
     
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // posting의 user 객체 변수로 맵핑, 삭제시 post도 삭제
     private List<Posting> postings;
 }
