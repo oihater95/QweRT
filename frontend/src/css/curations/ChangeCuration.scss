@@ -1,0 +1,40 @@
+.curation-change__btn {
+    background-color: rgb(230, 129, 62);
+    color: white;
+    font-size: 20px;
+    padding: 3px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.curation-delete__btn {
+    background-color: red;
+    color: white;
+    font-size: 20px;
+    padding: 3px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.change-curation__div {
+    font-size: 20px;
+    margin-left: 175px;
+}
+
+.btn-for__delete {
+    font-size: 10px;
+    background-color: red;
+    color: white;
+    font-size: 15px;
+    padding: 3px 20px;
+    border-radius: 5px;
+    margin-left: 300px;
+    margin-bottom: 10px;
+}
+
+.hover-for__delete {
+    outline: 2px solid skyblue;
+    outline-offset: -2px;
+    cursor: pointer;
+}
