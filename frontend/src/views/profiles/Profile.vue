@@ -34,7 +34,26 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="2">
+        <v-btn
+          v-if="!followed"
+          color="#AEA660"
+          width="100"
+          class="white--text"
+          @click="follow"
+        >
+          팔로우
+        </v-btn>
+        <v-btn
+          v-else
+          color="#857B1A"
+          width="100"
+          outlined
+          @click="follow"
+        >
+          언팔로우
+        </v-btn>
+      </v-col>
     </v-row>
     <v-row
       justify="center"
@@ -99,6 +118,7 @@
 
 <script>
 import '@/css/profiles/Profile.scss'
+// import axios from 'axios'
 
 export default {
   name: 'Profile',
@@ -110,6 +130,7 @@ export default {
         {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
       ],
       hovered: false,
+      followed: false,
     }
   },
   methods: {
@@ -119,7 +140,22 @@ export default {
     hideDelimiters: function () {
       this.hovered = false
     },
+    follow: function () {
+      this.followed = !this.followed
+    },
   },
+  // created: function () {
+  //   axios ({
+  //     method: 'get',
+  //     url: `http://localhost/qwert/profile/${this.$route.params.userId}/`,
+  //   })
+  //     .then(res => {
+  //       console.log(res)
+  //     })
+  //     .catch(err => {
+  //       console.log(err)
+  //     })
+  // },
 }
 </script>
 
