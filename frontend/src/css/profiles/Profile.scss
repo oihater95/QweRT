@@ -1,0 +1,33 @@
+.profile-container {
+  background-color: #F4F2DA;
+  border: 0.5rem double #857B1A;
+  margin-bottom: 20px;
+  .profile-image {
+    text-align: end;
+    .v-image {
+      width: 70%;
+      margin-left: auto;
+    }
+  }
+  .profile-masterpiece {
+    height: 100%;
+    .col {
+      text-align: center;
+      img {
+        object-fit: contain;
+        outline: 1rem ridge #AEA660;
+        border: 1rem solid floralwhite;
+        background-color: floralwhite;
+        max-width: 70%;
+        max-height: 600px;
+      }
+    }
+  }
+  .profile-showMore__btn {
+    margin-top: 50px;
+    margin-bottom: 100px;
+    .col {
+      text-align: center;
+    }
+  }
+}
