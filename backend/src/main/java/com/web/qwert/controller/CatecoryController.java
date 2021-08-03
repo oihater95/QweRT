@@ -1,4 +1,4 @@
-package com.web.qwert.controller.account;
+package com.web.qwert.controller;
 
 import java.util.List;
 
