@@ -112,6 +112,12 @@
   text-transform: uppercase;
   font-weight: 800;
   font-size: 12px;
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
 }
 
 #addBtn {
@@ -168,3 +174,4 @@ input[type=color]::-webkit-color-swatch {
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+

@@ -31,6 +31,8 @@
           </button>
           <button id="PaintBtn" @click="handlePaintClick">Paint</button>
           <button id="clearBtn" @click="handleClearClick">Clear</button>
+          <button id="undoBtn" class="undoBtn" @click="handleUndoClick" disabled style="width:40px">Undo</button>
+          <button id="redoBtn" class="redoBtn" @click="handleRedoClick" disabled style="width:40px">Redo</button>
           <button id="saveBtn" @click="handleSaveClick">Save</button>
           </v-row>
 
@@ -43,6 +45,8 @@
             Paint
           </button>
           <button id="clearBtn" @click="handleClearClick">Clear</button>
+          <button id="undoBtn" class="undoBtn" @click="handleUndoClick" disabled>Undo</button>
+          <button id="redoBtn" class="redoBtn" @click="handleRedoClick" disabled>Redo</button>
           <button id="saveBtn" @click="handleSaveClick">Save</button>
           </v-row>
     
@@ -99,21 +103,40 @@ export default {
       vueCanvas: null,
       canvasLineWidth: null,
       canvasFrame: null,
-      brushColor: null,
       filling: false,  // default는 그리기 (true => 채우기)
       pickColor: null,
       pickColorCnt: 0,
       currentColor: null,
+      history: {
+        undoList: [],
+        redoList: [],
+      },
     }
   },
   methods: {
+    // mousedown
+    startPainting: function() {
+      this.painting = true
+      
+    },
+    // mouseup & mouseleave
+    stopPainting: function() {
+      let img = this.canvasFrame.toDataURL()
+      if(this.painting === true) {
+        this.history.undoList.push(img)
+        console.log('undo', this.history.undoList)
+        document.getElementById("undoBtn").removeAttribute("disabled")
+      } 
+      this.painting = false
+    },
+
     // 마우스 움직이는 내내 발생
     onMouseMove: function(e) {
       this.x = e.offsetX
       this.y = e.offsetY
       
       if(!this.painting) {
-        // mousedown start painting
+        // mouseup painting false
         // mousemove => 펜 위치 움직임
         // beginpath는 클릭 전까지 마우스가 캔버스 위에 있으면 따라다님
         this.vueCanvas.beginPath()
@@ -121,9 +144,10 @@ export default {
         this.vueCanvas.moveTo(e.offsetX, e.offsetY)
       } else {
         // 마우스 시작 위치에서 펜 위치까지 선 긋기
-        // mouseup stop painting
+        // mousedown painting true
         this.vueCanvas.lineTo(e.offsetX, e.offsetY)
         this.vueCanvas.stroke()
+        //this.histories[this.histories.length-1].push([e.offsetX, e.offsetY])
       }
     },
     // 주어진 색상 선택
@@ -139,7 +163,7 @@ export default {
 
     // custom 색상 선택
     selectColorChange: function(e) {
-      var color = e.target.value
+      let color = e.target.value
       this.pickColor = color
       // 현재 색상
       const currentColor = document.getElementById("current-color")
@@ -152,10 +176,10 @@ export default {
     // 추가색상 추가
     addColor: function() {
       this.pickColorCnt += 1
-      var pickColor = this.pickColor 
-      var addColorBox = document.getElementById("add-color__box")
-      var color = document.createElement("div")
-      var closeBtn = document.createElement("button")
+      let pickColor = this.pickColor 
+      let addColorBox = document.getElementById("add-color__box")
+      let color = document.createElement("div")
+      let closeBtn = document.createElement("button")
       color.classList.add('controls__color')
       color.classList.add('add-color')
       closeBtn.classList.add('close-btn')
@@ -183,7 +207,7 @@ export default {
     },
     // 전체 지우기
     handleClearClick: function() {
-      var canvas = document.getElementById("drawing-canvas");
+      let canvas = document.getElementById("drawing-canvas");
       this.vueCanvas.clearRect(0, 0, canvas.width, canvas.height);
     },
     // 채우기
@@ -211,6 +235,53 @@ export default {
       }
       localStorage.setItem(image.filename, image.imageSrc)
     },
+    // Undo
+    handleUndoClick: function(){
+      let undoListCnt = this.history.undoList.length
+      if (undoListCnt >= 1) {
+        this.history.redoList.push(this.history.undoList.pop())
+        console.log('undo', this.history.undoList)
+        console.log('redo', this.history.redoList)
+        document.getElementById("redoBtn").removeAttribute("disabled")
+        undoListCnt = this.history.undoList.length
+        // 이전 캔버스 이미지
+        if (undoListCnt == 0) {
+          this.vueCanvas.clearRect(0, 0, 800, 600);
+          document.getElementById("undoBtn").disabled = true
+        } else {
+          let previousCanvas = this.history.undoList[undoListCnt - 1]
+          let img = new Image()
+          img.src = previousCanvas
+          img.onload = () => {
+            this.vueCanvas.drawImage(img, 0, 0)
+          }
+        }
+      } else {
+        this.vueCanvas.clearRect(0, 0, 800, 600);
+        document.getElementById("undoBtn").disabled = true
+      }
+      console.log('undo', this.history.undoList)
+    },
+    handleRedoClick: function(){
+      let redoListCnt = this.history.redoList.length
+      if (redoListCnt > 0) {
+        this.history.undoList.push(this.history.redoList.pop())
+        console.log('undo', this.history.undoList)
+        console.log('redo', this.history.redoList)
+        document.getElementById("undoBtn").removeAttribute("disabled")
+        redoListCnt = this.history.redoList.length
+        // 이전 캔버스 이미지
+        let previousCanvas = this.history.redoList[redoListCnt - 1]
+        let img = new Image()
+        img.src = previousCanvas
+        img.onload = () => {
+          this.vueCanvas.drawImage(img, 0, 0)
+        }
+      } else {
+        document.getElementById("redoBtn").disabled = true
+      }
+    },
+    
 
     // 추가색상 삭제
     clickCloseBtn: function(e) {
@@ -218,7 +289,6 @@ export default {
       const color = closeBtn.parentNode
       const addColorBox = document.getElementById("add-color__box")
       addColorBox.removeChild(color)
-      console.log(this.vueCanvas.fillStyle)
     },
 
     // 추가색상 삭제 시 현재색 없어짐 방지
@@ -228,17 +298,39 @@ export default {
       currentColorDiv.style.backgroundColor = currentColor
     },
 
-    stopPainting: function() {
-      this.painting = false
-    },
-    startPainting: function() {
-      this.painting = true
-    },
+    // saveState: function() {
+    //   const canvasElem = document.querySelector('canvas')
+    //   keep_redo = keep_redo || false;
+    //   if(!keep_redo) {
+    //     this.history.redoList = []
+    //   }
+    //   (list || this.history.undoList).push(canvasElem.toDataURL());
+    // },
+
+    // undo: function(canvasElem, vueCanvas) {
+    //   this.restoreState(canvasElem, vueCanvas, this.history.undoList, this.history.redoList)
+    // },
+    // redo: function(canvasElem, vueCanvas) {
+    //   this.restoreState(canvasElem, vueCanvas, this.history.redoList, this.history.undoList)
+    // },
+
+    // restoreState: function(canvasElem, vueCanvas, pop, push) {
+    //   if(pop.length) {
+    //     this.saveState(canvasElem, push, true)
+    //     var restore_state = pop.pop()
+    //     var img = new Element('img', {'src':restore_state})
+    //     img.onload = function() {
+    //       vueCanvas.clearRect(0, 0, 800, 600)
+    //       vueCanvas.drawImage(img, 0, 0, 800, 600, 0, 0, 800, 600)
+    //     }
+    //   }
+    // },
+
+
   },
   mounted() {
   const canvas = document.getElementById("drawing-canvas")
   const ctx = canvas.getContext("2d")
-  const colors = document.getElementsByClassName("controls__color")
   // var zctx = zoomed.getContext('2d')
   // const dpr = window.devicePixelRatio
   canvas.width = 800 
@@ -257,15 +349,16 @@ export default {
   ctx.filter = 'url(#remove-alpha)';
   this.canvasLineWidth = ctx.lineWidth
   this.vueCanvas = ctx
-  this.brushColor = colors
   this.canvasFrame = canvas
   },
 
   watch: {
     // 현재색상 없어짐 방지
     currentColor: function() {
-      this.maintainCurrent(this.vueCanvas.fillStyle)
-    }
+      if (this.currentColor === ""){
+        this.maintainCurrent(this.vueCanvas.fillStyle)
+      }
+    },
   }
 }
 </script>
