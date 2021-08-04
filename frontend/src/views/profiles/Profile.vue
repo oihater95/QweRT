@@ -81,7 +81,7 @@
           show-arrows-on-hover
           hide-delimiter-background
           :hide-delimiters="!hovered"
-          cycle
+          :cycle="!hovered"
           interval="4000"
         >
           <v-carousel-item
