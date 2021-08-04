@@ -1,14 +1,5 @@
 <template>
   <div id="drawing-body" class="container">
-    <svg width="0" height="0" style="position:absolute;z-index:-1;">
-      <defs>
-        <filter id="remove-alpha" x="0" y="0" width="100%" height="100%">
-          <feComponentTransfer>
-            <feFuncA type="discrete" tableValues="0 1"></feFuncA>
-          </feComponentTransfer>
-          </filter>
-      </defs>
-    </svg>
     <canvas 
     id="drawing-canvas" 
     class="canvas"
@@ -39,8 +30,8 @@
             Stroke
           </button>
           <button id="PaintBtn" @click="handlePaintClick">Paint</button>
-          <button id="saveBtn" @click="handleSaveClick">Save</button>
           <button id="clearBtn" @click="handleClearClick">Clear</button>
+          <button id="saveBtn" @click="handleSaveClick">Save</button>
           </v-row>
 
           <v-row v-else>
@@ -83,9 +74,11 @@
             <div @click="handleColorClick" class="controls__color" style="background-color:#0579FF"></div>
             <div @click="handleColorClick" class="controls__color" style="background-color:#5856D6"></div>
           </div>
-          
-          <div v-show="pickColorCnt > 0" id="add-color__box" class="control-color__box">
-          </div>
+        </div>
+        <div 
+        v-show="pickColorCnt > 0" 
+        id="add-color__box" 
+        class="control-color__box controls__colors ps-1">
         </div>
       </div>
   </div>
@@ -110,6 +103,7 @@ export default {
       filling: false,  // default는 그리기 (true => 채우기)
       pickColor: null,
       pickColorCnt: 0,
+      currentColor: null,
     }
   },
   methods: {
@@ -138,6 +132,7 @@ export default {
       const currentColor = document.getElementById("current-color")
       // 현재 색상
       currentColor.style = "background-color:" + `${selectedColor}`
+      this.currentColor = selectedColor
       this.vueCanvas.strokeStyle = selectedColor
       this.vueCanvas.fillStyle = selectedColor
     },
@@ -146,22 +141,30 @@ export default {
     selectColorChange: function(e) {
       var color = e.target.value
       this.pickColor = color
-      const currentColor = document.getElementById("current-color")
       // 현재 색상
+      const currentColor = document.getElementById("current-color")
       currentColor.style = "background-color:" + `${color}`
+      this.currentColor = color
       this.vueCanvas.strokeStyle = color
       this.vueCanvas.fillStyle = color
     },
 
+    // 추가색상 추가
     addColor: function() {
       this.pickColorCnt += 1
       var pickColor = this.pickColor 
       var addColorBox = document.getElementById("add-color__box")
       var color = document.createElement("div")
+      var closeBtn = document.createElement("button")
       color.classList.add('controls__color')
       color.classList.add('add-color')
+      closeBtn.classList.add('close-btn')
+      closeBtn.innerText = 'x'
       color.style = "background-color:" + `${pickColor}`
       addColorBox.appendChild(color)
+      color.appendChild(closeBtn)
+      color.addEventListener('click', this.handleColorClick)
+      closeBtn.addEventListener('click', this.clickCloseBtn)
     },
 
     // 선 굵기
@@ -183,7 +186,7 @@ export default {
       var canvas = document.getElementById("drawing-canvas");
       this.vueCanvas.clearRect(0, 0, canvas.width, canvas.height);
     },
-
+    // 채우기
     handleCanvasClick: function(e) {
       if (this.filling) {  // true(채우기) 일 때만 작동
         this.vueCanvas.fillRect(0, 0, e.target.width, e.target.height)
@@ -194,11 +197,11 @@ export default {
       e.preventDefault()
     },
 
+    // 로컬 & 로컬스토리지 저장
     handleSaveClick: function() {
       const img = this.canvasFrame.toDataURL()
       const link = document.createElement("a")
       link.href = img
-
       // a 태그에 다운로드를 붙이면 브라우저가 링크로 이동하지 않고 로컬에 저장함
       link.download = "QwertDrawing" + `${new Date()}`  
       link.click()  // 링크 클릭
@@ -209,6 +212,21 @@ export default {
       localStorage.setItem(image.filename, image.imageSrc)
     },
 
+    // 추가색상 삭제
+    clickCloseBtn: function(e) {
+      const closeBtn = e.target
+      const color = closeBtn.parentNode
+      const addColorBox = document.getElementById("add-color__box")
+      addColorBox.removeChild(color)
+      console.log(this.vueCanvas.fillStyle)
+    },
+
+    // 추가색상 삭제 시 현재색 없어짐 방지
+    maintainCurrent(currentColor) {
+      this.currentColor = currentColor
+      const currentColorDiv = document.getElementById("current-color")
+      currentColorDiv.style.backgroundColor = currentColor
+    },
 
     stopPainting: function() {
       this.painting = false
@@ -223,8 +241,8 @@ export default {
   const colors = document.getElementsByClassName("controls__color")
   // var zctx = zoomed.getContext('2d')
   // const dpr = window.devicePixelRatio
-  canvas.width = 700 
-  canvas.height = 700 
+  canvas.width = 800 
+  canvas.height = 600 
   // ctx.scale(dpr, dpr)
   ctx.lineCap = "round"
   ctx.lineJoin = "round"
@@ -241,8 +259,14 @@ export default {
   this.vueCanvas = ctx
   this.brushColor = colors
   this.canvasFrame = canvas
+  },
 
-},
+  watch: {
+    // 현재색상 없어짐 방지
+    currentColor: function() {
+      this.maintainCurrent(this.vueCanvas.fillStyle)
+    }
+  }
 }
 </script>
 

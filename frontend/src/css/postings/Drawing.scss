@@ -9,18 +9,10 @@
 
 
 #drawing-canvas {
-  width: 700px;
-  height: 700px;
+  width: 800px;
+  height: 600px;
   border-radius: 15px;
   box-shadow: 1px 1px 4px 6px rgba(50, 50, 93,  0.11);
-
-	// &:hover + .cursor {
-	// 	opacity: 1;
-	// }
-	
-	// &:active + .cursor {
-	// 	border-color: rgb(60, 60, 60);
-	// }
 }
 
 .controls {
@@ -30,19 +22,37 @@
   align-items: center;
 }
 
-#canvas-colors {
-  flex-wrap: wrap;
-}
-
 #add-color__box {
+  margin-top: 10px;
+  display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
-  
+  max-width: 612px;
 }
 .add-color {
+  padding-left: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
+  .close-btn{
+    display: none;
+  }
+  &:hover .close-btn{
+    display: inline;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    line-height: 15px;
+    background-color: rgb(230, 230, 230);
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    position: relative;
+    bottom: 5px;
+    left: 30px;
+  }
+  
 }
 
 #current-color__box {
@@ -50,7 +60,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: solid 3px lightgray;
+  border: solid 3px white;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 15px;
   #current-color {
     margin-bottom: 12px;
@@ -62,7 +73,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: solid 3px lightgray;
+  border: solid 3px white;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   border-radius: 15px;
   #select-color {
   }
@@ -73,8 +85,9 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: solid 3px lightgray;
+  border: solid 3px white;
   border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   #control-color {
   
   }
