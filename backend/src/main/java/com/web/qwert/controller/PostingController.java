@@ -44,7 +44,7 @@ public class PostingController {
     public Object upload(@RequestBody UploadRequest request, @RequestHeader String token) {	
         ResponseEntity response = null;
     	System.out.println("업로드");
-    	int user_id = request.getUser_id();
+    	int user_id = request.getUserId();
     	
     	try {
  		   if(user_id == JwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면
@@ -86,6 +86,5 @@ public class PostingController {
 	}
 	
 	// 카테고리로 게시글 검색
-	// 유저 탈퇴시 게시글 전부 삭제
 	
 }
