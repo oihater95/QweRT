@@ -7,11 +7,20 @@
   padding-bottom: 50px;
 }
 
+
 #drawing-canvas {
   width: 700px;
   height: 700px;
   border-radius: 15px;
   box-shadow: 1px 1px 4px 6px rgba(50, 50, 93,  0.11);
+
+	// &:hover + .cursor {
+	// 	opacity: 1;
+	// }
+	
+	// &:active + .cursor {
+	// 	border-color: rgb(60, 60, 60);
+	// }
 }
 
 .controls {
@@ -21,8 +30,54 @@
   align-items: center;
 }
 
-#current-color__box {
+#canvas-colors {
+  flex-wrap: wrap;
+}
+
+#add-color__box {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
   
+}
+.add-color {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#current-color__box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: solid 3px lightgray;
+  border-radius: 15px;
+  #current-color {
+    margin-bottom: 12px;
+  }
+}
+
+#select-color__box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: solid 3px lightgray;
+  border-radius: 15px;
+  #select-color {
+  }
+}
+
+.control-color__box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: solid 3px lightgray;
+  border-radius: 15px;
+  #control-color {
+  
+  }
 }
 
 .controls .controls__btns{
@@ -46,6 +101,14 @@
   font-size: 12px;
 }
 
+#addBtn {
+  font-size: 12px;
+  text-transform: uppercase;
+  &:hover {
+    color: skyblue;
+  }
+}
+
 .controls__btns button:active{
   transform: scale(0.95);
 }
@@ -55,10 +118,13 @@
 }
 
 .controls__colors .controls__color {
+  margin-left: 2px;
+  margin-right: 2px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
 }
 
 .controls .controls__range {
