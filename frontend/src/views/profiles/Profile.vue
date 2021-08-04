@@ -1,5 +1,6 @@
 <template>
   <v-container class="profile-container">
+    <!-- 헤더 장식 -->
     <v-row justify="center">
       <v-col
         cols="7"
@@ -8,16 +9,19 @@
         <v-img src="@/assets/images/profile_certificate.png"></v-img>
       </v-col>
     </v-row>
+    <!-- 프로필 정보 -->
     <v-row
       justify="center"
       align="center"
     >
+      <!-- 프로필 사진 -->
       <v-col
         cols="2"
         class="profile-image"
       >
         <v-img src="@/assets/images/profile_image_border.png"></v-img>
       </v-col>
+      <!-- 이름 & 팔로워/팔로잉 등등 수치 -->
       <v-col cols="4">
         <v-row>
           <v-col
@@ -34,6 +38,7 @@
           </v-col>
         </v-row>
       </v-col>
+      <!-- 팔로우 버튼 -->
       <v-col cols="2">
         <v-btn
           v-if="!followed"
@@ -55,6 +60,7 @@
         </v-btn>
       </v-col>
     </v-row>
+    <!-- 중간 장식 -->
     <v-row
       justify="center"
       class="my-5"
@@ -66,14 +72,17 @@
         <v-img src="@/assets/images/profile_divider.png"></v-img>
       </v-col>
     </v-row>
+    <!-- 자기소개 & 대표작 -->
     <v-row justify="center">
+      <!-- 자기소개 -->
       <v-col cols="6">
         <h3 class="text-center">introduction introduction introduction introduction introduction introduction</h3>
       </v-col>
+      <!-- 대표작 -->
       <v-col
         cols="10"
-        @mouseenter="showDelimiters"
-        @mouseleave="hideDelimiters"
+        @mouseenter="hoverOn"
+        @mouseleave="hoverOff"
       >
         <v-carousel
           light
@@ -101,6 +110,7 @@
         </v-carousel>
       </v-col>
     </v-row>
+    <!-- '더 보기' 버튼 -->
     <v-row
       justify="center"
       class="profile-showMore__btn"
@@ -124,6 +134,7 @@ export default {
   name: 'Profile',
   data: function () {
     return {
+      // 예시로 넣어본 그림 url
       drawings: [
         {src: 'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',},
         {src: 'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',},
@@ -134,12 +145,15 @@ export default {
     }
   },
   methods: {
-    showDelimiters: function () {
+    // 캐러셀에 마우스를 올려놓은 상태임을 알리는 함수
+    hoverOn: function () {
       this.hovered = true
     },
-    hideDelimiters: function () {
+    // 캐러셀에서 마우스가 떠난 상태임을 알리는 함수
+    hoverOff: function () {
       this.hovered = false
     },
+    // 임시로 작성한 팔로우 함수 (현재는 버튼이 바뀌는 것만 구현한 상태)
     follow: function () {
       this.followed = !this.followed
     },
