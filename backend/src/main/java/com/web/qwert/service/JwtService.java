@@ -52,7 +52,7 @@ public static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 			.setHeader(headerMap)
 			.setSubject("JWToken") // 토큰의 제목 설정
 			.setExpiration(expireTime) // 유효기간 설정
-			.claim("user_id", user.getUser_id()) // 회원 정보 저장
+			.claim("user_id", user.getUserId()) // 회원 정보 저장
 			.claim("nickname", user.getNickname())
 			.signWith(signatureAlgorithm, signingKey);//암호화
 		String jwt = jwtBuilder.compact(); // 직렬화

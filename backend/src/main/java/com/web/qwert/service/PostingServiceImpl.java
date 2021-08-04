@@ -1,5 +1,6 @@
 package com.web.qwert.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,16 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	public boolean createPosting(UploadRequest request) {
 		
-		int user_id = request.getUser_id();
+		int user_id = request.getUserId();
         Optional<User> userOpt = userDao.findById(user_id); //id로 user 찾기
         
         if (userOpt.isPresent()) { // 회원이면 posting 생성
             Posting posting = new Posting();
             posting.setUser(userOpt.get());
-            posting.setTitle(request.getPosting_title());
-            posting.setContent(request.getPosting_content());
-            posting.setPosting_img(request.getPosting_image());
-            posting.setCategory(CategoryDao.getOne(request.getCategory_id()));
+            posting.setTitle(request.getPostingTitle());
+            posting.setContent(request.getPostingContent());
+            posting.setPostingImg(request.getPostingImage());
+            posting.setCategory(CategoryDao.getOne(request.getCategoryId()));
             postingDao.save(posting);
             return true;
             
@@ -45,5 +46,11 @@ public class PostingServiceImpl implements PostingService {
         }
 
 	}
+
+	@Override
+	public List<Posting> getPostingsByUser(User user, int page) {
+		return user.getPostings();
+	}
+
 
 }
