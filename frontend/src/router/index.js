@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Signup from '@/views/accounts/Signup'
 import Login from '@/views/accounts/Login'
+import Profile from '@/views/profiles/Profile'
 import MainPage from '@/views/postings/MainPage.vue'
 import CurationPage from '@/views/curations/CurationPage.vue'
 import NewCuration from '@/views/curations/NewCuration.vue'
@@ -27,6 +28,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/profile/:userId',
+    name: 'Profile',
+    component: Profile
   },
   {
     path: '/',
