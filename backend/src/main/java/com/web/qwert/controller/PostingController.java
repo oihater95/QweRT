@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,7 +51,7 @@ public class PostingController {
  		   if(user_id == JwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면
  			   
  			   if(postingService.createPosting(request)) { // 포스팅 성공
- 	   
+ 				   
  				   response = new ResponseEntity<>(HttpStatus.OK);
  			   } else { // 비회원
  				  response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -69,14 +70,13 @@ public class PostingController {
 	// 유저로 게시글 검색
 	@GetMapping("{user_id}")
 	@ApiOperation(value = "유저의 게시글 검색")
-	public Object myPostings (@PathVariable int user_id, @RequestParam int page) {
+	public Object myPostings (@PathVariable int user_id, @RequestParam int page, @RequestParam int size) {
 		Optional<User> userOpt = userService.getUser(user_id);
 		ResponseEntity response = null;
 		System.out.println("내 게시물");
-		System.out.printf("page = %d\n", page);
 		
 		if(userOpt.isPresent()) { // 회원이면
-			List<Posting> result = postingService.getPostingsByUser(userOpt.get(), page);
+			List<Posting> result = postingService.getPostingsByUser(userOpt.get(), page, size);
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} else {
 			response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -85,6 +85,18 @@ public class PostingController {
 		return response;
 	}
 	
+	
+	@GetMapping("new")
+	@ApiOperation(value = "최신 게시글 검색")
+	public Object newPostings (@RequestParam int page, @RequestParam int size) {
+		ResponseEntity response = null;
+		System.out.println("최신 게시물");
+
+		List<Posting> result = postingService.getNewPostings(page, size);
+		response = new ResponseEntity<>(result, HttpStatus.OK);
+		
+		return response;
+	}
 	// 카테고리로 게시글 검색
 	
 }
