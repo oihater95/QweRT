@@ -9,11 +9,11 @@
     </v-card>
     <input id="file-selector" ref="file" type="file" @change="handleFileUploader">
     <v-btn @click="uploadFiles" color="primary">업로드</v-btn>
-    <h1>파일 리스트</h1>
+    <!-- <h1>파일 리스트</h1>
     <div v-for="(file, idx) in fileList" :key=file.Key>
       #{{idx+1}}: {{file.Key}}
       <v-btn @click="deleteFile(file.Key)" color="red">Delete</v-btn>
-    </div>
+    </div> -->
   </v-container>
 </template>
 

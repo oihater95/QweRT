@@ -57,7 +57,7 @@
                   </v-icon>
                 </template>
                 <v-list>
-                  <v-list-item>
+                  <v-list-item @click.native="clickProfile">
                     <v-list-item-title class="tab">내 프로필</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click.native="clickNotify">
@@ -114,6 +114,9 @@ export default {
     },
     clickNotify: function () {
       this.$router.push({ name: 'NotifyPage' })
+    },
+    clickProfile: function () {
+      this.$router.push({ name: 'Profile' })
     },
   }
 }

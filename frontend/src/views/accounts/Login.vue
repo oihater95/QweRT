@@ -145,7 +145,7 @@ export default {
     login: function () {
       axios ({
         method: 'post',
-        url: 'http://localhost/qwert/accounts/login/',
+        url: 'http://13.209.16.153/qwert/accounts/login/',
         data: this.credentials
       })
         .then(res => {
