@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.qwert.model.posting.Posting;
 
 import lombok.Data;
@@ -26,5 +27,6 @@ public class Category {
 	private String categoryName;
 	
 	@OneToMany(mappedBy = "category")
+	@JsonIgnore
 	private List<Posting> postings;
 }

@@ -45,7 +45,7 @@ public class Posting {
     
     @ManyToOne(fetch = FetchType.LAZY) // N+1 문제 방지
     @JoinColumn(name = "user_id") // FK
-    @JsonIgnore
+    //@JsonIgnore
     private User user;
     
     @ManyToOne(fetch = FetchType.LAZY)

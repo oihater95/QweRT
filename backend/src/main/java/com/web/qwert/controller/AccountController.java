@@ -134,12 +134,12 @@ public class AccountController {
 	  
    @DeleteMapping("{user_id}")
    @ApiOperation(value = "회원 탈퇴")
-   public Object signout (@PathVariable int user_id, HttpServletRequest request) {
+   public Object signout (@PathVariable int user_id, @RequestHeader String token) {
 	   Optional<User> userOpt = userService.getUser(user_id);
 	   if(!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
 	   
 	   try {
-		   if(user_id == jwtService.getUserId(request.getHeader("token"))) { //요청한 유저와 토큰 발급한 유저가 같다면 
+		   if(user_id == jwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면 
 			   userService.deleteUser(user_id);
 			   return new ResponseEntity<>(HttpStatus.OK);
 		   } else {
