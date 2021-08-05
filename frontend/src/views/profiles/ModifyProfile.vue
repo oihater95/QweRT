@@ -31,7 +31,7 @@
         <v-file-input
           accept="image/*"
           v-model="profileImageFile"
-          @change="changeProfileUmage"
+          @change="changeProfileImage"
         ></v-file-input>
       </v-col>
     </v-row>
@@ -87,7 +87,12 @@
         cols="12"
         class="text-center"
       >
-        <v-btn color="#E8D48D">저장</v-btn>
+        <v-btn
+          color="#E8D48D"
+          @click="changeUserInfo"
+        >
+          저장
+        </v-btn>
       </v-col>
       <v-col cols="10">
         <v-divider></v-divider>
@@ -172,6 +177,7 @@
         <v-btn
           color="#E8D48D"
           :disabled="(!password || !newPassword || !newPasswordConfirmation || !validForm)"
+          @click="changePassword"
         >
           변경
         </v-btn>
@@ -193,6 +199,7 @@
         <v-btn
           color="#F4A380"
           dark
+          @click="signOut"
         >
           탈퇴
         </v-btn>
@@ -210,16 +217,25 @@
         <v-btn color="#E8D48D">취소</v-btn>
       </v-col>
     </v-row>
+    <Modal
+      :msg="modalMsg"
+    />
   </v-container>
 </template>
 
 <script>
+import Modal from '@/components/common/Modal'
 import '@/css/profiles/ModifyProfile.scss'
+import axios from 'axios'
 
 export default {
   name: 'ModifyProfile',
+  components: {
+    Modal,
+  },
   data: function () {
     return {
+      userId: 11,
       profileImageFile: null,
       profileImageSrc: '',
       nickname: 'nickname',
@@ -235,8 +251,17 @@ export default {
       rules: {
         min: v => (v.length >= 8 || v.length === 0) || '8자 이상이어야 합니다.',
         include: v => ((/[a-zA-Z]/.test(v) && /[0-9]/.test(v)) || v.length === 0) || '영문, 숫자를 모두 포함해야 합니다.',
-        match: v => (v === this.newPassword || v.length === 0) || '새 비밀번호와 일치하지 않습니다.',
-      }
+        match: v => ( v === this.newPassword || v.length === 0) || '새 비밀번호와 일치하지 않습니다.',
+        match2: v => v === this.newPasswordConfirmation || '새 비밀번호.'
+      },
+      modalMsg: {
+        name: '',
+        triggerBtn: '',
+        title: '',
+        text: '',
+        positiveBtn: '',
+        negativeBtn: '',
+      },
     }
   },
   methods: {
@@ -246,7 +271,7 @@ export default {
       fileInput.click()
     },
     // 프로필 사진을 파일 탐색기에서 선택한 이미지로 바꾸는 함수
-    changeProfileUmage: function () {
+    changeProfileImage: function () {
       const file = this.profileImageFile
       if (typeof file === 'string') {
         this.profileImageSrc = file
@@ -258,6 +283,109 @@ export default {
         reader.readAsDataURL(file)
       }
     },
+    // changeUserInfo: function () {
+    //   axios({
+    //     method: 'put',
+    //     url: `http://localhost/qwert/accounts/${this.userId}/info/`,
+    //     data: {
+    //       nickname: this.nickname,
+    //       introduction: this.introduction,
+    //       profile_image: this.profileImage,
+    //       masterpiece_ids: this.masterpieces,
+    //     },
+    //     headers: { token: localStorage.getItem('jwtToken') }
+    //   })
+    //     .then(res => {
+    //       console.log(res)
+    //     })
+    //     .catch(err => {
+    //       console.log(err)
+    //     })
+    // },
+    // 비밀번호 변경 함수
+    changePassword: function () {
+      axios({
+        method: 'put',
+        url: `http://localhost/qwert/accounts/${this.userId}/pwd/`,
+        data: {
+          password: this.password,
+          new_password: this.newPassword
+        },
+        headers: { token: localStorage.getItem('jwtToken') }
+      })
+        .then(res => {
+          console.log(res)
+          // 비밀번호 변경 성공 모달 창
+          this.modalMsg = {
+            name: 'changePassword',
+            triggerBtn: '',
+            title: '',
+            text: '비밀번호 변경이 완료되었습니다.',
+            positiveBtn: '확인',
+            negativeBtn: '',
+          }
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
+        })
+        .catch(err => {
+          console.log(err)
+          // 비밀번호 변경 실패 모달 창 (상태 코드에 따라)
+          if (err.response.status === 401) {
+            this.modalMsg = {
+              name: 'changePasswordFailure401',
+              triggerBtn: '',
+              title: `${err.response.status} error`,
+              text: '현재 비밀번호가 일치하지 않습니다.<br/>혹은<br/>현재 로그인된 상태인지 확인해주세요.',
+              positiveBtn: '확인',
+              negativeBtn: '',
+            }
+          } else if (err.response.status === 404) {
+            this.modalMsg = {
+              name: 'changePasswordFailure404',
+              triggerBtn: '',
+              title: `${err.response.status} error`,
+              text: '확인할 수 없는 사용자에 대한 요청입니다.',
+              positiveBtn: '확인',
+              negativeBtn: '',
+            }
+          } else {
+            this.modalMsg = {
+              name: 'changePasswordFailure403',
+              triggerBtn: '',
+              title: `${err.response.status} error`,
+              text: '제한된 접근입니다.<br/>현재 로그인된 상태인지 확인해주세요.',
+              positiveBtn: '확인',
+              negativeBtn: '',
+            }
+          }
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
+        })
+    },
+    // signOut: function () {
+    //   axios({
+    //     method: 'delete',
+    //     url: `http://localhost/qwert/accounts/${this.userId}/`,
+    //     headers: this.setToken()
+    //   })
+    //     .then(res => {
+    //       console.log(res)
+    //     })
+    //     .catch(err => {
+    //       console.log(err)
+    //     })
+    // }
+  },
+  watch: {
+    newPassword: function () {
+      return new Promise((resolve) => {
+        resolve()
+        this.newPasswordConfirmation = (this.newPasswordConfirmation + ' ')
+      })
+        .then(() => {
+          this.newPasswordConfirmation = this.newPasswordConfirmation.trim()
+        })
+    }
   }
 }
 </script>
