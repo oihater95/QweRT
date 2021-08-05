@@ -20,9 +20,7 @@
               width="130"
             />
           </div>
-          <div v-if="!isLogon" class="icon-div">
-            <v-icon @click.native="clickSignup">fas fa-user-plus</v-icon>
-            <v-icon @click.native="clickLogin">mdi-login</v-icon>
+          <div v-if="isLogon" class="icon-div">
             <v-icon @click.native="clickCuration">far fa-images</v-icon>
             <v-icon @click.native="clickHome">mdi-home</v-icon>
             <div class="text-center">
