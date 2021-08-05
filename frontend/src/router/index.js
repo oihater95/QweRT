@@ -11,6 +11,7 @@ import ChangeCuration from '@/views/curations/ChangeCuration.vue'
 import PostingDetail from '@/views/postings/PostingDetail'
 import dragNdrop from '@/components/common/dragNdrop'  // 확인용 (업로드 페이지 대체)
 import FileUpload from '@/components/common/FileUpload'
+import UploadPage from '@/views/postings/UploadPage'
 import SearchPage from '@/views/search/SearchPage'
 import SearchCategory from '@/views/search/SearchCategory'
 import SearchKeyword from '@/views/search/SearchKeyword'
@@ -68,15 +69,19 @@ const routes = [
     props: true,
   },
   {
-    
     path: '/postings/drawing',
     name: 'Drawing',
     component: Drawing,
   },
   {
-    path: '/postings',  // 확인용 임시 path
+    path: '/postings/dragdrop',  // 확인용 임시 path
     name: 'dragNdrop',
     component: dragNdrop,
+  },
+  {
+    path: '/postings', 
+    name: 'UploadPage',
+    component: UploadPage,
   },
   {
     path: '/search',

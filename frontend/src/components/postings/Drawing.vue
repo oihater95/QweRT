@@ -41,7 +41,7 @@
               mdi-redo
             </v-icon>
           </button>
-          <button id="saveBtn" @click="handleSaveClick">Save</button>
+          <button id="uploadBtn" @click="handleUploadClick">Upload</button>
           </v-row>
 
           <v-row v-else>
@@ -63,7 +63,7 @@
               mdi-redo
             </v-icon>
           </button>
-          <button id="saveBtn" @click="handleSaveClick">Save</button>
+          <button id="uploadBtn" @click="handleUploadClick">Upload</button>
           </v-row>
     
         </div>
@@ -243,18 +243,20 @@ export default {
     },
 
     // 로컬 & 로컬스토리지 저장
-    handleSaveClick: function() {
+    handleUploadClick: function() {
       const img = this.canvasFrame.toDataURL()
-      const link = document.createElement("a")
-      link.href = img
-      // a 태그에 다운로드를 붙이면 브라우저가 링크로 이동하지 않고 로컬에 저장함
-      link.download = "QwertDrawing" + `${new Date()}`  
-      link.click()  // 링크 클릭
+      // const link = document.createElement("a")
+      // link.href = img
+      // // a 태그에 다운로드를 붙이면 브라우저가 링크로 이동하지 않고 로컬에 저장함
+      // link.download = "QwertDrawing" + `${new Date()}`  
+      // link.click()  // 링크 클릭
+
       var image = {
         filename: "QwertDrawing" + `${new Date()}`,
         imageSrc: img
       }
       localStorage.setItem(image.filename, image.imageSrc)
+      this.$router.push({name: 'PostingDetail', params: {filename: image.filename, imageSrc: image.imageSrc}})
     },
     // Undo
     handleUndoClick: function(){
@@ -297,7 +299,6 @@ export default {
         document.getElementById("redoBtn").disabled = true
       }
     },
-    
 
     // 추가색상 삭제
     clickCloseBtn: function(e) {
@@ -313,35 +314,6 @@ export default {
       const currentColorDiv = document.getElementById("current-color")
       currentColorDiv.style.backgroundColor = currentColor
     },
-
-    // saveState: function() {
-    //   const canvasElem = document.querySelector('canvas')
-    //   keep_redo = keep_redo || false;
-    //   if(!keep_redo) {
-    //     this.history.redoList = []
-    //   }
-    //   (list || this.history.undoList).push(canvasElem.toDataURL());
-    // },
-
-    // undo: function(canvasElem, vueCanvas) {
-    //   this.restoreState(canvasElem, vueCanvas, this.history.undoList, this.history.redoList)
-    // },
-    // redo: function(canvasElem, vueCanvas) {
-    //   this.restoreState(canvasElem, vueCanvas, this.history.redoList, this.history.undoList)
-    // },
-
-    // restoreState: function(canvasElem, vueCanvas, pop, push) {
-    //   if(pop.length) {
-    //     this.saveState(canvasElem, push, true)
-    //     var restore_state = pop.pop()
-    //     var img = new Element('img', {'src':restore_state})
-    //     img.onload = function() {
-    //       vueCanvas.clearRect(0, 0, 800, 600)
-    //       vueCanvas.drawImage(img, 0, 0, 800, 600, 0, 0, 800, 600)
-    //     }
-    //   }
-    // },
-
 
   },
   mounted() {
