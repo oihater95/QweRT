@@ -9,6 +9,7 @@ export default new Vuex.Store({
     createPersistedState(),
   ],
   state: {
+    isLogon: false,
     userInfo: {
       userId: '',
       nickname: '',
@@ -20,6 +21,7 @@ export default new Vuex.Store({
       state.userInfo.userId = data.userId
       state.userInfo.nickname = data.nickname
       state.userInfo.profileImage = data.profileImage
+      state.isLogon = true
     },
   },
   actions: {
