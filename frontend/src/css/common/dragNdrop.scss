@@ -47,3 +47,17 @@
 .drag-search__icon {
   cursor: pointer;
 }
+
+#posting-clear__btn {
+  background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#posting-upload__btn {
+  background: linear-gradient(to right, #5433FF, #20BDFF, #A5FECB);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
