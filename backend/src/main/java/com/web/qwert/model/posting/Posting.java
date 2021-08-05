@@ -19,24 +19,33 @@ import lombok.Data;
 
 @Entity
 @Data
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Posting {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int posting_id;
+	@JoinColumn(name = "posting_id")
+	private int postingId;
+	
 	private String title;
 	private String content;
-	private String posting_img;
+	
+	@JoinColumn(name = "posting_img")
+	private String postingImg;
+	
 	// 가입일은 자동 입력
-    @Column(insertable = false, updatable = false)
-    private LocalDateTime create_date;
-    private LocalDateTime update_date;
+    @Column(name = "create_date", insertable = false, updatable = false)
+    private LocalDateTime createDate;
     
-    private boolean masterpiece_flag;
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
+    
+    @JoinColumn(name = "masterpiece_flag")
+    private boolean masterpieceFlag;
     
     @ManyToOne(fetch = FetchType.LAZY) // N+1 문제 방지
     @JoinColumn(name = "user_id") // FK
-    @JsonIgnore
+    //@JsonIgnore
     private User user;
     
     @ManyToOne(fetch = FetchType.LAZY)

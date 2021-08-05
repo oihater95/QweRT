@@ -4,8 +4,8 @@
     id="DetailImg-card"
     class="row"
     elevation="5"
-    max-width="1050px"
-    max-height="1050px"
+    max-width="850px"
+    max-height="850px"
     >
       <img 
       id="DetailImage"
