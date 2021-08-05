@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col><dragNdrop/></v-col>
+      <v-col><DragDrop/></v-col>
       <v-col>
         <div class="container">
           <v-card class="my-5 posting-title">
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import dragNdrop from "@/components/common/dragNdrop"
+import DragDrop from "@/components/common/DragDrop"
 import "@/css/postings/UploadPage.scss"
 
 export default {
   name: 'UploadPage',
   components: {
-    dragNdrop,
+    DragDrop,
   }
 }
 </script>
