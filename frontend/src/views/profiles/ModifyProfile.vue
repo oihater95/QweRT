@@ -255,7 +255,6 @@ export default {
         min: v => (v.length >= 8 || v.length === 0) || '8자 이상이어야 합니다.',
         include: v => ((/[a-zA-Z]/.test(v) && /[0-9]/.test(v)) || v.length === 0) || '영문, 숫자를 모두 포함해야 합니다.',
         match: v => ( v === this.newPassword || v.length === 0) || '새 비밀번호와 일치하지 않습니다.',
-        match2: v => v === this.newPasswordConfirmation || '새 비밀번호.'
       },
       modalMsg: {
         name: '',
