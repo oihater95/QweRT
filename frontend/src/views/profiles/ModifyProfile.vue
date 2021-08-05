@@ -230,6 +230,7 @@
 <script>
 import Modal from '@/components/common/Modal'
 import '@/css/profiles/ModifyProfile.scss'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -239,11 +240,11 @@ export default {
   },
   data: function () {
     return {
-      userId: 2,
+      userId: null,
       profileImageFile: null,
       profileImageSrc: '',
-      nickname: 'nickname',
-      introduction: 'introduction introduction introduction introduction introduction introduction',
+      nickname: '',
+      introduction: '자기소개를 입력해주세요',
       masterpieces: [],
       password: '',
       newPassword: '',
@@ -294,7 +295,7 @@ export default {
         data: {
           nickname: this.nickname,
           introduction: this.introduction,
-          profileImage: 'this.profileImageSrc(아직 미완성)',
+          profileImage: '',
           masterpieceIds: this.masterpieces,
         },
         headers: { token: localStorage.getItem('jwtToken') }
@@ -486,6 +487,12 @@ export default {
         })
     },
   },
+  computed: {
+    ...mapState([
+      'isLogon',
+      'userInfo',
+    ])
+  },
   watch: {
     // '새 비밀번호'와 '새 비밀번호 확인'이 일치하여 경고가 없는 상태에서 '새 비밀번호'를 바꾸면 일치하지 않는다는 경고가 뜨지 않는 문제 해결
     // '새 비밀번호'를 바꿨을 때 '새 비밀번호 확인'에서도 즉각 반응하여 경고를 나타낼 수 있도록 하는 일종의 꼼수
@@ -499,6 +506,13 @@ export default {
         })
     },
   },
+  created: function () {
+    this.userId = this.userInfo.userId
+    this.nickname = this.userInfo.nickname
+    if (this.userInfo.profileImage) {
+      this.profileImageSrc = this.userInfo.profileImage
+    }
+  }
 }
 </script>
 

@@ -4,9 +4,14 @@
     <v-row justify="center">
       <v-col
         cols="7"
+        offset="2"
         class="pb-0"
       >
         <v-img src="@/assets/images/profile_certificate.png"></v-img>
+      </v-col>
+      <!-- 급히 만든 부분이라 수정 필요 -->
+      <v-col cols="2" class="text-end">
+        <v-btn color="#AEA660" @click="$router.push({ name: 'ModifyProfile', params: {userId: userId} })">정보 수정</v-btn>
       </v-col>
     </v-row>
     <!-- 프로필 정보 -->
@@ -28,7 +33,7 @@
             cols="12"
             class="pt-0"
           >
-            <h1 class="text-center">nickname</h1>
+            <h1 class="text-center">{{ nickname }}</h1>
           </v-col>
           <v-col
             cols="12"
@@ -76,7 +81,7 @@
     <v-row justify="center">
       <!-- 자기소개 -->
       <v-col cols="6">
-        <h3 class="text-center">introduction introduction introduction introduction introduction introduction</h3>
+        <h3 class="text-center">{{ introduction }}</h3>
       </v-col>
       <!-- 대표작 -->
       <v-col
@@ -128,12 +133,17 @@
 
 <script>
 import '@/css/profiles/Profile.scss'
+import { mapState } from 'vuex'
 // import axios from 'axios'
 
 export default {
   name: 'Profile',
   data: function () {
     return {
+      userId: null,
+      nickname: '',
+      profileImage: '',
+      introduction: '자기소개를 입력해주세요',
       // 예시로 넣어본 그림 url
       drawings: [
         {src: 'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',},
@@ -157,6 +167,17 @@ export default {
     follow: function () {
       this.followed = !this.followed
     },
+  },
+  // 임시로 state에서 정보 받아오기
+  computed: {
+    ...mapState([
+      'isLogon',
+      'userInfo',
+    ])
+  },
+  created: function () {
+    this.userId = this.userInfo.userId
+    this.nickname = this.userInfo.nickname
   },
   // created: function () {
   //   axios ({
