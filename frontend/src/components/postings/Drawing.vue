@@ -31,8 +31,16 @@
           </button>
           <button id="PaintBtn" @click="handlePaintClick">Paint</button>
           <button id="clearBtn" @click="handleClearClick">Clear</button>
-          <button id="undoBtn" class="undoBtn" @click="handleUndoClick" disabled style="width:40px">Undo</button>
-          <button id="redoBtn" class="redoBtn" @click="handleRedoClick" disabled style="width:40px">Redo</button>
+          <button id="undoBtn" class="undoBtn" @click="handleUndoClick" disabled style="width:40px">
+            <v-icon>
+              mdi-undo
+            </v-icon>
+          </button>
+          <button id="redoBtn" class="redoBtn" @click="handleRedoClick" disabled style="width:40px">
+            <v-icon>
+              mdi-redo
+            </v-icon>
+          </button>
           <button id="saveBtn" @click="handleSaveClick">Save</button>
           </v-row>
 
@@ -45,8 +53,16 @@
             Paint
           </button>
           <button id="clearBtn" @click="handleClearClick">Clear</button>
-          <button id="undoBtn" class="undoBtn" @click="handleUndoClick" disabled>Undo</button>
-          <button id="redoBtn" class="redoBtn" @click="handleRedoClick" disabled>Redo</button>
+          <button id="undoBtn" class="undoBtn" @click="handleUndoClick" disabled style="width:40px">
+            <v-icon>
+              mdi-undo
+            </v-icon>
+          </button>
+          <button id="redoBtn" class="redoBtn" @click="handleRedoClick" disabled style="width:40px">
+            <v-icon>
+              mdi-redo
+            </v-icon>
+          </button>
           <button id="saveBtn" @click="handleSaveClick">Save</button>
           </v-row>
     
@@ -121,12 +137,13 @@ export default {
     },
     // mouseup & mouseleave
     stopPainting: function() {
-      let img = this.canvasFrame.toDataURL()
-      if(this.painting === true) {
-        this.history.undoList.push(img)
-        console.log('undo', this.history.undoList)
-        document.getElementById("undoBtn").removeAttribute("disabled")
-      } 
+      if (this.filling === false){
+        let img = this.canvasFrame.toDataURL()
+        if(this.painting === true) {
+          this.history.undoList.push(img)
+          document.getElementById("undoBtn").removeAttribute("disabled")
+        } 
+      }
       this.painting = false
     },
 
@@ -147,7 +164,6 @@ export default {
         // mousedown painting true
         this.vueCanvas.lineTo(e.offsetX, e.offsetY)
         this.vueCanvas.stroke()
-        //this.histories[this.histories.length-1].push([e.offsetX, e.offsetY])
       }
     },
     // 주어진 색상 선택
@@ -214,6 +230,11 @@ export default {
     handleCanvasClick: function(e) {
       if (this.filling) {  // true(채우기) 일 때만 작동
         this.vueCanvas.fillRect(0, 0, e.target.width, e.target.height)
+        let img = this.canvasFrame.toDataURL()
+        if(this.painting === false) {
+          this.history.undoList.push(img)
+          document.getElementById("undoBtn").removeAttribute("disabled")
+        } 
       }
     },
 
@@ -240,8 +261,6 @@ export default {
       let undoListCnt = this.history.undoList.length
       if (undoListCnt >= 1) {
         this.history.redoList.push(this.history.undoList.pop())
-        console.log('undo', this.history.undoList)
-        console.log('redo', this.history.redoList)
         document.getElementById("redoBtn").removeAttribute("disabled")
         undoListCnt = this.history.undoList.length
         // 이전 캔버스 이미지
@@ -260,14 +279,10 @@ export default {
         this.vueCanvas.clearRect(0, 0, 800, 600);
         document.getElementById("undoBtn").disabled = true
       }
-      console.log('undo', this.history.undoList)
     },
     handleRedoClick: function(){
       let redoListCnt = this.history.redoList.length
       if (redoListCnt > 0) {
-        this.history.undoList.push(this.history.redoList.pop())
-        console.log('undo', this.history.undoList)
-        console.log('redo', this.history.redoList)
         document.getElementById("undoBtn").removeAttribute("disabled")
         redoListCnt = this.history.redoList.length
         // 이전 캔버스 이미지
@@ -277,6 +292,7 @@ export default {
         img.onload = () => {
           this.vueCanvas.drawImage(img, 0, 0)
         }
+        this.history.undoList.push(this.history.redoList.pop())
       } else {
         document.getElementById("redoBtn").disabled = true
       }
