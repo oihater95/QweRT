@@ -28,6 +28,7 @@
         class="form-control col-12"
         :class="{ 'grey lighten-3': dragover }"
         placeholder="Drag & Drop or Select"
+        readonly
         >
     </v-card>
     <div class="col-2 mx-3">
@@ -45,18 +46,24 @@
       </div>
       <br>
       <div class="input-group-append">
-        <v-btn 
-          color="error"
+        <v-btn
           elevation="1"
           class="mb-2"
-          @click.stop="clearInput">CLEAR
+          @click.stop="clearInput"
+          icon>
+          <v-icon id="posting-clear__btn">
+            mdi-trash-can-outline
+          </v-icon>
         </v-btn>
         <br>
         <v-btn
-          color="primary"
           elevation="1"
           class="my-2"
-          @click="onClickUpload">Upload
+          @click="onClickUpload"
+          icon>
+          <v-icon id="posting-upload__btn">
+            mdi-upload-outline
+          </v-icon>
         </v-btn>
       </div>
     </div>

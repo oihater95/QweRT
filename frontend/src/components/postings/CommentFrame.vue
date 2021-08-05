@@ -305,6 +305,7 @@ export default {
       } else {
         this.docentsArray.push(commentItem)
       }
+      this.comments.push(commentItem)
       this.commentForm.comment_content = ''
     }
 
