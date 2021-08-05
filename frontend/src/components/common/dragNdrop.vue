@@ -5,7 +5,7 @@
         2. @dragover : 항목이 드롭 영역 위로 드래그되는 시점 감지
         3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
         4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
-    <v-card id="drop-card" class="col-6">
+    <v-card id="drop-card" class="col-12">
       <div  v-if="imageSrc" class="upload-image">
         <img id="previewImg" 
         :src="imageSrc" 
