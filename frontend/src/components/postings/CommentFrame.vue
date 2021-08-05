@@ -90,6 +90,7 @@
     <br>
     <br>
     <v-card
+      id="comment-create__form"
       v-show="commentFormToggle"
       min-height="100px">
       <v-row
@@ -97,6 +98,7 @@
         align="center"
         class="mt-5">
         <v-col 
+        id="comment-create__content"
         cols="11"
         class="ms-5">
           <v-text-field
@@ -108,7 +110,8 @@
           hide-details="auto"
           ></v-text-field>
         </v-col>
-        <v-col class="me-1">
+        <v-col id="comment-create__btn"
+        class="me-1">
           <v-btn 
           icon
           @click="clickCommentForm">

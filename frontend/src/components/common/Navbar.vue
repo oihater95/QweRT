@@ -25,7 +25,7 @@
             <v-icon @click.native="clickHome">mdi-home</v-icon>
             <div class="text-center">
               <!-- offset-y가 있어야 클릭 시에 드롭다운이 아래로 내려온다. -->
-              <v-menu offset-y open-on-hover>
+              <v-menu offset-y open-on-hover :close-on-content-click="false">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon class="icon"
                     v-bind="attrs"
@@ -35,12 +35,22 @@
                   </v-icon>
                 </template>
                 <v-list>
+                  <v-list-group>
+                    <v-list-item slot="activator">
+                      <v-list-item-title class="tab">그림 업로드</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item :to="{ path: '/postings/drawing'}" >
+                      <v-list-item-title class="tab ms-8">그리기</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item :to="{ path: '/postings'}">
+                      <v-list-item-title class="tab ms-8">파일 업로드</v-list-item-title>
+                    </v-list-item>
+                  </v-list-group>
+                  
                   <v-list-item>
-                    <v-list-item-title class="tab">그림 업로드</v-list-item-title>
+                    <v-list-item-title class="tab ms-4">새 큐레이션</v-list-item-title>
                   </v-list-item>
-                  <v-list-item>
-                    <v-list-item-title class="tab">새 큐레이션</v-list-item-title>
-                  </v-list-item>
+                  
                 </v-list>
               </v-menu>
             </div>

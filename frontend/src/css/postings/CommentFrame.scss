@@ -1,5 +1,5 @@
 #comment-card {
-  max-width: 1050px;
+  max-width: 850px;
   margin: 0 auto;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .comment-row {
-  max-width: 1015px;
+  max-width: 865px;
 }
 
 .comment-row::-webkit-scrollbar {
@@ -59,4 +59,17 @@
 .comment-create__section {
   align-items: right;
   background-color: #FFFFF0;
+}
+
+#comment-create__form {
+  margin: 0 auto;
+  max-width: 850px;
+}
+
+#comment-create__content {
+  max-width: 800px;
+}
+
+#comment-create__btn {
+  padding: 0;
 }
