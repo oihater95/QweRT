@@ -19,6 +19,8 @@ public interface PostingService {
 	
 	public List<Posting> getPopularPostings(int page, int size);
 	
+	public List<Posting> getFavoritePostings(User user, int page, int size);
+	
 	public Optional<Posting> getPosting(int postingId);
 	
 	public PostingDto getPostingDetail(Posting posting);

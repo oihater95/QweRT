@@ -69,6 +69,7 @@ public class User {
     private List<Posting> postings;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Like> likes;
     
 }
