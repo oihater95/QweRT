@@ -1,7 +1,6 @@
 <template>
-    <div class="ui-thumbnail" tabindex="-1" :data-key="dataKey">
+    <div class="curate-thumbnail" tabindex="-1" :data-key="dataKey">
         <img class="curation-thumbnail__image" :src="imageUrl" alt="picture" />
-        <div class="ui-cuticle" data-flip-key="cuticle"></div>
     </div>
 </template>
 
@@ -21,7 +20,7 @@ export default {
 </script>
 
 <style scoped>
-.ui-thumbnail {
+.curate-thumbnail {
   display: block;
   max-width: 84px;
   max-height: 84px;
@@ -36,4 +35,24 @@ export default {
   height: 84px;
   width: 84px;
 }
+
+.curate-thumbnail > img {
+  filter: grayscale(100%);
+  transition-duration: 0.35s;
+}
+
+
+.curate-thumbnail:active > img {
+  transform: scale(0.9);
+  transition-duration: 100ms;
+}
+
+.curate-thumbnail:focus {
+  outline: none;
+}
+
+.curate-thumbnail[data-active] > img, .curate-thumbnail:hover > img {
+  filter: grayscale(0%);
+}
+
 </style>

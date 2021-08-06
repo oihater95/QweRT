@@ -1,6 +1,6 @@
 <template>
     <div id="app" data-state="0">
-        <div class="ui-big-images">
+        <div class="curate-big-images">
             <ImageMain
             v-for="(image, idx) in curationImages"
             :key="1-idx"
@@ -8,7 +8,7 @@
             :dataKey="idx"
             />
         </div>
-        <div class="ui-thumbnails">
+        <div class="curate-thumbnails">
             <ImageThumbnail
             v-for="(image, idx) in curationImages"
             :key="2-idx"
@@ -16,12 +16,12 @@
             :dataKey="idx"
             />
         </div>
-        <div class="ui-content">
-            <nav class="ui-nav">
+        <div class="curate-content">
+            <nav class="curate-nav">
                 <button id="prev" tabindex="-1" title="Previous">&lt;</button>
                 <button id="next" tabindex="-1" title="Next">&gt;</button>
             </nav>
-            <div class="ui-articles">
+            <div class="curate-articles">
                 <ImageArticle
                 v-for="(image, idx) in curationImages"
                 :key="3-idx"
@@ -99,7 +99,7 @@ export default {
             // 이 함수의 제일 밑에서 추가해준다.
             const activeElements = document.querySelectorAll('[data-active]');
             // 큰 화면
-            const mainImages = Array.from(document.querySelectorAll('.ui-big-image'));
+            const mainImages = Array.from(document.querySelectorAll('.curate-big-image'));
 
             Array.from(activeElements)
                 .forEach(el => el.removeAttribute('data-active'));
@@ -127,7 +127,7 @@ export default {
         // 버튼 혹은 썸네일을 통해서 동작한다.
         const prevButton = document.querySelector('#prev');
         const nextButton = document.querySelector('#next');
-        const thumbnails = Array.from(document.querySelectorAll('.ui-thumbnail'));
+        const thumbnails = Array.from(document.querySelectorAll('.curate-thumbnail'));
 
         // 클릭했을 때 어느 걸 클릭했는지 알린다.
         thumbnails.forEach( thumb => { 
@@ -160,21 +160,20 @@ export default {
   transition-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
 }
 
-.ui-big-images {
+.curate-big-images {
   position: absolute;
   top: -4%;
-  left: 5%;
   height: 100%;
   width: 100%;
-  overflow:hidden;
+  /* overflow: hidden; */
   display: flex;
 }
 
-.ui-thumbnails {
+.curate-thumbnails {
   position: absolute;
   width: 100%;
   bottom: 15px;
-  left: 300px;
+  left: 200px;
   background-color: #fff;
   display: flex;
   flex-direction: row;
@@ -185,15 +184,14 @@ export default {
   padding-right: calc( 45% + .5rem );
 }
 
-/* 완료 */
-.ui-content {
+.curate-content {
   position: absolute;
   width: 30%;
-  right: 0;
+  right: 10%;
   bottom: 0;
 }
 
-.ui-articles {
+.curate-articles {
   background: #493e56;
   color: white;
   display: flex;
@@ -202,15 +200,15 @@ export default {
   height: 100px;
 }
 
-
-.ui-nav {
+.curate-nav {
   position: absolute;
   right: 0;
   bottom: 60%;
   background: inherit;
   z-index: 1;
 }
-.ui-nav button {
+
+.curate-nav button {
   background: #493e56;
   border: none;
   -webkit-appearance: none;
@@ -223,81 +221,16 @@ export default {
   transition: inherit;
   transition-duration: 300ms;
 }
-.ui-nav button:hover, .ui-nav button:focus {
+
+.curate-nav button:hover, .curate-nav button:focus {
   background: #D4A12D;
   outline: none;
 }
-.ui-nav button:active {
+
+.curate-nav button:active {
   outline: none;
   transform: translateY(0.25em);
   transition-duration: 100ms;
-}
-
-
-.ui-big-image {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-.ui-big-image img {
-  transform: scale(0.85);
-}
-
-.ui-big-image[data-active] ~ .ui-big-image {
-  transform: translateX(100%);
-}
-
-.ui-big-image[data-active] {
-  opacity: 1;
-  transform: translateX(0%);
-}
-.ui-big-image[data-active] img {
-  transform: scale(1);
-}
-
-.ui-article {
-  transform: translateX(-100%);
-}
-.ui-article:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #D4A12D;
-  opacity: 1;
-  transition-duration: 0.35s;
-  z-index: 1;
-}
-
-.ui-article[data-active] ~ .ui-article {
-  transform: translateX(100%);
-}
-
-.ui-article[data-active] {
-  transform: translateX(0%);
-}
-.ui-article[data-active]:before {
-  opacity: 0;
-}
-
-.ui-thumbnail > img {
-  filter: grayscale(100%);
-  transition-duration: 0.35s;
-}
-.ui-thumbnail:active > img {
-  transform: scale(0.9);
-  transition-duration: 100ms;
-}
-.ui-thumbnail:focus {
-  outline: none;
-}
-
-.ui-thumbnail[data-active] > img, .ui-thumbnail:hover > img {
-  filter: grayscale(0%);
-}
-.ui-thumbnail[data-active] .ui-cuticle {
-  display: block;
 }
 
 </style>
