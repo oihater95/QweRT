@@ -89,6 +89,7 @@
       >
         <v-btn
           color="#E8D48D"
+          @click="changeUserInfo"
         >
           저장
         </v-btn>
@@ -229,6 +230,7 @@
 <script>
 import Modal from '@/components/common/Modal'
 import '@/css/profiles/ModifyProfile.scss'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -238,11 +240,11 @@ export default {
   },
   data: function () {
     return {
-      userId: 9,
+      userId: null,
       profileImageFile: null,
       profileImageSrc: '',
-      nickname: 'nickname',
-      introduction: 'introduction introduction introduction introduction introduction introduction',
+      nickname: '',
+      introduction: '자기소개를 입력해주세요',
       masterpieces: [],
       password: '',
       newPassword: '',
@@ -255,7 +257,6 @@ export default {
         min: v => (v.length >= 8 || v.length === 0) || '8자 이상이어야 합니다.',
         include: v => ((/[a-zA-Z]/.test(v) && /[0-9]/.test(v)) || v.length === 0) || '영문, 숫자를 모두 포함해야 합니다.',
         match: v => ( v === this.newPassword || v.length === 0) || '새 비밀번호와 일치하지 않습니다.',
-        match2: v => v === this.newPasswordConfirmation || '새 비밀번호.'
       },
       modalMsg: {
         name: '',
@@ -286,25 +287,74 @@ export default {
         reader.readAsDataURL(file)
       }
     },
-    // changeUserInfo: function () {
-    //   axios({
-    //     method: 'put',
-    //     url: `http://localhost/qwert/accounts/${this.userId}/info/`,
-    //     data: {
-    //       nickname: this.nickname,
-    //       introduction: this.introduction,
-    //       profile_image: this.profileImage,
-    //       masterpiece_ids: this.masterpieces,
-    //     },
-    //     headers: { token: localStorage.getItem('jwtToken') }
-    //   })
-    //     .then(res => {
-    //       console.log(res)
-    //     })
-    //     .catch(err => {
-    //       console.log(err)
-    //     })
-    // },
+    // 회원정보 수정 함수
+    changeUserInfo: function () {
+      axios({
+        method: 'put',
+        url: `http://localhost/qwert/accounts/${this.userId}/info/`,
+        data: {
+          nickname: this.nickname,
+          introduction: this.introduction,
+          profileImage: '',
+          masterpieceIds: this.masterpieces,
+        },
+        headers: { token: localStorage.getItem('jwtToken') }
+      })
+        .then(res => {
+          console.log(res)
+          // state에 저장되어 있는 기본 유저정보 갱신
+          this.$store.dispatch('setUserInfo', {
+            userId: this.userId,
+            nickname: this.nickname,
+            profileImage: this.profileImageSrc,
+          })
+          // 회원정보 수정 성공 모달 창
+          this.modalMsg = {
+            name: 'changeUserInfo',
+            triggerBtn: '',
+            title: '',
+            text: '회원정보 수정이 완료되었습니다.',
+            positiveBtn: '확인',
+            negativeBtn: '',
+          }
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
+        })
+        .catch(err => {
+          console.log(err)
+          // 회원정보 수정 실패 모달 창 (상태 코드에 따라)
+          if (err.response.status === 401) {
+            this.modalMsg = {
+              name: 'changeUserInfoFailure401',
+              triggerBtn: '',
+              title: `${err.response.status} error`,
+              text: '인증되지 않은 사용자입니다.<br/>혹은<br/>현재 로그인된 상태인지 확인해주세요.',
+              positiveBtn: '확인',
+              negativeBtn: '',
+            }
+          } else if (err.response.status === 404) {
+            this.modalMsg = {
+              name: 'changeUserInfoFailure404',
+              triggerBtn: '',
+              title: `${err.response.status} error`,
+              text: '확인할 수 없는 사용자에 대한 요청입니다.',
+              positiveBtn: '확인',
+              negativeBtn: '',
+            }
+          } else {
+            this.modalMsg = {
+              name: 'changeUserInfoFailure',
+              triggerBtn: '',
+              title: `${err.response.status} error`,
+              text: '제한된 접근입니다.<br/>현재 로그인된 상태인지 확인해주세요.',
+              positiveBtn: '확인',
+              negativeBtn: '',
+            }
+          }
+          const modalBtn = document.querySelector('#modalBtn')
+          modalBtn.click()
+        })
+    },
     // 비밀번호 변경 함수
     changePassword: function () {
       axios({
@@ -312,7 +362,7 @@ export default {
         url: `http://localhost/qwert/accounts/${this.userId}/pwd/`,
         data: {
           password: this.password,
-          new_password: this.newPassword
+          newPassword: this.newPassword
         },
         headers: { token: localStorage.getItem('jwtToken') }
       })
@@ -387,8 +437,8 @@ export default {
       })
         .then(res => {
           console.log(res)
-          // jwt 토큰 삭제
-          localStorage.removeItem('jwtToken')
+          // jwt 토큰과 state의 회원 정보 삭제
+          this.$store.dispatch('removeUserInfo')
           // 회원 탈퇴 성공 모달 창
           this.modalMsg = {
             name: 'deleteUser',
@@ -437,9 +487,15 @@ export default {
         })
     },
   },
-  // '새 비밀번호'와 '새 비밀번호 확인'이 일치하여 경고가 없는 상태에서 '새 비밀번호'를 바꾸면 일치하지 않는다는 경고가 뜨지 않는 문제 해결
-  // '새 비밀번호'를 바꿨을 때 '새 비밀번호 확인'에서도 즉각 반응하여 경고를 나타낼 수 있도록 하는 일종의 꼼수
+  computed: {
+    ...mapState([
+      'isLogon',
+      'userInfo',
+    ])
+  },
   watch: {
+    // '새 비밀번호'와 '새 비밀번호 확인'이 일치하여 경고가 없는 상태에서 '새 비밀번호'를 바꾸면 일치하지 않는다는 경고가 뜨지 않는 문제 해결
+    // '새 비밀번호'를 바꿨을 때 '새 비밀번호 확인'에서도 즉각 반응하여 경고를 나타낼 수 있도록 하는 일종의 꼼수
     newPassword: function () {
       return new Promise((resolve) => {
         resolve()
@@ -448,6 +504,13 @@ export default {
         .then(() => {
           this.newPasswordConfirmation = this.newPasswordConfirmation.trim()
         })
+    },
+  },
+  created: function () {
+    this.userId = this.userInfo.userId
+    this.nickname = this.userInfo.nickname
+    if (this.userInfo.profileImage) {
+      this.profileImageSrc = this.userInfo.profileImage
     }
   }
 }

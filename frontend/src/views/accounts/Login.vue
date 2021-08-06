@@ -145,11 +145,13 @@ export default {
     login: function () {
       axios ({
         method: 'post',
-        url: 'http://localhost/qwert/accounts/login/',
+        url: 'http://13.209.16.153/qwert/accounts/login/',
         data: this.credentials
       })
         .then(res => {
           console.log(res)
+          // jwt Token 저장
+          localStorage.setItem('jwtToken', res.data.token)
           // 유저정보 state에 저장
           this.$store.dispatch('setUserInfo', res.data)
           this.$router.push({ name: 'MainPage' })

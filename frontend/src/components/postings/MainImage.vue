@@ -10,6 +10,7 @@
         <img
           :src="image.posting_image"
           alt="posting_image"
+          @click="clickToGoDetail"
         >
         <div class="bottom-div d-flex flex-column align-center">
           <img
@@ -41,6 +42,11 @@ export default {
       type: Object
     }
   },
+  methods: {
+    clickToGoDetail: function() {
+      this.$router.push({name: 'PostingDetail', params: {filename: this.image.title, imageSrc: this.image.posting_image}})
+    }
+  }
 }
 </script>
 

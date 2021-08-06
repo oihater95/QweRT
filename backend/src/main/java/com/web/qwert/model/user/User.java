@@ -13,7 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+
 import com.web.qwert.model.like.Like;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.qwert.model.posting.Posting;
 
 import lombok.AllArgsConstructor;
@@ -33,12 +35,14 @@ public class User {
     private int userId;
     
     @Column(name = "email")
+    @JsonIgnore
     private String email;
     
     @Column(name = "nickname")
     private String nickname;
     
     @Column(name = "password")
+    @JsonIgnore
     private String password;  
     
     // 가입일은 자동 입력
@@ -61,6 +65,7 @@ public class User {
 	}
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // posting의 user 객체 변수로 맵핑, 삭제시 post도 삭제
+    @JsonIgnore
     private List<Posting> postings;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
