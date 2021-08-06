@@ -1,7 +1,10 @@
 <template>
   <v-container class="profile-container">
-    <!-- 헤더 장식 -->
-    <v-row justify="center">
+    <v-row
+      justify="center"
+      align="center"
+    >
+      <!-- 헤더 장식 -->
       <v-col
         cols="7"
         offset="2"
@@ -9,9 +12,16 @@
       >
         <v-img src="@/assets/images/profile_certificate.png"></v-img>
       </v-col>
-      <!-- 급히 만든 부분이라 수정 필요 -->
+      <!-- 정보 수정 버튼 -->
       <v-col cols="2" class="text-end">
-        <v-btn color="#AEA660" @click="$router.push({ name: 'ModifyProfile', params: {userId: userId} })">정보 수정</v-btn>
+        <v-btn
+          color="#AEA660"
+          small
+          depressed
+          @click="$router.push({ name: 'ModifyProfile', params: {userId: userId} })"
+        >
+          정보 수정
+        </v-btn>
       </v-col>
     </v-row>
     <!-- 프로필 정보 -->
