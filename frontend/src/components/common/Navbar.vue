@@ -20,7 +20,7 @@
               width="130"
             />
           </div>
-          <div class="icon-div">
+          <div v-if="isLogon" class="icon-div">
             <v-icon @click.native="clickCuration">far fa-images</v-icon>
             <v-icon @click.native="clickHome">mdi-home</v-icon>
             <div class="text-center">
@@ -67,7 +67,7 @@
                   </v-icon>
                 </template>
                 <v-list>
-                  <v-list-item>
+                  <v-list-item @click.native="clickProfile">
                     <v-list-item-title class="tab">내 프로필</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click.native="clickNotify">
@@ -79,6 +79,11 @@
                 </v-list>
               </v-menu>
             </div>
+            <v-icon @click.native="clickSearch">fas fa-search</v-icon>
+          </div>
+          <div v-else class="icon-div">
+            <v-icon @click.native="clickSignup">fas fa-user-plus</v-icon>
+            <v-icon @click.native="clickLogin">mdi-login</v-icon>
             <v-icon @click.native="clickSearch">fas fa-search</v-icon>
           </div>
         </v-layout>
@@ -97,6 +102,7 @@
 
 <script>
 import "@/css/common/Navbar.scss"
+import { mapState } from 'vuex'
 
 export default {
   name: 'Navbar',
@@ -125,6 +131,21 @@ export default {
     clickNotify: function () {
       this.$router.push({ name: 'NotifyPage' })
     },
-  }
+    clickProfile: function () {
+      this.$router.push({ name: 'Profile' })
+    },
+    clickSignup: function () {
+      this.$router.push({ name: 'Signup' })
+    },
+    clickLogin: function () {
+      this.$router.push({ name: 'Login' })
+    },
+  },
+  computed: {
+    ...mapState([
+      'isLogon',
+      'userInfo',
+    ])
+  },
 }
 </script>
