@@ -23,8 +23,6 @@ export default {
 .curate-big-image {
   width: 100%;
   margin-right: -100%;
-  max-width: 1400px;
-  max-height: 580px;
 }
 
 .curate-big-image img {

@@ -90,6 +90,12 @@ export default {
                     description : "Lorem ipsum dolor sit, amet consectetur adipisicing elit6" ,
                     image_url: "https://picsum.photos/1200/1200/?image=823",
                 },
+                {
+                    title : "lorem7",
+                    id : 7,
+                    description : "Lorem ipsum dolor sit, amet consectetur adipisicing elit6" ,
+                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/321673.jpg",
+                },
             ]
         }
     },
