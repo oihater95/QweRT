@@ -35,7 +35,7 @@ public class PostingServiceImpl implements PostingService {
         Optional<User> userOpt = userDao.findById(user_id); //id로 user 찾기
         
         if (userOpt.isPresent()) { // 회원이면 posting 생성
-        	System.out.println(userOpt.get().getPostings().size() + "개의 포스팅");
+
             Posting posting = new Posting();
             posting.setUser(userOpt.get());
             posting.setTitle(request.getPostingTitle());
@@ -69,5 +69,8 @@ public class PostingServiceImpl implements PostingService {
 		return postingDao.findAll(pageRequest).getContent();
 	}
 
-
+	@Override
+	public Optional<Posting> getPosting(int postingId) {
+		return postingDao.findById(postingId);
+	}
 }

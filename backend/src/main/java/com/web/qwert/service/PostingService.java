@@ -1,6 +1,7 @@
 package com.web.qwert.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 
@@ -14,4 +15,6 @@ public interface PostingService {
 	public List<Posting> getPostingsByUser(User user, int page, int size);
 	
 	public List<Posting> getNewPostings(int page, int size);
+	
+	public Optional<Posting> getPosting(int postingId);
 }
