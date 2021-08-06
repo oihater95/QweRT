@@ -1,7 +1,10 @@
 <template>
   <v-container class="profile-container">
-    <!-- 헤더 장식 -->
-    <v-row justify="center">
+    <v-row
+      justify="center"
+      align="center"
+    >
+      <!-- 헤더 장식 -->
       <v-col
         cols="7"
         offset="2"
@@ -9,9 +12,16 @@
       >
         <v-img src="@/assets/images/profile_certificate.png"></v-img>
       </v-col>
-      <!-- 급히 만든 부분이라 수정 필요 -->
+      <!-- 정보 수정 버튼 -->
       <v-col cols="2" class="text-end">
-        <v-btn color="#AEA660" @click="$router.push({ name: 'ModifyProfile', params: {userId: userId} })">정보 수정</v-btn>
+        <v-btn
+          color="#AEA660"
+          small
+          depressed
+          @click="$router.push({ name: 'ModifyProfile', params: {userId: userId} })"
+        >
+          정보 수정
+        </v-btn>
       </v-col>
     </v-row>
     <!-- 프로필 정보 -->
@@ -24,22 +34,58 @@
         cols="2"
         class="profile-image"
       >
-        <v-img src="@/assets/images/profile_image_border.png"></v-img>
+        <v-img
+          src="@/assets/images/profile_image_border.png"
+          class="border"
+        >
+          <v-img
+            src="@/assets/images/profile_image_default.png"
+            class="content"
+          ></v-img>
+        </v-img>
       </v-col>
       <!-- 이름 & 팔로워/팔로잉 등등 수치 -->
-      <v-col cols="4">
+      <v-col
+        cols="4"
+        class="profile-userInfo"
+      >
         <v-row>
+          <!-- 이름 -->
           <v-col
             cols="12"
             class="pt-0"
           >
-            <h1 class="text-center">{{ nickname }}</h1>
+            <h1>{{ nickname }}</h1>
           </v-col>
+          <!-- 팔로워/팔로잉 등등 수치 -->
           <v-col
             cols="12"
             class="pa-0"
           >
-            <h5 class="text-center">팔로워 100 / 팔로잉 100 / 좋아요 1200 / 큐레이션 500</h5>
+            <h5>
+              <span class="follow">
+                팔로워 100
+              </span> |
+              <span class="follow">
+                팔로잉 100
+              </span> |
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
+                    <v-icon small>fas fa-heart</v-icon> 1200
+                  </span>
+                </template>
+                <span>게시물이 좋아요 받은 횟수</span>
+              </v-tooltip> |
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
+                    <v-icon small>far fa-image</v-icon> 500
+                  </span>
+                </template>
+                <span>게시물이 큐레이팅된 횟수</span>
+              </v-tooltip>
+            </h5>
           </v-col>
         </v-row>
       </v-col>

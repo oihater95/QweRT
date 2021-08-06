@@ -1,8 +1,10 @@
 package com.web.qwert.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import com.web.qwert.dao.CategoryDao;
 import com.web.qwert.dao.PostingDao;
 import com.web.qwert.dao.UserDao;
+import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
+import com.web.qwert.model.posting.PostingDto;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.User;
 
@@ -28,6 +32,9 @@ public class PostingServiceImpl implements PostingService {
 	@Autowired
 	PostingDao postingDao;
 	
+	@Autowired
+	LikeService likeService;
+	
 	@Override
 	public boolean createPosting(UploadRequest request) {
 		
@@ -35,7 +42,7 @@ public class PostingServiceImpl implements PostingService {
         Optional<User> userOpt = userDao.findById(user_id); //id로 user 찾기
         
         if (userOpt.isPresent()) { // 회원이면 posting 생성
-        	System.out.println(userOpt.get().getPostings().size() + "개의 포스팅");
+
             Posting posting = new Posting();
             posting.setUser(userOpt.get());
             posting.setTitle(request.getPostingTitle());
@@ -53,7 +60,7 @@ public class PostingServiceImpl implements PostingService {
 
 	@Override
 	public List<Posting> getPostingsByUser(User user, int page, int size) {
-		//PageRequest 사용할 시, Page<>로 리턴 후 getContent()
+		//page말고 파라미터가 있는 경우 pageable만 인식됨
 		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
 		return postingDao.findByUser(user, pageable);
 //		return postings.stream().sorted((a,b) -> (b.getPostingId() - a.getPostingId()))
@@ -61,13 +68,53 @@ public class PostingServiceImpl implements PostingService {
 //				.limit(3)
 //				.collect(Collectors.toList());
 	}
-
+	
+	@Override
+	public List<Posting> getFavoritePostings(User user, int page, int size) {
+		// 최신순으로 유저의 좋아요 리스트 size만큼 읽어옴
+		List<Like> likes = likeService.getLikesByUser(user, page, size); 
+		List<Posting> postings = new ArrayList<Posting>();
+		
+		// 좋아요한 게시물 리스트를 구함
+		for(Like like : likes) {
+			Posting posting = like.getPosting();
+			postings.add(posting);
+			
+		}
+		return postings;
+	}
+	
 	@Override
 	public List<Posting> getNewPostings(int page, int size) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
-		
 		return postingDao.findAll(pageRequest).getContent();
 	}
+	
+	@Override
+	public List<Posting> getPopularPostings(int page, int size) {
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likeCnt").descending());
+		return postingDao.findAll(pageRequest).getContent();
+	}
+	
+	@Override
+	public Optional<Posting> getPosting(int postingId) {
+		return postingDao.findById(postingId);
+	}
+
+	@Override
+	public PostingDto getPostingDetail(Posting posting) {
+		PostingDto postingDto = new PostingDto();
+		BeanUtils.copyProperties(posting, postingDto);
+		
+		User uploader = posting.getUser();
+		postingDto.setCategoryId(posting.getCategory().getCategoryId());
+		postingDto.setUserId(uploader.getUserId());
+		postingDto.setNickname(uploader.getNickname());
+		
+		return postingDto;
+	}
+
+
 
 
 }

@@ -304,9 +304,9 @@ export default {
           console.log(res)
           // state에 저장되어 있는 기본 유저정보 갱신
           this.$store.dispatch('setUserInfo', {
-            userId: this.userId,
+            user_id: this.userId,
             nickname: this.nickname,
-            profileImage: this.profileImageSrc,
+            profile_image: this.profileImageSrc,
           })
           // 회원정보 수정 성공 모달 창
           this.modalMsg = {
@@ -437,8 +437,8 @@ export default {
       })
         .then(res => {
           console.log(res)
-          // jwt 토큰 삭제
-          localStorage.removeItem('jwtToken')
+          // jwt 토큰과 state의 회원 정보 삭제
+          this.$store.dispatch('removeUserInfo')
           // 회원 탈퇴 성공 모달 창
           this.modalMsg = {
             name: 'deleteUser',

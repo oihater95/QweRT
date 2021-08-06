@@ -88,6 +88,7 @@ const routes = [
     path: '/postings', 
     name: 'UploadPage',
     component: UploadPage,
+    props: true,
   },
   {
     path: '/search',

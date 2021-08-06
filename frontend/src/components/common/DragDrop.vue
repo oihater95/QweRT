@@ -6,7 +6,18 @@
                 3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
                 4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
             <v-card id="drop-card" class="col-12">
-                <div  v-if="imageSrc" class="upload-image">
+                <div  v-if="$route.params.imgSrc" class="upload-image">
+                    <img id="previewImg" 
+                        :src="$route.params.imgSrc" 
+                        class="col-12"
+                        @dragover.prevent="dragover = true"
+                        @dragenter.prevent="dragover = true"
+                        @dragleave.prevent="dragover = false"
+                        @drop.prevent="onDrop"
+                        :class="{ 'grey lighten-3': dragover }"
+                    >
+                </div>
+                <div  v-else-if="imageSrc" class="upload-image">
                     <img id="previewImg" 
                         :src="imageSrc" 
                         class="col-12"
@@ -82,9 +93,11 @@ export default {
       imageSrc: '',
     }
   },
+
   methods: {
     onDrop (event) {
       this.dragover = false
+      this.createImage(event.dataTransfer.files[0])
       this.inputImageFile(event.dataTransfer.files)
     },
     onFileChange (e) {
@@ -118,6 +131,10 @@ export default {
       reader.readAsDataURL(file)
     },
     uploadImage: async function () {
+      if(this.$route.params.imgSrc){
+        this.image = this.$route.params.imgSrc
+      }
+
       const response = await axios({
         method: 'GET',
         url: API_ENDPOINT
@@ -140,6 +157,10 @@ export default {
         body: blobData
       })
       console.log('Result: ', result)
+
+      let fileKey = response.data.Key
+      let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
+      this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
     },
     clearInput() {
       this.filename = '',
@@ -159,7 +180,7 @@ export default {
         reader.readAsDataURL(file)
       }
     },
-  }
+  },
 }
 </script>
 

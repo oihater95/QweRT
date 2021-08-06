@@ -15,18 +15,35 @@ export default new Vuex.Store({
       nickname: '',
       profileImage: '',
     },
+    postingInfo: {
+      userId: '',
+      postingImage: '',
+      postingTitle: '',
+      postingContent: '',
+      categoryId: '',
+    },
   },
   mutations: {
     SETUSERINFO: function (state, data) {
-      state.userInfo.userId = data.userId
+      state.userInfo.userId = data.user_id
       state.userInfo.nickname = data.nickname
-      state.userInfo.profileImage = data.profileImage
+      state.userInfo.profileImage = data.profile_image
       state.isLogon = true
+    },
+    REMOVEUSERINFO: function (state) {
+      state.userInfo.userId = ''
+      state.userInfo.nickname = ''
+      state.userInfo.profileImage = ''
+      state.isLogon = false
     },
   },
   actions: {
     setUserInfo: function ({ commit }, data) {
       commit('SETUSERINFO', data)
+    },
+    removeUserInfo: function ({ commit }) {
+      localStorage.removeItem('jwtToken')
+      commit('REMOVEUSERINFO')
     },
   },
   modules: {

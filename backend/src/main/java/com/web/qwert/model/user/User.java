@@ -12,8 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 
+
+import com.web.qwert.model.like.Like;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.qwert.model.posting.Posting;
 
@@ -66,4 +67,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // posting의 user 객체 변수로 맵핑, 삭제시 post도 삭제
     @JsonIgnore
     private List<Posting> postings;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Like> likes;
+    
 }
