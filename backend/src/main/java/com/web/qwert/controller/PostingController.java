@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.qwert.model.posting.Posting;
+import com.web.qwert.model.posting.PostingDto;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.User;
 import com.web.qwert.service.JwtService;
@@ -97,6 +98,20 @@ public class PostingController {
 		
 		return response;
 	}
+	
+	@GetMapping("detail/{postingId}")
+	@ApiOperation(value = "게시물 상세 정보 조회")
+	public Object postingDetail (@PathVariable int postingId) {
+		System.out.println("게시물 상세 정보");
+		Optional<Posting> postingOpt = postingService.getPosting(postingId);
+		
+		if(!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시물
+		
+		PostingDto response = postingService.getPostingDetail(postingOpt.get());
+			
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	// 카테고리로 게시글 검색
 	
 }
