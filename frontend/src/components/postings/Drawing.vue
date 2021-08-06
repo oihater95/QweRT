@@ -244,7 +244,7 @@ export default {
 
     // 로컬 & 로컬스토리지 저장
     handleUploadClick: function() {
-      const img = this.canvasFrame.toDataURL()
+      const img = this.canvasFrame.toDataURL('image/jpeg')  // jpg로 저장
       // const link = document.createElement("a")
       // link.href = img
       // // a 태그에 다운로드를 붙이면 브라우저가 링크로 이동하지 않고 로컬에 저장함
@@ -256,7 +256,7 @@ export default {
         imageSrc: img
       }
       localStorage.setItem(image.filename, image.imageSrc)
-      this.$router.push({name: 'PostingDetail', params: {filename: image.filename, imageSrc: image.imageSrc}})
+      this.$router.push({name: 'UploadPage', params: {imgSrc: image.imageSrc}})
     },
     // Undo
     handleUndoClick: function(){

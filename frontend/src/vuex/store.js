@@ -15,6 +15,13 @@ export default new Vuex.Store({
       nickname: '',
       profileImage: '',
     },
+    postingInfo: {
+      userId: '',
+      postingImage: '',
+      postingTitle: '',
+      postingContent: '',
+      categoryId: '',
+    },
   },
   mutations: {
     SETUSERINFO: function (state, data) {
