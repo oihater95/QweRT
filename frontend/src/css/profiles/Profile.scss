@@ -4,9 +4,29 @@
   margin-bottom: 20px;
   .profile-image {
     text-align: end;
-    .v-image {
+    .border {
       width: 70%;
       margin-left: auto;
+      .content {
+        width: 80%;
+        margin-top: 10%;
+        margin-left: 10%;
+        border-radius: 50% 50% 50% 50%;
+      }
+    }
+  }
+  .profile-userInfo {
+    h1 {
+      text-align: center;
+    }
+    h5 {
+      text-align: center;
+      .follow:hover {
+        cursor: pointer;
+      }
+      .v-icon {
+        color: rgb(230, 129, 62);
+      }
     }
   }
   .profile-masterpiece {
