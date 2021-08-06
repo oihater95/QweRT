@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col><DragDrop/></v-col>
+      <v-col><DragDrop imgSrc="imgSrc"/></v-col>
       <v-col>
         <div class="container">
           <v-card class="my-5 posting-title">
@@ -35,6 +35,11 @@ export default {
   name: 'UploadPage',
   components: {
     DragDrop,
+  },
+  props: {
+    imgSrc: {
+      type: String,
+    }
   }
 }
 </script>
