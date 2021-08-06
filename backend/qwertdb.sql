@@ -19,7 +19,7 @@ CREATE TABLE `user` (
   `create_date` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_idx_unique_email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 
 
@@ -58,6 +58,7 @@ CREATE TABLE posting
     `masterpiece_flag`  bit(1)           NULL        , 
     `user_id`           INT              NOT NULL    , 
     `category_id`       INT              NOT NULL    , 
+    `like_cnt`			INT				 NULL		 ,
     PRIMARY KEY (posting_id)
 );
 
@@ -68,4 +69,25 @@ ALTER TABLE posting
     ADD CONSTRAINT FK_posting_category FOREIGN KEY (category_id) REFERENCES category (category_id);
 
 
+-- 4. 좋아요 테이블 생성
 
+DROP TABLE IF EXISTS `like`;
+
+CREATE TABLE `like`
+(
+    `like_id`      INT    NOT NULL    AUTO_INCREMENT, 
+    `user_id`      INT    NOT NULL, 
+    `posting_id`    INT    NOT NULL, 
+    `uploader_id`  INT    NOT NULL, 
+    CONSTRAINT PK_like PRIMARY KEY (like_id)
+);
+
+
+ALTER TABLE `like`
+    ADD CONSTRAINT FK_like_user FOREIGN KEY (user_id) REFERENCES user (user_id);
+
+ALTER TABLE `like`
+    ADD CONSTRAINT FK_like_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
+
+
+use qwertdb;
