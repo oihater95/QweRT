@@ -3,6 +3,7 @@ package com.web.qwert.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,8 +14,10 @@ import com.web.qwert.dao.CategoryDao;
 import com.web.qwert.dao.PostingDao;
 import com.web.qwert.dao.UserDao;
 import com.web.qwert.model.posting.Posting;
+import com.web.qwert.model.posting.PostingDto;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.User;
+import com.web.qwert.model.user.UserDto;
 
 @Service
 public class PostingServiceImpl implements PostingService {
@@ -72,5 +75,16 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	public Optional<Posting> getPosting(int postingId) {
 		return postingDao.findById(postingId);
+	}
+
+	@Override
+	public PostingDto getPostingDetail(Posting posting) {
+		PostingDto postingDto = new PostingDto();
+		BeanUtils.copyProperties(posting, postingDto);
+		User uploader = posting.getUser();
+		postingDto.setCategoryId(posting.getCategory().getCategoryId());
+		postingDto.setUserId(uploader.getUserId());
+		postingDto.setNickname(uploader.getNickname());
+		return postingDto;
 	}
 }

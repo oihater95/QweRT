@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
 import com.web.qwert.model.posting.Posting;
+import com.web.qwert.model.posting.PostingDto;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.User;
 
@@ -17,4 +18,6 @@ public interface PostingService {
 	public List<Posting> getNewPostings(int page, int size);
 	
 	public Optional<Posting> getPosting(int postingId);
+	
+	public PostingDto getPostingDetail(Posting posting);
 }
