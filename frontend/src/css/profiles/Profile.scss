@@ -15,6 +15,20 @@
       }
     }
   }
+  .profile-userInfo {
+    h1 {
+      text-align: center;
+    }
+    h5 {
+      text-align: center;
+      .follow:hover {
+        cursor: pointer;
+      }
+      .v-icon {
+        color: rgb(230, 129, 62);
+      }
+    }
+  }
   .profile-masterpiece {
     height: 100%;
     .col {

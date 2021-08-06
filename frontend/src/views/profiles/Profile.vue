@@ -45,19 +45,47 @@
         </v-img>
       </v-col>
       <!-- 이름 & 팔로워/팔로잉 등등 수치 -->
-      <v-col cols="4">
+      <v-col
+        cols="4"
+        class="profile-userInfo"
+      >
         <v-row>
+          <!-- 이름 -->
           <v-col
             cols="12"
             class="pt-0"
           >
-            <h1 class="text-center">{{ nickname }}</h1>
+            <h1>{{ nickname }}</h1>
           </v-col>
+          <!-- 팔로워/팔로잉 등등 수치 -->
           <v-col
             cols="12"
             class="pa-0"
           >
-            <h5 class="text-center">팔로워 100 / 팔로잉 100 / 좋아요 1200 / 큐레이션 500</h5>
+            <h5>
+              <span class="follow">
+                팔로워 100
+              </span> |
+              <span class="follow">
+                팔로잉 100
+              </span> |
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
+                    <v-icon small>fas fa-heart</v-icon> 1200
+                  </span>
+                </template>
+                <span>게시물이 좋아요 받은 횟수</span>
+              </v-tooltip> |
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
+                    <v-icon small>far fa-image</v-icon> 500
+                  </span>
+                </template>
+                <span>게시물이 큐레이팅된 횟수</span>
+              </v-tooltip>
+            </h5>
           </v-col>
         </v-row>
       </v-col>
