@@ -34,7 +34,15 @@
         cols="2"
         class="profile-image"
       >
-        <v-img src="@/assets/images/profile_image_border.png"></v-img>
+        <v-img
+          src="@/assets/images/profile_image_border.png"
+          class="border"
+        >
+          <v-img
+            src="@/assets/images/profile_image_default.png"
+            class="content"
+          ></v-img>
+        </v-img>
       </v-col>
       <!-- 이름 & 팔로워/팔로잉 등등 수치 -->
       <v-col cols="4">
