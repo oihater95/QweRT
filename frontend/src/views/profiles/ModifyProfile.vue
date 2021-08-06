@@ -437,8 +437,8 @@ export default {
       })
         .then(res => {
           console.log(res)
-          // jwt 토큰 삭제
-          localStorage.removeItem('jwtToken')
+          // jwt 토큰과 state의 회원 정보 삭제
+          this.$store.dispatch('removeUserInfo')
           // 회원 탈퇴 성공 모달 창
           this.modalMsg = {
             name: 'deleteUser',

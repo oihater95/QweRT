@@ -73,7 +73,7 @@
                   <v-list-item @click.native="clickNotify">
                     <v-list-item-title class="tab">알림</v-list-item-title>
                   </v-list-item>
-                  <v-list-item>
+                  <v-list-item @click.native="clickLogout">
                     <v-list-item-title class="tab">로그아웃</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -132,13 +132,17 @@ export default {
       this.$router.push({ name: 'NotifyPage' })
     },
     clickProfile: function () {
-      this.$router.push({ name: 'Profile' })
+      this.$router.push({ name: 'Profile', params: {userId: this.userInfo.userId} })
     },
     clickSignup: function () {
       this.$router.push({ name: 'Signup' })
     },
     clickLogin: function () {
       this.$router.push({ name: 'Login' })
+    },
+    clickLogout: function () {
+      this.$store.dispatch('removeUserInfo')
+      this.$router.push({ name: 'MainPage', query: { t: new Date().getTime() }})
     },
   },
   computed: {
