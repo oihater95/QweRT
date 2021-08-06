@@ -41,11 +41,11 @@
               mdi-redo
             </v-icon>
           </button>
-          <button id="uploadBtn" @click="handleUploadClick">Upload</button>
+          <button id="uploadBtn" @click="handleUploadClick" disabled>Upload</button>
           </v-row>
 
           <v-row v-else>
-          <button id="StrokeBtn" @click="handleStrokeClick" >Stroke</button>
+          <button id="StrokeBtn" @click="handleStrokeClick">Stroke</button>
           <button 
             id="PaintBtn" 
             @click="handlePaintClick" 
@@ -63,7 +63,7 @@
               mdi-redo
             </v-icon>
           </button>
-          <button id="uploadBtn" @click="handleUploadClick">Upload</button>
+          <button id="uploadBtn" @click="handleUploadClick" disabled>Upload</button>
           </v-row>
     
         </div>
@@ -127,6 +127,7 @@ export default {
         undoList: [],
         redoList: [],
       },
+      isInput: false,
     }
   },
   methods: {
@@ -142,6 +143,7 @@ export default {
         if(this.painting === true) {
           this.history.undoList.push(img)
           document.getElementById("undoBtn").removeAttribute("disabled")
+          document.getElementById("uploadBtn").removeAttribute("disabled")
         } 
       }
       this.painting = false
@@ -225,6 +227,7 @@ export default {
     handleClearClick: function() {
       let canvas = document.getElementById("drawing-canvas");
       this.vueCanvas.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById("uploadBtn").disabled = true
     },
     // 채우기
     handleCanvasClick: function(e) {
@@ -269,6 +272,7 @@ export default {
         if (undoListCnt == 0) {
           this.vueCanvas.clearRect(0, 0, 800, 600);
           document.getElementById("undoBtn").disabled = true
+          document.getElementById("uploadBtn").disabled = true
         } else {
           let previousCanvas = this.history.undoList[undoListCnt - 1]
           let img = new Image()
@@ -280,12 +284,14 @@ export default {
       } else {
         this.vueCanvas.clearRect(0, 0, 800, 600);
         document.getElementById("undoBtn").disabled = true
+        document.getElementById("uploadBtn").disabled = true
       }
     },
     handleRedoClick: function(){
       let redoListCnt = this.history.redoList.length
       if (redoListCnt > 0) {
         document.getElementById("undoBtn").removeAttribute("disabled")
+        document.getElementById("uploadBtn").removeAttribute("disabled")
         redoListCnt = this.history.redoList.length
         // 이전 캔버스 이미지
         let previousCanvas = this.history.redoList[redoListCnt - 1]
@@ -338,6 +344,14 @@ export default {
   this.canvasLineWidth = ctx.lineWidth
   this.vueCanvas = ctx
   this.canvasFrame = canvas
+
+  if (this.$route.params.imgSrc) {
+    let img = new Image()
+      img.src = this.$route.params.imgSrc
+      img.onload = () => {
+        this.vueCanvas.drawImage(img, 0, 0)
+    }
+  }
   },
 
   watch: {

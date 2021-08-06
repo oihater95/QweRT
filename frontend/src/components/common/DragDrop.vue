@@ -43,7 +43,15 @@
                 >
             </v-card>
             <div class="mx-1 col-6">
-                <div class="file-button d-inline me-2">
+                <div v-if="$route.params.imgSrc" class="d-inline">
+                    <v-btn
+                        class="mb-2 mx-2 mt-1 posting-btns"
+                        @click="backToDrawing"
+                        icon>
+                        <i id="posting-back__btn" class="fas fa-reply"></i>
+                    </v-btn>
+                </div>
+                <div v-else class="file-button d-inline me-2">
                     <label for="ex_file">
                         <i class="fa fa-paperclip drag-search__icon "></i>
                     </label>
@@ -166,7 +174,6 @@ export default {
       this.filename = '',
       this.imageSrc = ''
     },
-
     // 미리보기
     preview (file) {
       if (typeof file === 'string') {
@@ -180,6 +187,10 @@ export default {
         reader.readAsDataURL(file)
       }
     },
+    // 그리기에서 넘어왔을 때 뒤로가기
+    backToDrawing() {
+      this.$router.push({name: 'Drawing', params: {imgSrc: this.$route.params.imgSrc}})
+    }
   },
 }
 </script>
