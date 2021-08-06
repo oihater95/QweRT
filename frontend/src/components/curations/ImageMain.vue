@@ -19,15 +19,20 @@ export default {
 }
 </script>
 
-<style>
-.ui-big-images {
-  position: absolute;
-  top: -4%;
-  left: 10%;
-  height: 100%;
+<style scoped>
+.ui-big-image {
   width: 100%;
-  overflow:hidden;
-  display: flex;
+  margin-right: -100%;
+}
+
+.ui-big-image img {
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center 20%;
+     object-position: center 20%;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 </style>

@@ -21,5 +21,19 @@ export default {
 </script>
 
 <style scoped>
+.ui-thumbnail {
+  display: block;
+  max-width: 84px;
+  max-height: 84px;
+  margin-left: 0.5rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
 
+.curation-thumbnail__image {
+  width: auto;
+  object-fit: cover;
+  height: 84px;
+  width: 84px;
+}
 </style>

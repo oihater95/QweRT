@@ -163,55 +163,26 @@ export default {
 .ui-big-images {
   position: absolute;
   top: -4%;
-  left: 10%;
+  left: 5%;
   height: 100%;
   width: 100%;
   overflow:hidden;
   display: flex;
 }
 
-.ui-big-image {
-  width: 100%;
-  margin-right: -100%;
-}
-
-.ui-big-image img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
 .ui-thumbnails {
   position: absolute;
   width: 100%;
-  bottom: 0;
-  left: 0;
+  bottom: 15px;
+  left: 300px;
   background-color: #fff;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   padding: 0 1rem;
-  padding-top: 0.5rem;
   padding-right: 45%;
   padding-right: calc( 45% + .5rem );
-}
-
-.ui-thumbnail {
-  display: block;
-  max-width: 100px;
-  max-height: 100px;
-  margin-right: 0.5rem;
-  padding: 0.5rem 0;
-  cursor: pointer;
-}
-
-.curation-thumbnail__image {
-  width: auto;
-  object-fit: cover;
-  height: 100px;
-  width: 100px;
 }
 
 /* 완료 */
@@ -231,20 +202,6 @@ export default {
   height: 100px;
 }
 
-.ui-article {
-  padding: .8rem;
-  width: 100%;
-  margin-right: -100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.ui-paragraph {
-  margin: 0;
-  font-size: 0.7rem;
-  line-height: 1.7;
-}
 
 .ui-nav {
   position: absolute;
@@ -276,19 +233,6 @@ export default {
   transition-duration: 100ms;
 }
 
-.ui-heading {
-  margin: 0;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  font-weight: normal;
-}
-.ui-heading:before {
-  font-size: 0.5rem;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 0.5rem;
-  letter-spacing: 1px;
-}
 
 .ui-big-image {
   opacity: 0;

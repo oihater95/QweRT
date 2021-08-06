@@ -24,5 +24,20 @@ export default {
 </script>
 
 <style>
+.ui-article {
+  padding: .8rem;
+  width: 100%;
+  margin-right: -100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ui-paragraph {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
 
 </style>
