@@ -71,7 +71,13 @@ public class PostingServiceImpl implements PostingService {
 		
 		return postingDao.findAll(pageRequest).getContent();
 	}
-
+	
+	@Override
+	public List<Posting> getPopularPostings(int page, int size) {
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likeCnt").descending());
+		return postingDao.findAll(pageRequest).getContent();
+	}
+	
 	@Override
 	public Optional<Posting> getPosting(int postingId) {
 		return postingDao.findById(postingId);
@@ -81,10 +87,14 @@ public class PostingServiceImpl implements PostingService {
 	public PostingDto getPostingDetail(Posting posting) {
 		PostingDto postingDto = new PostingDto();
 		BeanUtils.copyProperties(posting, postingDto);
+		
 		User uploader = posting.getUser();
 		postingDto.setCategoryId(posting.getCategory().getCategoryId());
 		postingDto.setUserId(uploader.getUserId());
 		postingDto.setNickname(uploader.getNickname());
+		
 		return postingDto;
 	}
+
+
 }
