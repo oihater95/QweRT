@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.web.qwert.model.category.Category;
 import com.web.qwert.model.like.Like;
 import com.web.qwert.model.user.User;
@@ -23,7 +24,7 @@ import lombok.Data;
 
 @Entity
 @Data
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // 좋아요한 게시물 리스트 리턴시 직렬화 에러 해결
 public class Posting {
 	
 	@Id
@@ -53,7 +54,7 @@ public class Posting {
     
     @ManyToOne(fetch = FetchType.LAZY) // N+1 문제 방지
     @JoinColumn(name = "user_id") // FK
-    //@JsonIgnore
+    @JsonIgnore
     private User user;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -62,5 +63,6 @@ public class Posting {
     private Category category;
     
     @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Like> likes;
 }

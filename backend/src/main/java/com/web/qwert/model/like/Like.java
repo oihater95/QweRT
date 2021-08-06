@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
 
@@ -29,9 +30,11 @@ public class Like {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id") 
+	@JsonIgnore
 	private User user; // 좋아요 준 유저
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "posting_id")
+	@JsonIgnore
 	private Posting posting; // 좋아요 받은 게시물
 }

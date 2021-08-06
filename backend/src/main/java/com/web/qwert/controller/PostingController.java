@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -107,11 +106,39 @@ public class PostingController {
 		
 		if(!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시물
 		
-		PostingDto response = postingService.getPostingDetail(postingOpt.get());
+		PostingDto result = postingService.getPostingDetail(postingOpt.get());
 			
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	// 카테고리로 게시글 검색
+	@GetMapping("popular")
+	@ApiOperation(value = "인기 게시글 검색")
+	public Object popularPostings (@RequestParam int page, @RequestParam int size) {
+		ResponseEntity response = null;
+		System.out.println("인기 게시물");
+
+		List<Posting> result = postingService.getPopularPostings(page, size);
+		response = new ResponseEntity<>(result, HttpStatus.OK);
+		
+		return response;
+	}
 	
+	// 내가 좋아요한 게시글 조회
+		@GetMapping("{userId}/like")
+		@ApiOperation(value = "내가 좋아요한 게시글 검색")
+		public Object myFavoritePostings (@PathVariable int userId, @RequestParam int page, @RequestParam int size) {
+			Optional<User> userOpt = userService.getUser(userId);
+			ResponseEntity response = null;
+			System.out.println("내가 좋아하는 게시물");
+			
+			if(userOpt.isPresent()) { // 회원이면
+				List<Posting> result = postingService.getFavoritePostings(userOpt.get(), page, size);
+				response = new ResponseEntity<>(result, HttpStatus.OK);
+			} else {
+				response = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+			}
+			
+			return response;
+		}
 }
