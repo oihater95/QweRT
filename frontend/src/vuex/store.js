@@ -18,9 +18,9 @@ export default new Vuex.Store({
   },
   mutations: {
     SETUSERINFO: function (state, data) {
-      state.userInfo.userId = data.userId
+      state.userInfo.userId = data.user_id
       state.userInfo.nickname = data.nickname
-      state.userInfo.profileImage = data.profileImage
+      state.userInfo.profileImage = data.profile_image
       state.isLogon = true
     },
     REMOVEUSERINFO: function (state) {
