@@ -30,10 +30,20 @@ export default new Vuex.Store({
       state.userInfo.profileImage = data.profileImage
       state.isLogon = true
     },
+    REMOVEUSERINFO: function (state) {
+      state.userInfo.userId = ''
+      state.userInfo.nickname = ''
+      state.userInfo.profileImage = ''
+      state.isLogon = false
+    },
   },
   actions: {
     setUserInfo: function ({ commit }, data) {
       commit('SETUSERINFO', data)
+    },
+    removeUserInfo: function ({ commit }) {
+      localStorage.removeItem('jwtToken')
+      commit('REMOVEUSERINFO')
     },
   },
   modules: {
