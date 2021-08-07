@@ -148,7 +148,7 @@ export default {
         url: 'http://13.209.16.153/qwert/accounts/login/',
         data: this.credentials
       })
-        .then(res => {
+        .then(res => {  
           console.log(res)
           // jwt Token 저장
           localStorage.setItem('jwtToken', res.data.token)
