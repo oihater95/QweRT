@@ -342,7 +342,7 @@ export default {
     nicknameCheck: function () {
       axios ({
         method: 'get',
-        url: `http://13.209.16.153/qwert/accounts/nicknamecheck/?nickname=${this.nickname}`
+        url: `http://13.209.16.153:8080/qwert/accounts/nicknamecheck/?nickname=${this.nickname}`
       })
         .then(res => {
           console.log(res)
@@ -366,7 +366,7 @@ export default {
     changeUserInfo: function () {
       axios({
         method: 'put',
-        url: `http://localhost/qwert/accounts/${this.userId}/info/`,
+        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/info/`,
         data: {
           nickname: this.nickname,
           introduction: this.introduction,
@@ -435,7 +435,7 @@ export default {
     changePassword: function () {
       axios({
         method: 'put',
-        url: `http://localhost/qwert/accounts/${this.userId}/pwd/`,
+        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/pwd/`,
         data: {
           password: this.password,
           newPassword: this.newPassword
@@ -508,7 +508,7 @@ export default {
     deleteUser: function () {
       axios({
         method: 'delete',
-        url: `http://localhost/qwert/accounts/${this.userId}/`,
+        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
