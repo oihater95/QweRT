@@ -2,6 +2,14 @@
   background-color: #F4F2DA;
   border: 0.5rem double #857B1A;
   margin-bottom: 20px;
+  .row {
+    .v-btn {
+      background-color: #E8D48D;
+    }
+    .warning-btn {
+      background-color: #F4A380;
+    }
+  }
   .profile-image__loader {
     .v-image {
       width: 140px;

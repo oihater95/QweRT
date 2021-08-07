@@ -51,9 +51,29 @@
           counter="128"
         ></v-text-field>
       </v-col>
+      <v-col class="mt-3">
+        <v-tooltip
+          top
+          v-model="showCheckResult"
+          :color="checkResult ? '#849EDB' : '#F4A380'"
+        >
+          <template v-slot:activator="{ attrs }">
+            <v-btn
+              v-bind="attrs"
+              small
+              rounded
+              :disabled="nickname === currentNickname || nickname === validNickname"
+              @click="nicknameCheck"
+            >
+              중복확인
+            </v-btn>
+          </template>
+          <span>{{ checkResult ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.' }}</span>
+        </v-tooltip>
+      </v-col>
     </v-row>
     <!-- 자기소개 -->
-    <v-row >
+    <v-row>
       <v-col
         cols="2"
         offset="1"
@@ -88,7 +108,7 @@
         class="text-center"
       >
         <v-btn
-          color="#E8D48D"
+          :disabled="(nickname !== currentNickname) && ((nickname !== validNickname) || !checkResult)"
           @click="changeUserInfo"
         >
           저장
@@ -175,7 +195,6 @@
         class="text-center"
       >
         <v-btn
-          color="#E8D48D"
           :disabled="(!password || !newPassword || !newPasswordConfirmation || !validForm)"
           @click="changePassword"
         >
@@ -197,7 +216,7 @@
       <!-- 탈퇴 버튼 -->
       <v-col>
         <v-btn
-          color="#F4A380"
+          class="warning-btn"
           dark
           @click="signout"
         >
@@ -214,7 +233,7 @@
         cols="12"
         class="text-center"
       >
-        <v-btn color="#E8D48D">취소</v-btn>
+        <v-btn>취소</v-btn>
       </v-col>
     </v-row>
     <Modal
@@ -244,6 +263,10 @@ export default {
       profileImageFile: null,
       profileImageSrc: '',
       nickname: '',
+      currentNickname: '',
+      validNickname: '',
+      checkResult: false,
+      showCheckResult: false,
       introduction: '자기소개를 입력해주세요',
       masterpieces: [],
       password: '',
@@ -286,6 +309,30 @@ export default {
         }
         reader.readAsDataURL(file)
       }
+    },
+    // 닉네임 중복 확인 함수
+    nicknameCheck: function () {
+      axios ({
+        method: 'get',
+        url: `http://13.209.16.153/qwert/accounts/nicknamecheck/?nickname=${this.nickname}`
+      })
+        .then(res => {
+          console.log(res)
+          this.validNickname = this.nickname
+          this.checkResult = true
+          this.showCheckResult = true
+          setTimeout(() => {
+            this.showCheckResult = false
+          }, 1500)
+        })
+        .catch(err => {
+          console.log(err)
+          this.checkResult = false
+          this.showCheckResult = true
+          setTimeout(() => {
+            this.showCheckResult = false
+          }, 1500)
+        })
     },
     // 회원정보 수정 함수
     changeUserInfo: function () {
@@ -509,6 +556,7 @@ export default {
   created: function () {
     this.userId = this.userInfo.userId
     this.nickname = this.userInfo.nickname
+    this.currentNickname = this.userInfo.nickname
     if (this.userInfo.profileImage) {
       this.profileImageSrc = this.userInfo.profileImage
     }
