@@ -28,6 +28,6 @@ pipeline {
 					sh 'docker run --name vue-nginx -d -p 80:80 dockerize-vuejs-app' 
 				} 
 			}
-		} 
+		}  
 	} 
 }    
