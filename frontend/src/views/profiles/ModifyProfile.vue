@@ -1,5 +1,5 @@
 <template>
-  <v-container class="profile-container">
+  <v-container class="profileModification-container">
     <!-- 헤더 장식 -->
     <v-row justify="center">
       <v-col
@@ -257,7 +257,7 @@
         cols="12"
         class="text-center"
       >
-        <v-btn>취소</v-btn>
+        <v-btn @click="$router.push({ name: 'Profile', params: {userId: userId} })">취소</v-btn>
       </v-col>
     </v-row>
     <Modal
