@@ -90,15 +90,39 @@
       </v-col>
     </v-row>
     <!-- 대표작 -->
-    <v-row align="center">
+    <v-row class="profile-masterpieces__loader">
       <v-col
         cols="2"
         offset="1"
       >
         <h2>대표작</h2>
       </v-col>
-      <v-col>
-        대표작 선택
+      <v-col cols="8">
+        <v-row>
+          <v-col
+            cols="4"
+            v-for="(sampleSrc, i) in masterpieceSamples"
+            :key="i"
+          >
+            <div class="box-minus">
+              <v-img
+                :src="sampleSrc"
+                contain
+              ></v-img>
+              <v-icon large>fas fa-minus</v-icon>
+            </div>
+          </v-col>
+          <v-col
+            cols="4"
+            v-if="masterpieceSamples.length < 3"
+          >
+            <div class="box-add">
+              <div class="content">
+                <v-icon large>fas fa-plus</v-icon>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <!-- 저장 버튼 -->
@@ -269,6 +293,10 @@ export default {
       showCheckResult: false,
       introduction: '자기소개를 입력해주세요',
       masterpieces: [],
+      masterpieceSamples: [
+        'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',
+        'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',
+      ],
       password: '',
       newPassword: '',
       newPasswordConfirmation: '',
@@ -349,6 +377,7 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.currentNickname = this.nickname
           // state에 저장되어 있는 기본 유저정보 갱신
           this.$store.dispatch('setUserInfo', {
             user_id: this.userId,
