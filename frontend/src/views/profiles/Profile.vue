@@ -46,7 +46,7 @@
           ></v-img>
           <v-img
             v-else
-            src="profileImageSrc"
+            :src="profileImageSrc"
             class="content"
           ></v-img>
         </v-img>
@@ -225,13 +225,13 @@ export default {
       this.followState = !this.followState
     },
   },
-  // 임시로 state에서 정보 받아오기
   computed: {
     ...mapState([
       'host',
       'userInfo',
     ])
   },
+  // 페이지가 로드될 때 유저 정보 불러오기
   created: function () {
     axios({
       method: 'get',
