@@ -40,13 +40,13 @@
           class="border"
         >
           <v-img
-            v-if="!profileImg"
+            v-if="!profileImageSrc"
             src="@/assets/images/profile_image_default.png"
             class="content"
           ></v-img>
           <v-img
             v-else
-            src="profileImg"
+            src="profileImageSrc"
             class="content"
           ></v-img>
         </v-img>
@@ -194,7 +194,7 @@ export default {
   data: function () {
     return {
       nickname: '',
-      profileImg: '',
+      profileImageSrc: '',
       introduction: '',
       followerCnt: null,
       followingCnt: null,
@@ -240,7 +240,7 @@ export default {
       .then(res => {
         console.log(res)
         this.nickname = res.data.nickname
-        this.profileImg = res.data.profileImg
+        this.profileImageSrc = res.data.profileImg
         this.introduction = res.data.introduction
         this.followerCnt = res.data.followerCnt
         this.followingCnt = res.data.followingCnt

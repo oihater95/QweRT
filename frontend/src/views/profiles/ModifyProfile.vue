@@ -83,6 +83,7 @@
       <v-col cols="7">
         <v-textarea
           v-model="introduction"
+          rows="5"
           clearable
           outlined
           counter="1000"
@@ -257,7 +258,7 @@
         cols="12"
         class="text-center"
       >
-        <v-btn @click="$router.push({ name: 'Profile', params: {userId: userId} })">취소</v-btn>
+        <v-btn @click="$router.push({ name: 'Profile', params: {userId: $route.params.userId} })">취소</v-btn>
       </v-col>
     </v-row>
     <Modal
@@ -283,7 +284,6 @@ export default {
   },
   data: function () {
     return {
-      userId: null,
       profileImageFile: null,
       profileImageSrc: '',
       nickname: '',
@@ -291,7 +291,7 @@ export default {
       validNickname: '',
       checkResult: false,
       showCheckResult: false,
-      introduction: '자기소개를 입력해주세요',
+      introduction: '',
       masterpieces: [],
       masterpieceSamples: [
         'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',
@@ -366,7 +366,7 @@ export default {
     changeUserInfo: function () {
       axios({
         method: 'put',
-        url: `${this.host}/accounts/${this.userId}/info/`,
+        url: `${this.host}/accounts/${this.$route.params.userId}/info/`,
         data: {
           nickname: this.nickname,
           introduction: this.introduction,
@@ -380,7 +380,7 @@ export default {
           this.currentNickname = this.nickname
           // state에 저장되어 있는 기본 유저정보 갱신
           this.$store.dispatch('setUserInfo', {
-            userId: this.userId,
+            userId: this.$route.params.userId,
             nickname: this.nickname,
             profileImage: this.profileImageSrc,
           })
@@ -435,7 +435,7 @@ export default {
     changePassword: function () {
       axios({
         method: 'put',
-        url: `${this.host}/accounts/${this.userId}/pwd/`,
+        url: `${this.host}/accounts/${this.$route.params.userId}/pwd/`,
         data: {
           password: this.password,
           newPassword: this.newPassword
@@ -508,7 +508,7 @@ export default {
     deleteUser: function () {
       axios({
         method: 'delete',
-        url: `${this.host}/accounts/${this.userId}/`,
+        url: `${this.host}/accounts/${this.$route.params.userId}/`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
@@ -566,7 +566,6 @@ export default {
   computed: {
     ...mapState([
       'host',
-      'isLogon',
       'userInfo',
     ])
   },
@@ -584,12 +583,21 @@ export default {
     },
   },
   created: function () {
-    this.userId = this.userInfo.userId
-    this.nickname = this.userInfo.nickname
-    this.currentNickname = this.userInfo.nickname
-    if (this.userInfo.profileImage) {
-      this.profileImageSrc = this.userInfo.profileImage
-    }
+    axios({
+      method: 'get',
+      url: `${this.host}/profile/${this.$route.params.userId}/`,
+    })
+      .then(res => {
+        console.log(res)
+        this.nickname = res.data.nickname
+        this.currentNickname = res.data.nickname
+        this.profileImageSrc = res.data.profileImg
+        this.introduction = res.data.introduction
+        this.masterpieces = res.data.masterpieces
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
