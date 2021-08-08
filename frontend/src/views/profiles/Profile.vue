@@ -15,6 +15,7 @@
       <!-- 정보 수정 버튼 -->
       <v-col cols="2" class="text-end">
         <v-btn
+          v-if="$route.params.userId == userInfo.userId"
           color="#AEA660"
           small
           depressed
@@ -98,7 +99,7 @@
       <!-- 팔로우 버튼 -->
       <v-col cols="2">
         <v-btn
-          v-if="!followState"
+          v-if="($route.params.userId != userInfo.userId) && !followState"
           color="#AEA660"
           width="100"
           class="white--text"
@@ -107,7 +108,7 @@
           팔로우
         </v-btn>
         <v-btn
-          v-else
+          v-if="($route.params.userId != userInfo.userId) && followState"
           color="#857B1A"
           width="100"
           outlined
@@ -228,7 +229,6 @@ export default {
   computed: {
     ...mapState([
       'host',
-      'isLogon',
       'userInfo',
     ])
   },
