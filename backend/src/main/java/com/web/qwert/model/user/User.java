@@ -35,14 +35,12 @@ public class User {
     private int userId;
     
     @Column(name = "email")
-    @JsonIgnore
     private String email;
     
     @Column(name = "nickname")
     private String nickname;
     
     @Column(name = "password")
-    @JsonIgnore
     private String password;  
     
     // 가입일은 자동 입력
