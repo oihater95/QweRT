@@ -380,9 +380,9 @@ export default {
           this.currentNickname = this.nickname
           // state에 저장되어 있는 기본 유저정보 갱신
           this.$store.dispatch('setUserInfo', {
-            user_id: this.userId,
+            userId: this.userId,
             nickname: this.nickname,
-            profile_image: this.profileImageSrc,
+            profileImage: this.profileImageSrc,
           })
           // 회원정보 수정 성공 모달 창
           this.modalMsg = {

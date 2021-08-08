@@ -18,7 +18,7 @@
           color="#AEA660"
           small
           depressed
-          @click="$router.push({ name: 'ModifyProfile', params: {userId: userId} })"
+          @click="$router.push({ name: 'ModifyProfile', params: {userId: $route.params.userId} })"
         >
           정보 수정
         </v-btn>
@@ -39,7 +39,13 @@
           class="border"
         >
           <v-img
+            v-if="!profileImg"
             src="@/assets/images/profile_image_default.png"
+            class="content"
+          ></v-img>
+          <v-img
+            v-else
+            src="profileImg"
             class="content"
           ></v-img>
         </v-img>
@@ -64,15 +70,15 @@
           >
             <h5>
               <span class="follow">
-                팔로워 100
+                팔로워 {{ followerCnt }}
               </span> |
               <span class="follow">
-                팔로잉 100
+                팔로잉 {{ followingCnt }}
               </span> |
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on">
-                    <v-icon small>fas fa-heart</v-icon> 1200
+                    <v-icon small>fas fa-heart</v-icon> {{ likedCnt }}
                   </span>
                 </template>
                 <span>게시물이 좋아요 받은 횟수</span>
@@ -80,7 +86,7 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on">
-                    <v-icon small>far fa-image</v-icon> 500
+                    <v-icon small>far fa-image</v-icon> {{ curatedCnt }}
                   </span>
                 </template>
                 <span>게시물이 큐레이팅된 횟수</span>
@@ -92,7 +98,7 @@
       <!-- 팔로우 버튼 -->
       <v-col cols="2">
         <v-btn
-          v-if="!followed"
+          v-if="!followState"
           color="#AEA660"
           width="100"
           class="white--text"
@@ -180,16 +186,21 @@
 <script>
 import '@/css/profiles/Profile.scss'
 import { mapState } from 'vuex'
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   name: 'Profile',
   data: function () {
     return {
-      userId: null,
       nickname: '',
-      profileImage: '',
-      introduction: '자기소개를 입력해주세요',
+      profileImg: '',
+      introduction: '',
+      followerCnt: null,
+      followingCnt: null,
+      likedCnt: null,
+      curatedCnt: null,
+      followState: false,
+      masterpieces: [],
       // 예시로 넣어본 그림 url
       drawings: [
         {src: 'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',},
@@ -197,7 +208,6 @@ export default {
         {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
       ],
       hovered: false,
-      followed: false,
     }
   },
   methods: {
@@ -211,7 +221,7 @@ export default {
     },
     // 임시로 작성한 팔로우 함수 (현재는 버튼이 바뀌는 것만 구현한 상태)
     follow: function () {
-      this.followed = !this.followed
+      this.followState = !this.followState
     },
   },
   // 임시로 state에서 정보 받아오기
@@ -223,21 +233,25 @@ export default {
     ])
   },
   created: function () {
-    this.userId = this.userInfo.userId
-    this.nickname = this.userInfo.nickname
+    axios({
+      method: 'get',
+      url: `${this.host}/profile/${this.$route.params.userId}/`,
+    })
+      .then(res => {
+        console.log(res)
+        this.nickname = res.data.nickname
+        this.profileImg = res.data.profileImg
+        this.introduction = res.data.introduction
+        this.followerCnt = res.data.followerCnt
+        this.followingCnt = res.data.followingCnt
+        this.likedCnt = res.data.likedCnt
+        this.curatedCnt = res.data.curatedCnt
+        this.masterpieces = res.data.masterpieces
+      })
+      .catch(err => {
+        console.log(err)
+      })
   },
-  // created: function () {
-  //   axios ({
-  //     method: 'get',
-  //     url: `${this.host}/profile/${this.$route.params.userId}/`,
-  //   })
-  //     .then(res => {
-  //       console.log(res)
-  //     })
-  //     .catch(err => {
-  //       console.log(err)
-  //     })
-  // },
 }
 </script>
 
