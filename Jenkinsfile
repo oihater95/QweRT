@@ -14,7 +14,7 @@ pipeline {
 		stage('spring-deploy') {
 			steps {
 				script {
-					sh 'docker rm -f springboot-jar'
+					// sh 'docker rm -f springboot-jar'
 					sh 'docker build -t springboot-container ./backend'
                     sh 'docker run -it -d --name springboot-jar --network springboot-mysql -p 8080:8080 springboot-container bash'
 				}
