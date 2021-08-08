@@ -6,7 +6,7 @@
                 3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
                 4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
             <v-card id="drop-card" class="col-12">
-                <div  v-if="$route.params.imgSrc" class="upload-image">
+                <div  v-if="drawing" class="upload-image">
                     <img id="previewImg" 
                         :src="$route.params.imgSrc" 
                         class="col-12"
@@ -99,6 +99,7 @@ export default {
       dragover: false,
       filename: '',
       imageSrc: '',
+      drawing: false,
     }
   },
 
@@ -143,36 +144,42 @@ export default {
         this.image = this.$route.params.imgSrc
       }
 
-      const response = await axios({
-        method: 'GET',
-        url: API_ENDPOINT
-      })
-      console.log('Response: ', response)
-
-      let binary = atob(this.image.split(',')[1])
-      let array = []
-      for (var i = 0; i < binary.length; i++) {
-        array.push(binary.charCodeAt(i))
+      if (this.filename.length > 0 || this.drawing === true) {
+          const response = await axios({
+            method: 'GET',
+            url: API_ENDPOINT
+          })
+          console.log('Response: ', response)
+    
+          let binary = atob(this.image.split(',')[1])
+          let array = []
+          for (var i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i))
+          }
+          let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+          // Put request for upload to S3
+          const result = await fetch(response.data.uploadURL, {
+            method: 'PUT',
+            // lambda에 적어준 내용과 일치해야 한다.
+            // headers: {
+            //   'Content-type': 'image/jpeg'
+            // },
+            body: blobData
+          })
+          console.log('Result: ', result)
+    
+          let fileKey = response.data.Key
+          let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
+          this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
+      } else {
+        alert('파일이 없습니다')
       }
-      let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-      // Put request for upload to S3
-      const result = await fetch(response.data.uploadURL, {
-        method: 'PUT',
-        // lambda에 적어준 내용과 일치해야 한다.
-        // headers: {
-        //   'Content-type': 'image/jpeg'
-        // },
-        body: blobData
-      })
-      console.log('Result: ', result)
 
-      let fileKey = response.data.Key
-      let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
-      this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
     },
     clearInput() {
       this.filename = '',
       this.imageSrc = ''
+      this.drawing = false
     },
     // 미리보기
     preview (file) {
@@ -192,6 +199,12 @@ export default {
       this.$router.push({name: 'Drawing', params: {imgSrc: this.$route.params.imgSrc}})
     }
   },
+
+  mounted() {
+    if(this.$route.params.imgSrc) {
+      this.drawing = true
+    }
+  }
 }
 </script>
 
