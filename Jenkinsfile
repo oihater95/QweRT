@@ -19,7 +19,7 @@ pipeline {
                     sh 'docker run -it -d --name springboot-jar --network springboot-mysql -p 8080:8080 springboot-container bash'
 				}
 			}  
-		} 
+		}  
 		stage('vue-build-deploy') {   
             steps { 
 				script {
