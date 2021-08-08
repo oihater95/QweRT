@@ -1,6 +1,8 @@
 package com.web.qwert.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +16,11 @@ import org.springframework.stereotype.Service;
 import com.web.qwert.dao.CategoryDao;
 import com.web.qwert.dao.PostingDao;
 import com.web.qwert.dao.UserDao;
+import com.web.qwert.model.category.Category;
 import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.posting.PostingDto;
+import com.web.qwert.model.posting.UpdateRequest;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.User;
 
@@ -27,7 +31,7 @@ public class PostingServiceImpl implements PostingService {
     UserDao userDao;
 	
 	@Autowired
-	CategoryDao CategoryDao;
+	CategoryDao categoryDao;
 	
 	@Autowired
 	PostingDao postingDao;
@@ -48,7 +52,7 @@ public class PostingServiceImpl implements PostingService {
             posting.setTitle(request.getPostingTitle());
             posting.setContent(request.getPostingContent());
             posting.setPostingImg(request.getPostingImage());
-            posting.setCategory(CategoryDao.getOne(request.getCategoryId()));
+            posting.setCategory(categoryDao.getOne(request.getCategoryId()));
             postingDao.save(posting);
             return true;
             
@@ -112,6 +116,21 @@ public class PostingServiceImpl implements PostingService {
 		postingDto.setNickname(uploader.getNickname());
 		
 		return postingDto;
+	}
+
+	@Override
+	public void removePosting(Posting posting) {
+		postingDao.delete(posting);
+	}
+
+	@Override
+	public void updatePosting(Posting posting, UpdateRequest request) {
+		posting.setTitle(request.getPostingTitle());
+		posting.setContent(request.getPostingContent());
+		Category category = categoryDao.getOne(request.getCategoryId());
+		posting.setCategory(category);
+		posting.setUpdateDate(LocalDateTime.now());
+		postingDao.save(posting);
 	}
 
 
