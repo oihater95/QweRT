@@ -9,6 +9,7 @@
               label="제목"
               :rules="[rules.required]"
               hide-details="auto"
+              counter="30"
               maxlength="30"
             ></v-text-field>
           </v-card>
@@ -16,8 +17,9 @@
           <v-textarea
           class="my-5 pt-5 posting-content"
           solo
-          height="380px"
+          height="180px"
           maxlength="200"
+          counter="200"
           :rules="[rules.required]"
           :placeholder="'설명\n\n도용 및 저작권 침해에 주의해주세요'"
           >
@@ -67,26 +69,30 @@ export default {
     clickCategory: function(e) {
       for (var i=0; i < this.category.length; i++) {
         if (e.target.innerText === this.category[i]) {
-          if (!this.toggleCategoryId) {
+          if (this.toggleCategoryId.length === 0) {
             this.toggleCategoryId.push(`${i}`)
           } else {
             if (i == this.toggleCategoryId[0]) {
-              this.toggleCategoryId.pop()
+              while (this.toggleCategoryId.length > 0) {
+                this.toggleCategoryId.pop()
+              }
             } else {
-              this.toggleCategoryId.pop()
+              while (this.toggleCategoryId.length > 0) {
+                this.toggleCategoryId.pop()
+              }
               this.toggleCategoryId.push(`${i}`)
             }
           }
         }
       }
+      // 토글 ON/OFF
       for (var j=0; j < this.category.length; j++) {
         if (j == this.toggleCategoryId[0]) {
-          let toggleOn = document.getElementsByClassName(`category-btn__${j}`)
-          console.log(toggleOn, toggleOn.innerText)
-          toggleOn.style = "background-color: skyblue"
+          let toggleOn = document.querySelector(`.category-btn__${j}`)
+          toggleOn.style = "color: skyblue; border-color: skyblue"
         } else {
-          let toggleOff = document.getElementsByClassName(`category-btn__${j}`)
-          toggleOff.style = "color: black"
+          let toggleOff = document.querySelector(`.category-btn__${j}`)
+          toggleOff.style = "color: black; border-color: black"
         }
       } 
 
@@ -98,7 +104,7 @@ export default {
       categories[i].classList.add(`category-btn__${i}`)
       categories[i].addEventListener('click', this.clickCategory)
     }
-  }
+  },
 }
 </script>
 
