@@ -24,4 +24,6 @@ public interface PostingService {
 	public Optional<Posting> getPosting(int postingId);
 	
 	public PostingDto getPostingDetail(Posting posting);
+	
+	public void removePosting(Posting posting);
 }

@@ -114,6 +114,11 @@ public class PostingServiceImpl implements PostingService {
 		return postingDto;
 	}
 
+	@Override
+	public void removePosting(Posting posting) {
+		postingDao.delete(posting);
+	}
+
 
 
 
