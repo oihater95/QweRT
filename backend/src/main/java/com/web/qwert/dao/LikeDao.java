@@ -19,4 +19,5 @@ public interface LikeDao extends JpaRepository<Like, Integer> {
 
 	List<Like> findLikeByUser(User user, Pageable pageable);
 	
+	int countByUploaderId(int uploaderId);
 }
