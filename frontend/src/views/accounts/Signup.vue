@@ -237,7 +237,7 @@ export default {
     emailcheck: function () {
       axios ({
         method: 'get',
-        url: `http://13.209.16.153/qwert/accounts/emailcheck/?email=${this.credentials.email}`
+        url: `http://13.209.16.153:8080/qwert/accounts/emailcheck/?email=${this.credentials.email}`
       })
         .then(res => {
           console.log(res)
@@ -278,7 +278,7 @@ export default {
     nicknamecheck: function () {
       axios ({
         method: 'get',
-        url: `http://13.209.16.153/qwert/accounts/nicknamecheck/?nickname=${this.credentials.nickname}`
+        url: `http://13.209.16.153:8080/qwert/accounts/nicknamecheck/?nickname=${this.credentials.nickname}`
       })
         .then(res => {
           console.log(res)
@@ -322,7 +322,7 @@ export default {
     signup: function () {
       axios ({
         method: 'post',
-        url: 'http://13.209.16.153/qwert/accounts/signup/',
+        url: 'http://13.209.16.153:8080/qwert/accounts/signup/',
         data: this.credentials
       })
         .then(res => {

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="profile-container">
+  <v-container class="profileModification-container">
     <!-- 헤더 장식 -->
     <v-row justify="center">
       <v-col
@@ -51,9 +51,29 @@
           counter="128"
         ></v-text-field>
       </v-col>
+      <v-col class="mt-3">
+        <v-tooltip
+          top
+          v-model="showCheckResult"
+          :color="checkResult ? '#849EDB' : '#F4A380'"
+        >
+          <template v-slot:activator="{ attrs }">
+            <v-btn
+              v-bind="attrs"
+              small
+              rounded
+              :disabled="nickname === currentNickname || nickname === validNickname"
+              @click="nicknameCheck"
+            >
+              중복확인
+            </v-btn>
+          </template>
+          <span>{{ checkResult ? '사용 가능한 닉네임입니다.' : '이미 사용 중인 닉네임입니다.' }}</span>
+        </v-tooltip>
+      </v-col>
     </v-row>
     <!-- 자기소개 -->
-    <v-row >
+    <v-row>
       <v-col
         cols="2"
         offset="1"
@@ -70,15 +90,39 @@
       </v-col>
     </v-row>
     <!-- 대표작 -->
-    <v-row align="center">
+    <v-row class="profile-masterpieces__loader">
       <v-col
         cols="2"
         offset="1"
       >
         <h2>대표작</h2>
       </v-col>
-      <v-col>
-        대표작 선택
+      <v-col cols="8">
+        <v-row>
+          <v-col
+            cols="4"
+            v-for="(sampleSrc, i) in masterpieceSamples"
+            :key="i"
+          >
+            <div class="box-minus">
+              <v-img
+                :src="sampleSrc"
+                contain
+              ></v-img>
+              <v-icon large>fas fa-minus</v-icon>
+            </div>
+          </v-col>
+          <v-col
+            cols="4"
+            v-if="masterpieceSamples.length < 3"
+          >
+            <div class="box-add">
+              <div class="content">
+                <v-icon large>fas fa-plus</v-icon>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <!-- 저장 버튼 -->
@@ -88,7 +132,7 @@
         class="text-center"
       >
         <v-btn
-          color="#E8D48D"
+          :disabled="(nickname !== currentNickname) && ((nickname !== validNickname) || !checkResult)"
           @click="changeUserInfo"
         >
           저장
@@ -175,7 +219,6 @@
         class="text-center"
       >
         <v-btn
-          color="#E8D48D"
           :disabled="(!password || !newPassword || !newPasswordConfirmation || !validForm)"
           @click="changePassword"
         >
@@ -197,7 +240,7 @@
       <!-- 탈퇴 버튼 -->
       <v-col>
         <v-btn
-          color="#F4A380"
+          class="warning-btn"
           dark
           @click="signout"
         >
@@ -214,7 +257,7 @@
         cols="12"
         class="text-center"
       >
-        <v-btn color="#E8D48D">취소</v-btn>
+        <v-btn @click="$router.push({ name: 'Profile', params: {userId: userId} })">취소</v-btn>
       </v-col>
     </v-row>
     <Modal
@@ -244,8 +287,16 @@ export default {
       profileImageFile: null,
       profileImageSrc: '',
       nickname: '',
+      currentNickname: '',
+      validNickname: '',
+      checkResult: false,
+      showCheckResult: false,
       introduction: '자기소개를 입력해주세요',
       masterpieces: [],
+      masterpieceSamples: [
+        'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',
+        'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',
+      ],
       password: '',
       newPassword: '',
       newPasswordConfirmation: '',
@@ -287,11 +338,35 @@ export default {
         reader.readAsDataURL(file)
       }
     },
+    // 닉네임 중복 확인 함수
+    nicknameCheck: function () {
+      axios ({
+        method: 'get',
+        url: `http://13.209.16.153:8080/qwert/accounts/nicknamecheck/?nickname=${this.nickname}`
+      })
+        .then(res => {
+          console.log(res)
+          this.validNickname = this.nickname
+          this.checkResult = true
+          this.showCheckResult = true
+          setTimeout(() => {
+            this.showCheckResult = false
+          }, 1500)
+        })
+        .catch(err => {
+          console.log(err)
+          this.checkResult = false
+          this.showCheckResult = true
+          setTimeout(() => {
+            this.showCheckResult = false
+          }, 1500)
+        })
+    },
     // 회원정보 수정 함수
     changeUserInfo: function () {
       axios({
         method: 'put',
-        url: `http://localhost/qwert/accounts/${this.userId}/info/`,
+        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/info/`,
         data: {
           nickname: this.nickname,
           introduction: this.introduction,
@@ -302,6 +377,7 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.currentNickname = this.nickname
           // state에 저장되어 있는 기본 유저정보 갱신
           this.$store.dispatch('setUserInfo', {
             user_id: this.userId,
@@ -359,7 +435,7 @@ export default {
     changePassword: function () {
       axios({
         method: 'put',
-        url: `http://localhost/qwert/accounts/${this.userId}/pwd/`,
+        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/pwd/`,
         data: {
           password: this.password,
           newPassword: this.newPassword
@@ -432,7 +508,7 @@ export default {
     deleteUser: function () {
       axios({
         method: 'delete',
-        url: `http://localhost/qwert/accounts/${this.userId}/`,
+        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
@@ -509,6 +585,7 @@ export default {
   created: function () {
     this.userId = this.userInfo.userId
     this.nickname = this.userInfo.nickname
+    this.currentNickname = this.userInfo.nickname
     if (this.userInfo.profileImage) {
       this.profileImageSrc = this.userInfo.profileImage
     }

@@ -14,4 +14,6 @@ public interface PostingDao extends JpaRepository<Posting, Integer> {
 	List<Posting> findPostingByUserAndMasterpieceFlag(User user, boolean masterpieceFlag);
 
 	List<Posting> findByUser(User user, Pageable pageable);
+	
+	int countByUser(User user);
 }
