@@ -217,6 +217,7 @@ export default {
   // 임시로 state에서 정보 받아오기
   computed: {
     ...mapState([
+      'host',
       'isLogon',
       'userInfo',
     ])
@@ -228,7 +229,7 @@ export default {
   // created: function () {
   //   axios ({
   //     method: 'get',
-  //     url: `http://localhost/qwert/profile/${this.$route.params.userId}/`,
+  //     url: `${this.host}/profile/${this.$route.params.userId}/`,
   //   })
   //     .then(res => {
   //       console.log(res)
