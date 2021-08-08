@@ -1,6 +1,8 @@
 package com.web.qwert.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.posting.PostingDto;
+import com.web.qwert.model.posting.UpdateRequest;
 import com.web.qwert.model.posting.UploadRequest;
+import com.web.qwert.model.user.ChangeInfoRequest;
 import com.web.qwert.model.user.User;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.PostingService;
@@ -142,28 +147,53 @@ public class PostingController {
 
 		return response;
 	}
-	
+
 	@DeleteMapping("{postingId}")
 	@ApiOperation("게시물 삭제")
-	public Object deletePosting (@PathVariable int postingId, @RequestHeader String token) {
+	public Object deletePosting(@PathVariable int postingId, @RequestHeader String token) {
 		Optional<Posting> postingOpt = postingService.getPosting(postingId);
-		if(!postingOpt.isPresent()) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 없는 게시물
-		
+		if (!postingOpt.isPresent())
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 없는 게시물
+
 		int userId = postingOpt.get().getUser().getUserId();
-		
+
 		try {
-			   if(userId == jwtService.getUserId(token)) { // 게시물 작성자와 토큰 발급한 유저가 같다면 
-				   postingService.removePosting(postingOpt.get());
-				   return new ResponseEntity<>(HttpStatus.OK);
-			   } else {
-				   return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 권한 없음
-			   }
-		   } catch (Exception e) {
-			   e.printStackTrace();
-			   return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
-		   }
-		
-		
+			if (userId == jwtService.getUserId(token)) { // 게시물 작성자와 토큰 발급한 유저가 같다면
+				postingService.removePosting(postingOpt.get());
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 권한 없음
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
+		}
+
 	}
-	
+
+	@PutMapping("{postingId}")
+	@ApiOperation("게시물 수정")
+	public Object updatePosting(@PathVariable int postingId, @RequestHeader String token,
+			@RequestBody UpdateRequest request) {
+		
+		Optional<Posting> postingOpt = postingService.getPosting(postingId);
+		if (!postingOpt.isPresent())
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 없는 게시물
+		
+		int userId = postingOpt.get().getUser().getUserId();		
+		try {
+			if (userId == jwtService.getUserId(token)) { // 게시물 작성자와 토큰 발급한 유저가 같다면
+				postingService.updatePosting(postingOpt.get(), request);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else { 
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 권한 없음
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
+		}
+
+	}
+
 }

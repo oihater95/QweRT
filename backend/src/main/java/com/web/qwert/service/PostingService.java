@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.posting.PostingDto;
+import com.web.qwert.model.posting.UpdateRequest;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.User;
 
@@ -26,4 +27,6 @@ public interface PostingService {
 	public PostingDto getPostingDetail(Posting posting);
 	
 	public void removePosting(Posting posting);
+	
+	public void updatePosting(Posting posting, UpdateRequest request);
 }
