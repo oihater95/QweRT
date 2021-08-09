@@ -80,6 +80,9 @@ export default {
     imageFile: {
       type: String,
     },
+    deleteFlag: {
+      type: Boolean
+    }
   },
 
   methods: {
@@ -149,7 +152,17 @@ export default {
   watch: {
     imageFile() {
       this.imageSrc = ''
-      console.log(this.imageFile)
+    },
+    deleteFlag() {
+      if (this.deleteFlag) {
+        if (this.imageSrc) {
+          this.imageSrc = ''
+        } else if (this.$route.params.imgSrc) {
+          this.$route.params.imgSrc = ''
+        } else {
+          this.imageFile = ''
+        }
+      }
     }
   }
 }

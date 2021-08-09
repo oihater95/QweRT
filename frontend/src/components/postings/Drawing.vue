@@ -251,7 +251,6 @@ export default {
     // 로컬 & 로컬스토리지 저장
     handleUploadClick: function() {
       const img = this.canvasFrame.toDataURL('image/jpeg')  // jpg로 저장
-      console.log(img)
       var image = {
         imagename: "QwertDrawing" + `${new Date()}`,
         imageSrc: img
