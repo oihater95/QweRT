@@ -17,15 +17,18 @@
       >
         <h2>프로필 사진</h2>
       </v-col>
-      <v-col>
+      <v-col
+        cols="3" 
+        lg="2"
+      >
         <v-img
-          v-if="!profileImageSrc"
+          v-if="!profileImageSrc && !profileImageData"
           src="@/assets/images/profile_image_default.png"
           @click="selectProfileImage"
         ></v-img>
         <v-img
           v-else
-          :src="profileImageSrc"
+          :src="profileImageData ? profileImageData : profileImageSrc"
           @click="selectProfileImage"
         ></v-img>
         <v-file-input
@@ -33,6 +36,38 @@
           v-model="profileImageFile"
           @change="changeProfileImage"
         ></v-file-input>
+        <v-btn
+          x-small
+          tile
+          class="ms-2 mt-3"
+          @click="profileImageSrc='', profileImageFile='', profileImageData=''"
+        >
+          프로필 사진 기본 설정
+        </v-btn>
+      </v-col>
+      <v-col align-self="center">
+        <v-row>
+          <v-col cols="12">
+            <v-btn
+              small
+              rounded
+              :disabled="!profileImageData"
+              @click="uploadProfileImage"
+            >
+              결정완료
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              small
+              rounded
+              :disabled="!profileImageData"
+              @click="profileImageFile='', profileImageData=''"
+            >
+              되돌리기
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <!-- 닉네임 -->
@@ -83,6 +118,7 @@
       <v-col cols="7">
         <v-textarea
           v-model="introduction"
+          rows="5"
           clearable
           outlined
           counter="1000"
@@ -132,7 +168,7 @@
         class="text-center"
       >
         <v-btn
-          :disabled="(nickname !== currentNickname) && ((nickname !== validNickname) || !checkResult)"
+          :disabled="((nickname !== currentNickname) && ((nickname !== validNickname) || !checkResult)) || (profileImageData.length !== 0)"
           @click="changeUserInfo"
         >
           저장
@@ -257,7 +293,7 @@
         cols="12"
         class="text-center"
       >
-        <v-btn @click="$router.push({ name: 'Profile', params: {userId: userId} })">취소</v-btn>
+        <v-btn @click="$router.push({ name: 'Profile', params: {userId: $route.params.userId} })">취소</v-btn>
       </v-col>
     </v-row>
     <Modal
@@ -283,15 +319,15 @@ export default {
   },
   data: function () {
     return {
-      userId: null,
       profileImageFile: null,
+      profileImageData: '',
       profileImageSrc: '',
       nickname: '',
       currentNickname: '',
       validNickname: '',
       checkResult: false,
       showCheckResult: false,
-      introduction: '자기소개를 입력해주세요',
+      introduction: '',
       masterpieces: [],
       masterpieceSamples: [
         'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',
@@ -329,14 +365,43 @@ export default {
     changeProfileImage: function () {
       const file = this.profileImageFile
       if (typeof file === 'string') {
-        this.profileImageSrc = file
+        this.profileImageData = file
       } else {
         let reader = new FileReader()
         reader.onload = () => {
-          this.profileImageSrc = reader.result
+          this.profileImageData = reader.result
         }
         reader.readAsDataURL(file)
       }
+    },
+    // 프로필 사진을 S3에 업로드하는 함수
+    uploadProfileImage: async function () {
+      const API_ENDPOINT = 'https://2b7e7mxwc9.execute-api.ap-northeast-2.amazonaws.com/default/getPresignedUrl'
+      const response = await axios({
+        method: 'GET',
+        url: API_ENDPOINT
+      })
+      console.log('Response: ', response)
+      let binary = atob(this.profileImageData.split(',')[1])
+      let array = []
+      for (var i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i))
+      }
+      let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+      // Put request for upload to S3
+      const result = await fetch(response.data.uploadURL, {
+        method: 'PUT',
+        // lambda에 적어준 내용과 일치해야 한다.
+        // headers: {
+        //   'Content-type': 'image/jpeg'
+        // },
+        body: blobData
+      })
+      console.log('Result: ', result)
+      let fileKey = response.data.Key
+      this.profileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
+      this.profileImageFile = ''
+      this.profileImageData = ''
     },
     // 닉네임 중복 확인 함수
     nicknameCheck: function () {
@@ -366,11 +431,11 @@ export default {
     changeUserInfo: function () {
       axios({
         method: 'put',
-        url: `${this.host}/accounts/${this.userId}/info/`,
+        url: `${this.host}/accounts/${this.$route.params.userId}/info/`,
         data: {
           nickname: this.nickname,
           introduction: this.introduction,
-          profileImage: '',
+          profileImage: this.profileImageSrc,
           masterpieceIds: this.masterpieces,
         },
         headers: { token: localStorage.getItem('jwtToken') }
@@ -380,7 +445,7 @@ export default {
           this.currentNickname = this.nickname
           // state에 저장되어 있는 기본 유저정보 갱신
           this.$store.dispatch('setUserInfo', {
-            userId: this.userId,
+            userId: this.$route.params.userId,
             nickname: this.nickname,
             profileImage: this.profileImageSrc,
           })
@@ -435,7 +500,7 @@ export default {
     changePassword: function () {
       axios({
         method: 'put',
-        url: `${this.host}/accounts/${this.userId}/pwd/`,
+        url: `${this.host}/accounts/${this.$route.params.userId}/pwd/`,
         data: {
           password: this.password,
           newPassword: this.newPassword
@@ -508,7 +573,7 @@ export default {
     deleteUser: function () {
       axios({
         method: 'delete',
-        url: `${this.host}/accounts/${this.userId}/`,
+        url: `${this.host}/accounts/${this.$route.params.userId}/`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
@@ -566,7 +631,6 @@ export default {
   computed: {
     ...mapState([
       'host',
-      'isLogon',
       'userInfo',
     ])
   },
@@ -579,17 +643,27 @@ export default {
         this.newPasswordConfirmation = (this.newPasswordConfirmation + ' ')
       })
         .then(() => {
-          this.newPasswordConfirmation = this.newPasswordConfirmation.trim()
+          this.newPasswordConfirmation = this.newPasswordConfirmation.slice(0, this.newPasswordConfirmation.length-1)
         })
     },
   },
+  // 페이지가 로드될 때 유저 정보 불러오기
   created: function () {
-    this.userId = this.userInfo.userId
-    this.nickname = this.userInfo.nickname
-    this.currentNickname = this.userInfo.nickname
-    if (this.userInfo.profileImage) {
-      this.profileImageSrc = this.userInfo.profileImage
-    }
+    axios({
+      method: 'get',
+      url: `${this.host}/profile/${this.$route.params.userId}/`,
+    })
+      .then(res => {
+        console.log(res)
+        this.nickname = res.data.nickname
+        this.currentNickname = res.data.nickname
+        this.profileImageSrc = res.data.profileImg
+        this.introduction = res.data.introduction
+        this.masterpieces = res.data.masterpieces
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
