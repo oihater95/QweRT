@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.web.qwert.model.comment.Comment;
 import com.web.qwert.model.comment.CommentRequest;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
@@ -62,5 +64,28 @@ public class CommentController {
 			   e.printStackTrace();
 			   return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		   }
+	}
+	
+	@DeleteMapping("{commentId}")
+	@ApiOperation("댓글 삭제")
+	public Object deleteComment(@PathVariable int commentId, @RequestHeader String token) {
+		Optional<Comment> commentOpt = commentService.getComment(commentId);
+		if (!commentOpt.isPresent()) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 없는 댓글
+		
+		Comment comment = commentOpt.get(); 
+		int userId = comment.getUser().getUserId();
+
+		try {
+			if (userId == jwtService.getUserId(token)) { // 댓글 작성자와 토큰 발급한 유저가 같다면
+				commentService.deleteComment(comment);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 권한 없음
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
+		}
+
 	}
 }

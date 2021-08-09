@@ -1,5 +1,7 @@
 package com.web.qwert.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +29,13 @@ public class CommentServiceImpl {
 		comment.setContent(request.getContent());
 		comment.setDocentFlag(request.isDocentFlag());
 		commentDao.save(comment);
+	}
+	
+	public Optional<Comment> getComment (int commentId) {
+		return commentDao.findById(commentId);
+	}
+	
+	public void deleteComment (Comment comment) {
+		commentDao.delete(comment);
 	}
 }
