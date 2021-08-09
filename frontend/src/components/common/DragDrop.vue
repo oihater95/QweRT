@@ -6,7 +6,7 @@
                 3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
                 4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
             <v-card id="drop-card" class="col-12">
-                <div  v-if="$route.params.imgSrc" class="upload-image">
+                <div  v-if="drawing" class="upload-image">
                     <img id="previewImg" 
                         :src="$route.params.imgSrc" 
                         class="col-12"
@@ -20,6 +20,17 @@
                 <div  v-else-if="imageSrc" class="upload-image">
                     <img id="previewImg" 
                         :src="imageSrc" 
+                        class="col-12"
+                        @dragover.prevent="dragover = true"
+                        @dragenter.prevent="dragover = true"
+                        @dragleave.prevent="dragover = false"
+                        @drop.prevent="onDrop"
+                        :class="{ 'grey lighten-3': dragover }"
+                    >
+                </div>
+                <div  v-else-if="imageFile" class="upload-image">
+                    <img id="previewImg" 
+                        :src="imageFile" 
                         class="col-12"
                         @dragover.prevent="dragover = true"
                         @dragenter.prevent="dragover = true"
@@ -42,47 +53,15 @@
                     readonly
                 >
             </v-card>
-            <div class="mx-1 col-6">
-                <div class="file-button d-inline me-2">
-                    <label for="ex_file">
-                        <i class="fa fa-paperclip drag-search__icon "></i>
-                    </label>
-                    <input 
-                    id="ex_file" 
-                    type=file 
-                    class="file-input"  
-                    accept="image/*" 
-                    ref="fileInput" 
-                    @change="onFileChange">
-                </div>
-                <div class="input-group-append d-inline">
-                    <v-btn
-                        class="mb-2 mx-2 mt-1 posting-btns"
-                        @click.stop="clearInput"
-                        icon>
-                        <v-icon id="posting-clear__btn">
-                            mdi-trash-can-outline
-                        </v-icon>
-                    </v-btn>
-                    <v-btn
-                        class="mb-2 mx-2 mt-1 posting-btns"
-                        @click="uploadImage"
-                        icon>
-                        <v-icon id="posting-upload__btn">
-                            mdi-upload-outline
-                        </v-icon>
-                    </v-btn>
-                </div>
-            </div>
+            
         </div>
     </div>
 </template>
 
 <script>
 import "@/css/common/dragNdrop.scss"
-import axios from'axios'
+import { mapState } from 'vuex'
 
-const API_ENDPOINT = 'https://2b7e7mxwc9.execute-api.ap-northeast-2.amazonaws.com/default/getPresignedUrl'
 
 export default {
   name: 'DragDrop',
@@ -91,7 +70,16 @@ export default {
       dragover: false,
       filename: '',
       imageSrc: '',
+      drawing: false,
+      image: '',
+      file: ''
     }
+  },
+
+  props: {
+    imageFile: {
+      type: String,
+    },
   },
 
   methods: {
@@ -100,12 +88,7 @@ export default {
       this.createImage(event.dataTransfer.files[0])
       this.inputImageFile(event.dataTransfer.files)
     },
-    onFileChange (e) {
-      let files = e.target.files || e.dataTransfer.files
-      if (!files.length) return
-      this.createImage(files[0])
-      this.inputImageFile(e.target.files)
-    },
+    
     inputImageFile (files) {
       if (files.length) {
         let file = files[0]
@@ -115,6 +98,7 @@ export default {
           return false
         }
         this.filename = file.name
+        this.file = file
         // 미리보기
         this.preview(file)
       }
@@ -127,60 +111,47 @@ export default {
           return alert('Wrong file type - JPG only.')
         }
         this.image = e.target.result
+        this.$store.dispatch('setImageInfo', {
+          drawing: this.drawing,
+          image: this.image,
+          imageSrc: this.ImageSrc,
+          filename: this.filename,
+          file: this.file
+        })
       }
       reader.readAsDataURL(file)
     },
-    uploadImage: async function () {
-      if(this.$route.params.imgSrc){
-        this.image = this.$route.params.imgSrc
-      }
-
-      const response = await axios({
-        method: 'GET',
-        url: API_ENDPOINT
-      })
-      console.log('Response: ', response)
-
-      let binary = atob(this.image.split(',')[1])
-      let array = []
-      for (var i = 0; i < binary.length; i++) {
-        array.push(binary.charCodeAt(i))
-      }
-      let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-      // Put request for upload to S3
-      const result = await fetch(response.data.uploadURL, {
-        method: 'PUT',
-        // lambda에 적어준 내용과 일치해야 한다.
-        // headers: {
-        //   'Content-type': 'image/jpeg'
-        // },
-        body: blobData
-      })
-      console.log('Result: ', result)
-
-      let fileKey = response.data.Key
-      let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
-      this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
-    },
-    clearInput() {
-      this.filename = '',
-      this.imageSrc = ''
-    },
+    
 
     // 미리보기
     preview (file) {
       if (typeof file === 'string') {
         this.imageSrc = file
       } else {
-        let vm = this
         let reader = new FileReader()
         reader.onload = () => {
-          vm.imageSrc = reader.result
+          this.imageSrc = reader.result
         }
         reader.readAsDataURL(file)
       }
     },
   },
+
+  mounted() {
+    this.$store.dispatch('clearImageInfo')
+    if(this.$route.params.imgSrc) {
+      this.drawing = true
+    }
+  },
+  computed: {
+    ...mapState(['host', 'imageInfo']),
+  },
+  watch: {
+    imageFile() {
+      this.imageSrc = ''
+      console.log(this.imageFile)
+    }
+  }
 }
 </script>
 
