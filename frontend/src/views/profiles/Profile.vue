@@ -170,27 +170,39 @@
     </v-row>
     <!-- '더 보기' 버튼 -->
     <v-row
+      v-if="!showMore"
       justify="center"
       class="profile-showMore__btn"
     >
       <v-col>
-        <v-btn plain>
+        <v-btn
+          plain
+          @click="showMore=true"
+        >
           <h2>
             <i class="fas fa-caret-down"></i> 더 보기
           </h2>
         </v-btn>
       </v-col>
     </v-row>
+    <!-- 상세 정보 -->
+    <ProfileShowMore
+      v-else
+    />
   </v-container>
 </template>
 
 <script>
+import ProfileShowMore from '@/components/profiles/ProfileShowMore'
 import '@/css/profiles/Profile.scss'
 import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
   name: 'Profile',
+  components: {
+    ProfileShowMore,
+  },
   data: function () {
     return {
       nickname: '',
@@ -209,6 +221,7 @@ export default {
         {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
       ],
       hovered: false,
+      showMore: false,
     }
   },
   methods: {
