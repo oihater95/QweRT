@@ -249,14 +249,6 @@ export default {
           this.checkResult = '가입 가능한 이메일입니다.'
           this.showOverlay = true
         })
-        .then(() => {
-          // 중복확인 rules를 갱신하기 위한 꼼수 (다시 공백을 지워서 email 입력을 갱신)
-          this.credentials.email = this.credentials.email.trim()
-          // 1초 후 오버레이 내리기
-          setTimeout(() => {
-            this.showOverlay = false
-          }, 1000)
-        })
         .catch(err => {
           console.log(err)
           // 중복확인 rules를 갱신하기 위한 꼼수 (뒤에 공백을 붙였다가)
@@ -268,7 +260,7 @@ export default {
         })
         .then(() => {
           // 중복확인 rules를 갱신하기 위한 꼼수 (다시 공백을 지워서 email 입력을 갱신)
-          this.credentials.email = this.credentials.email.trim()
+          this.credentials.email = this.credentials.email.slice(0, this.credentials.email.length-1)
           // 1초 후 오버레이 내리기
           setTimeout(() => {
             this.showOverlay = false
@@ -288,12 +280,6 @@ export default {
           this.checkResult = '사용 가능한 닉네임입니다.'
           this.showOverlay = true
         })
-        .then(() => {
-          this.credentials.nickname = this.credentials.nickname.trim()
-          setTimeout(() => {
-            this.showOverlay = false
-          }, 1000)
-        })
         .catch(err => {
           console.log(err)
           this.uniqueNickname = false
@@ -302,7 +288,7 @@ export default {
           this.showOverlay = true
         })
         .then(() => {
-          this.credentials.nickname = this.credentials.nickname.trim()
+          this.credentials.nickname = this.credentials.nickname.slice(0, this.credentials.nickname.length-1)
           setTimeout(() => {
             this.showOverlay = false
           }, 1000)
