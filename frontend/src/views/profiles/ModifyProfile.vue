@@ -36,6 +36,14 @@
           v-model="profileImageFile"
           @change="changeProfileImage"
         ></v-file-input>
+        <v-btn
+          x-small
+          tile
+          class="ms-2 mt-3"
+          @click="profileImageSrc='', profileImageFile='', profileImageData=''"
+        >
+          프로필 사진 기본 설정
+        </v-btn>
       </v-col>
       <v-col align-self="center">
         <v-row>
