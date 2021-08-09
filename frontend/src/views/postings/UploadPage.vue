@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col><DragDrop imgSrc="imgSrc" :imageFile="imageFile"/></v-col>
+      <v-col><DragDrop imgSrc="imgSrc" :imageFile="imageFile" :deleteFlag="deleteFlag"/></v-col>
       <v-col>
         <div class="container">
           <v-card class="my-5 posting-title">
@@ -11,6 +11,7 @@
               hide-details="auto"
               counter="30"
               maxlength="30"
+              v-model="postingData.postingTitle"
             ></v-text-field>
           </v-card>
           
@@ -20,6 +21,7 @@
           height="180px"
           maxlength="200"
           counter="200"
+          v-model="postingData.postingContent"
           :rules="[rules.required]"
           :placeholder="'설명\n\n도용 및 저작권 침해에 주의해주세요'"
           >
@@ -109,6 +111,14 @@ export default {
         file: '',
       },
       imageFile: null,
+      deleteFlag: false,
+      postingData: {
+        userId: '',
+        postingTitle: '',
+        postingContent: '',
+        postingImage: '',
+        categoryId: '',
+      }
     }
   },
   props: {
@@ -212,7 +222,25 @@ export default {
     
           let fileKey = response.data.Key
           let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
-          this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
+          this.postingData.postingImage = fileKey
+          this.postingData.categoryId = parseInt(this.toggleCategoryId[0])
+          this.postingData.userId = this.userInfo.userId
+
+          axios ({
+            method: 'post',
+            url: `${this.host}/postings`,
+            data: this.postingData,
+            headers: { token: localStorage.getItem('jwtToken') }
+          })
+            .then(res => {  
+              console.log(res)
+              this.$store.dispatch('setPostingInfo', res.data)
+              this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
+            })
+            .catch(err => {
+              console.log(err)
+            })
+          
       } else {
         alert('파일이 없습니다')
       }
@@ -221,6 +249,7 @@ export default {
     // 데이터 삭제
     clearInput() {
       this.$store.dispatch('clearImageInfo')
+      this.deleteFlag = true
     },
 
     // 그리기에서 넘어왔을 때 뒤로가기
@@ -243,8 +272,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['host', 'imageInfo'])
-  }
+    ...mapState(['host', 'imageInfo', 'userInfo', 'postingInfo'])
+  },
 }
 </script>
 

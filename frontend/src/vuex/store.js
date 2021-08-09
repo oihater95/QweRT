@@ -59,6 +59,14 @@ export default new Vuex.Store({
       state.imageInfo.filename = ''
       state.imageInfo.file = ''
     },
+    SET_POSTING_INFO: function (state, data) {
+      state.postingInfo.userId = data.userId
+      state.postingInfo.postingImage = data.postingImage
+      state.postingInfo.postingTitle = data.postingTitle
+      state.postingInfo.postingContent = data.postingContent
+      state.postingInfo.categoryId = data.categoryId
+    },
+    
   },
   actions: {
     setUserInfo: function ({ commit }, data) {
@@ -73,6 +81,9 @@ export default new Vuex.Store({
     },
     clearImageInfo: function ({ commit }) {
       commit('CLEAR_IMAGE_INFO')
+    },
+    setPostingInfo: function ({ commit }, data) {
+      commit('SET_POSTING_INFO', data)
     },
   },
   modules: {
