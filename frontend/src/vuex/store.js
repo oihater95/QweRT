@@ -33,13 +33,13 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SETUSERINFO: function (state, data) {
+    SET_USER_INFO: function (state, data) {
       state.userInfo.userId = data.userId
       state.userInfo.nickname = data.nickname
       state.userInfo.profileImage = data.profileImage
       state.isLogon = true
     },
-    REMOVEUSERINFO: function (state) {
+    REMOVE_USER_INFO: function (state) {
       state.userInfo.userId = ''
       state.userInfo.nickname = ''
       state.userInfo.profileImage = ''
@@ -62,11 +62,11 @@ export default new Vuex.Store({
   },
   actions: {
     setUserInfo: function ({ commit }, data) {
-      commit('SETUSERINFO', data)
+      commit('SET_USER_INFO', data)
     },
     removeUserInfo: function ({ commit }) {
       localStorage.removeItem('jwtToken')
-      commit('REMOVEUSERINFO')
+      commit('REMOVE_USER_INFO')
     },
     setImageInfo: function ({ commit }, data) {
       commit('SET_IMAGE_INFO', data)

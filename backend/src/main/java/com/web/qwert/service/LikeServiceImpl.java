@@ -30,12 +30,13 @@ public class LikeServiceImpl implements LikeService {
 	@Override
 	@Transactional
 	public void updateLike(User user, Posting posting) {
-		System.out.println("updatelike");
 		Optional<Like> likeOpt = likeDao.findLikeByUserAndPosting(user, posting);
+		
 		if(likeOpt.isPresent()) { // 좋아요가 있다면 
 			likeDao.delete(likeOpt.get()); // 삭제
 			posting.setLikeCnt( posting.getLikeCnt() - 1);
 			postingDao.save(posting);
+		
 		} else { // 좋아요 없다면
 			Like like = new Like();
 			like.setUser(user);

@@ -40,13 +40,13 @@
           class="border"
         >
           <v-img
-            v-if="!profileImg"
+            v-if="!profileImageSrc"
             src="@/assets/images/profile_image_default.png"
             class="content"
           ></v-img>
           <v-img
             v-else
-            src="profileImg"
+            :src="profileImageSrc"
             class="content"
           ></v-img>
         </v-img>
@@ -170,31 +170,43 @@
     </v-row>
     <!-- '더 보기' 버튼 -->
     <v-row
+      v-if="!showMore"
       justify="center"
       class="profile-showMore__btn"
     >
       <v-col>
-        <v-btn plain>
+        <v-btn
+          plain
+          @click="showMore=true"
+        >
           <h2>
             <i class="fas fa-caret-down"></i> 더 보기
           </h2>
         </v-btn>
       </v-col>
     </v-row>
+    <!-- 상세 정보 -->
+    <ProfileShowMore
+      v-else
+    />
   </v-container>
 </template>
 
 <script>
+import ProfileShowMore from '@/components/profiles/ProfileShowMore'
 import '@/css/profiles/Profile.scss'
 import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
   name: 'Profile',
+  components: {
+    ProfileShowMore,
+  },
   data: function () {
     return {
       nickname: '',
-      profileImg: '',
+      profileImageSrc: '',
       introduction: '',
       followerCnt: null,
       followingCnt: null,
@@ -209,6 +221,7 @@ export default {
         {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
       ],
       hovered: false,
+      showMore: false,
     }
   },
   methods: {
@@ -225,13 +238,13 @@ export default {
       this.followState = !this.followState
     },
   },
-  // 임시로 state에서 정보 받아오기
   computed: {
     ...mapState([
       'host',
       'userInfo',
     ])
   },
+  // 페이지가 로드될 때 유저 정보 불러오기
   created: function () {
     axios({
       method: 'get',
@@ -240,7 +253,7 @@ export default {
       .then(res => {
         console.log(res)
         this.nickname = res.data.nickname
-        this.profileImg = res.data.profileImg
+        this.profileImageSrc = res.data.profileImg
         this.introduction = res.data.introduction
         this.followerCnt = res.data.followerCnt
         this.followingCnt = res.data.followingCnt

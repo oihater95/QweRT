@@ -13,9 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-
-import com.web.qwert.model.like.Like;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.qwert.model.comment.Comment;
+import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
 
 import lombok.AllArgsConstructor;
@@ -69,5 +69,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Like> likes;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comment> comments;
     
 }
