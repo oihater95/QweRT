@@ -643,7 +643,7 @@ export default {
         this.newPasswordConfirmation = (this.newPasswordConfirmation + ' ')
       })
         .then(() => {
-          this.newPasswordConfirmation = this.newPasswordConfirmation.trim()
+          this.newPasswordConfirmation = this.newPasswordConfirmation.slice(0, this.newPasswordConfirmation.length-1)
         })
     },
   },
