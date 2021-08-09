@@ -57,8 +57,28 @@ public class CommentServiceImpl {
 	public List<CommentDto> getComments (Posting posting, int page, int size) {
 		
 		// 게시물의 최신 순 댓글들을 size만큼 페이징해서 가져움
-		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").ascending());
 		List<Comment> comments = commentDao.findByPostingAndDocentFlag(posting, false, pageable);
+		
+		// 페이지의 모든 댓글 정보에 작성자 정보 추가
+		List<CommentDto> results = new ArrayList<CommentDto>();
+		for(Comment comment : comments) {
+			CommentDto commentDto = new CommentDto(); // 댓글 정보 저장
+			BeanUtils.copyProperties(comment, commentDto);
+			
+			UserDto user = new UserDto(); // 댓글 작성자 정보 저장
+			BeanUtils.copyProperties(comment.getUser(), user);
+			commentDto.setUser(user);
+			results.add(commentDto);	
+		}
+		return results;
+	}
+	
+	public List<CommentDto> getDocentComments (Posting posting, int page, int size) {
+		
+		// 게시물의 오래된 순 도슨트 댓글들을 size만큼 페이징해서 가져움
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").ascending());
+		List<Comment> comments = commentDao.findByPostingAndDocentFlag(posting, true, pageable);
 		
 		// 페이지의 모든 댓글 정보에 작성자 정보 추가
 		List<CommentDto> results = new ArrayList<CommentDto>();

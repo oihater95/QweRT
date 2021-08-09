@@ -129,5 +129,15 @@ public class CommentController {
 		List<CommentDto> results = commentService.getComments(postingOpt.get(), page, size);
 		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
+	
+	@GetMapping("{postingId}/docent")
+	@ApiOperation("도슨트 댓글 불러오기")
+	public Object getDocentComments (@PathVariable int postingId, @RequestParam int page, @RequestParam int size) {
+		Optional<Posting> postingOpt = postingService.getPosting(postingId);
+		if (!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시물
+		
+		List<CommentDto> results = commentService.getDocentComments(postingOpt.get(), page, size);
+		return new ResponseEntity<>(results, HttpStatus.OK);
+	}
 
 }
