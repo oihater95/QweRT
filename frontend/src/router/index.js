@@ -9,6 +9,7 @@ import CurationPage from '@/views/curations/CurationPage.vue'
 import NewCuration from '@/views/curations/NewCuration.vue'
 import ChangeCuration from '@/views/curations/ChangeCuration.vue'
 import CurationDetail from '@/views/curations/CurationDetail.vue'
+import SelectColor from '@/components/curations/SelectColor.vue'
 import PostingDetail from '@/views/postings/PostingDetail'
 import dragNdrop from '@/components/common/dragNdrop'  // 확인용 (업로드 페이지 대체)
 import DragDrop from '@/components/common/DragDrop'
@@ -61,6 +62,11 @@ const routes = [
     path: '/curation/:id',
     name: 'CurationDetail',
     component: CurationDetail
+  },
+  {
+    path: '/color',
+    name: 'SelectColor',
+    component: SelectColor
   },
   {
     path: '/curation/:id/edit',
