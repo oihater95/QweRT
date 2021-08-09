@@ -110,6 +110,7 @@
 <script>
 import Modal from '@/components/common/Modal'
 import '@/css/accounts/Login.scss'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -145,7 +146,7 @@ export default {
     login: function () {
       axios ({
         method: 'post',
-        url: 'http://13.209.16.153:8080/qwert/accounts/login/',
+        url: `${this.host}/accounts/login/`,
         data: this.credentials
       })
         .then(res => {  
@@ -196,6 +197,11 @@ export default {
         }
       }
     },
+  },
+  computed: {
+    ...mapState([
+      'host',
+    ])
   },
   // cookie에 저장된 이메일이 있다면 자동으로 불러오기
   created: function () {

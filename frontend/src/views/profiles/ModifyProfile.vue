@@ -342,7 +342,7 @@ export default {
     nicknameCheck: function () {
       axios ({
         method: 'get',
-        url: `http://13.209.16.153:8080/qwert/accounts/nicknamecheck/?nickname=${this.nickname}`
+        url: `${this.host}/accounts/nicknamecheck/?nickname=${this.nickname}`
       })
         .then(res => {
           console.log(res)
@@ -366,7 +366,7 @@ export default {
     changeUserInfo: function () {
       axios({
         method: 'put',
-        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/info/`,
+        url: `${this.host}/accounts/${this.userId}/info/`,
         data: {
           nickname: this.nickname,
           introduction: this.introduction,
@@ -380,9 +380,9 @@ export default {
           this.currentNickname = this.nickname
           // state에 저장되어 있는 기본 유저정보 갱신
           this.$store.dispatch('setUserInfo', {
-            user_id: this.userId,
+            userId: this.userId,
             nickname: this.nickname,
-            profile_image: this.profileImageSrc,
+            profileImage: this.profileImageSrc,
           })
           // 회원정보 수정 성공 모달 창
           this.modalMsg = {
@@ -435,7 +435,7 @@ export default {
     changePassword: function () {
       axios({
         method: 'put',
-        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/pwd/`,
+        url: `${this.host}/accounts/${this.userId}/pwd/`,
         data: {
           password: this.password,
           newPassword: this.newPassword
@@ -508,7 +508,7 @@ export default {
     deleteUser: function () {
       axios({
         method: 'delete',
-        url: `http://13.209.16.153:8080/qwert/accounts/${this.userId}/`,
+        url: `${this.host}/accounts/${this.userId}/`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
@@ -565,6 +565,7 @@ export default {
   },
   computed: {
     ...mapState([
+      'host',
       'isLogon',
       'userInfo',
     ])
