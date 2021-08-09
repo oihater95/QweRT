@@ -1,16 +1,18 @@
 <template>
   <div class="channel" :class="{moving: moving}">
-      <div class="digits"
-        @mousedown="start" 
-        @mousemove="move"
-        @mouseup="stop"
-        @touchstart="start" 
-        @touchmove="move" 
-        @touchend="stop"
-        >
-        <div class="digit" :class="{current: digit == hexy}" :key="1-idx" v-for="(digit, idx) in digits"><span>{{digit}}</span></div>
+    <div class="digits"
+      @mousedown="start" 
+      @mousemove="move"
+      @mouseup="stop"
+      @touchstart="start" 
+      @touchmove="move" 
+      @touchend="stop"
+    >
+      <div class="digit" :class="{current: digit == newDigit}" :key="1-idx" v-for="(digit, idx) in digits">
+          <span>{{digit}}</span>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -30,7 +32,7 @@ export default {
     return {
       moving: false,
       y: 0,
-      hexy: 0
+      newDigit: 0
     }
   },
   methods: {
@@ -51,9 +53,9 @@ export default {
       }
       let stack = (this.height * (this.digits.length-1) * -1)
       this.y = value > 0 ? 0 : value < stack ? stack : value
-      this.hexy = parseInt(Math.abs(Math.round(this.y/this.height))).toString(16)
+      this.newDigit = parseInt(Math.abs(Math.round(this.y/this.height))).toString(16)
       this.$el.style.setProperty('--y', this.y + 'px')
-      this.$emit('colorize', this.index, this.hexy)
+      this.$emit('colorize', this.index, this.newDigit)
     },
     start: function(e){
       this.moving = true

@@ -1,19 +1,14 @@
 .select-color__name {
     position: absolute;
-    top: 50%;
-    left: 70%;
+    top: 74%;
+    right: 75%;
     margin: 0;
     transform: translate(0%, -50%);
-    h4 {
-      font-weight: 300;
-      position: absolute;
-      top: 130%;
-      left: 0;
-      color: rgba(#fff, .5)
-    }
   }
 
 .select-color__div {
+  height: 700px;
+  width: 700px;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -23,6 +18,7 @@
   color: #fff;
   overflow: hidden;
   text-shadow: 1px 1px 0 rgba(#000, .2);
+  padding-left: 100px;
 }
 
 .digits {
@@ -45,11 +41,11 @@
     border-radius: .3em;
     opacity: 1;
     span {
-      font-size: 2.7em;
+      font-size: 1.7em;
     }
   }
   span {
-    font-size: 1.5em;
+    font-size: 1.1em;
   }
 }
 
