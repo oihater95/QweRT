@@ -24,6 +24,13 @@ export default new Vuex.Store({
       postingContent: '',
       categoryId: '',
     },
+    imageInfo: {
+      drawing: false,
+      image: '',
+      imageSrc: '',
+      filename: '',
+      file: '',
+    }
   },
   mutations: {
     SETUSERINFO: function (state, data) {
@@ -38,6 +45,20 @@ export default new Vuex.Store({
       state.userInfo.profileImage = ''
       state.isLogon = false
     },
+    SET_IMAGE_INFO: function (state, data) {
+      state.imageInfo.drawing = data.drawing
+      state.imageInfo.image = data.image
+      state.imageInfo.imageSrc = data.imageSrc
+      state.imageInfo.filename = data.filename
+      state.imageInfo.file = data.file
+    },
+    CLEAR_IMAGE_INFO: function (state) {
+      state.imageInfo.drawing = false
+      state.imageInfo.image = ''
+      state.imageInfo.imageSrc = ''
+      state.imageInfo.filename = ''
+      state.imageInfo.file = ''
+    },
   },
   actions: {
     setUserInfo: function ({ commit }, data) {
@@ -46,6 +67,12 @@ export default new Vuex.Store({
     removeUserInfo: function ({ commit }) {
       localStorage.removeItem('jwtToken')
       commit('REMOVEUSERINFO')
+    },
+    setImageInfo: function ({ commit }, data) {
+      commit('SET_IMAGE_INFO', data)
+    },
+    clearImageInfo: function ({ commit }) {
+      commit('CLEAR_IMAGE_INFO')
     },
   },
   modules: {
