@@ -1,5 +1,6 @@
 package com.web.qwert.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,11 @@ public class CommentServiceImpl {
 	
 	public void deleteComment (Comment comment) {
 		commentDao.delete(comment);
+	}
+	
+	public void updateComment (Comment comment, String content) {
+		comment.setContent(content);
+		comment.setUpdateDate(LocalDateTime.now());
+		commentDao.save(comment);
 	}
 }
