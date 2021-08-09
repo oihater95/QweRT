@@ -6,5 +6,5 @@ import lombok.Data;
 public class UserDto {
 	private int userId;
 	private String nickname;
-	private String profileImage;
+	private String profileImg;
 }

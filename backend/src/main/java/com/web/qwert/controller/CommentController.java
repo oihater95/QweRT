@@ -1,5 +1,6 @@
 package com.web.qwert.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,18 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.qwert.model.comment.Comment;
+import com.web.qwert.model.comment.CommentDto;
 import com.web.qwert.model.comment.CommentRequest;
 import com.web.qwert.model.posting.Posting;
-import com.web.qwert.model.posting.UpdateRequest;
 import com.web.qwert.model.user.User;
 import com.web.qwert.service.CommentServiceImpl;
 import com.web.qwert.service.JwtService;
@@ -116,4 +119,25 @@ public class CommentController {
 		}
 
 	}
+	
+	@GetMapping("{postingId}")
+	@ApiOperation("일반 댓글 불러오기")
+	public Object getComments (@PathVariable int postingId, @RequestParam int page, @RequestParam int size) {
+		Optional<Posting> postingOpt = postingService.getPosting(postingId);
+		if (!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시물
+		
+		List<CommentDto> results = commentService.getComments(postingOpt.get(), page, size);
+		return new ResponseEntity<>(results, HttpStatus.OK);
+	}
+	
+	@GetMapping("{postingId}/docent")
+	@ApiOperation("도슨트 댓글 불러오기")
+	public Object getDocentComments (@PathVariable int postingId, @RequestParam int page, @RequestParam int size) {
+		Optional<Posting> postingOpt = postingService.getPosting(postingId);
+		if (!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시물
+		
+		List<CommentDto> results = commentService.getDocentComments(postingOpt.get(), page, size);
+		return new ResponseEntity<>(results, HttpStatus.OK);
+	}
+
 }
