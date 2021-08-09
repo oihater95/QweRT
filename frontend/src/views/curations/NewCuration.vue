@@ -10,7 +10,11 @@
         </div>
         <div class="new-curation__color">
           <input type="checkbox" id="checkbox" v-model="checked">
-          <label for="checkbox">배경색 고르기</label>
+          <label for="checkbox" class="new-curation__label">선택사항: 배경색 고르기</label>
+          <span>
+          (배경색을 고르지 않으면 흰 색으로 설정됩니다.)
+
+          </span>
           <div v-if="checked">
             <SelectColor/>
           </div>

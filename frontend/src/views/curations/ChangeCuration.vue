@@ -10,7 +10,7 @@
         <div class="new-thumbnail__div">
           <div>큐레이션 썸네일</div>
           <div class="d-flex new-thumbnail_last">
-            <dragNdrop class="new-curation__component" />
+            <DragDrop class="new-curation__component" />
           </div>
         </div>
       </v-container>
@@ -31,14 +31,14 @@
 <script>
 import "@/css/curations/ChangeCuration.scss"
 import CurationInfo from "@/components/curations/CurationInfo"
-import dragNdrop from "@/components/common/dragNdrop"
+import DragDrop from "@/components/common/DragDrop"
 import MainImage from "@/components/postings/MainImage"
 
 export default {
   name: "ChangeCuration",
   components: {
     CurationInfo,
-    dragNdrop,
+    DragDrop,
     MainImage
   },
   data:  function () {
