@@ -34,5 +34,10 @@
 .tab:hover {
   color: skyblue;
   cursor: pointer;
-}    
+}
+
+.navbar-down__icon{
+  position: fixed !important;
+  z-index: 1;
+}
     
