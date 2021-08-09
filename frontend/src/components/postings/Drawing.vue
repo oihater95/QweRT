@@ -139,7 +139,7 @@ export default {
     // mouseup & mouseleave
     stopPainting: function() {
       if (this.filling === false){
-        let img = this.canvasFrame.toDataURL()
+        let img = this.canvasFrame.toDataURL('image/jpeg')
         if(this.painting === true) {
           this.history.undoList.push(img)
           document.getElementById("undoBtn").removeAttribute("disabled")
@@ -227,6 +227,8 @@ export default {
     handleClearClick: function() {
       let canvas = document.getElementById("drawing-canvas");
       this.vueCanvas.clearRect(0, 0, canvas.width, canvas.height);
+      this.vueCanvas.fillStyle = 'white'
+      this.vueCanvas.fillRect(0, 0, canvas.width, canvas.height);
       document.getElementById("uploadBtn").disabled = true
     },
     // 채우기
@@ -237,6 +239,7 @@ export default {
         if(this.painting === false) {
           this.history.undoList.push(img)
           document.getElementById("undoBtn").removeAttribute("disabled")
+          document.getElementById("uploadBtn").removeAttribute("disabled")
         } 
       }
     },
@@ -248,18 +251,12 @@ export default {
     // 로컬 & 로컬스토리지 저장
     handleUploadClick: function() {
       const img = this.canvasFrame.toDataURL('image/jpeg')  // jpg로 저장
-      // const link = document.createElement("a")
-      // link.href = img
-      // // a 태그에 다운로드를 붙이면 브라우저가 링크로 이동하지 않고 로컬에 저장함
-      // link.download = "QwertDrawing" + `${new Date()}`  
-      // link.click()  // 링크 클릭
-
+      console.log(img)
       var image = {
-        filename: "QwertDrawing" + `${new Date()}`,
+        imagename: "QwertDrawing" + `${new Date()}`,
         imageSrc: img
       }
-      localStorage.setItem(image.filename, image.imageSrc)
-      this.$router.push({name: 'UploadPage', params: {imgSrc: image.imageSrc}})
+      this.$router.push({name: 'UploadPage', params: {imgSrc: image.imageSrc, imagename: image.imagename}})
     },
     // Undo
     handleUndoClick: function(){
