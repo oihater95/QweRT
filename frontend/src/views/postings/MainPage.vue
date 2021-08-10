@@ -5,7 +5,12 @@
       <div @click="clickPopular">인기</div>
       <div @click="clickNew">최신</div>
     </div>
-     <v-row v-if="tab===1">
+    <v-row 
+    v-if="tab===1"
+    
+    >
+    <!-- @scroll="scrollloadMore"
+    v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="size" -->
       <FeedImage
         v-for="(image, idx) in feedImages" 
         :key="1-idx"
@@ -26,7 +31,6 @@
         :image="image"
       />
     </v-row>
-
   </v-container>
 </template>
 
@@ -34,7 +38,9 @@
 import "@/css/postings/MainPage.scss"
 import FeedImage from "@/components/postings/FeedImage"
 import MainImage from "@/components/postings/MainImage"
+import axios from 'axios'
 import { mapState } from 'vuex'
+
 
 
 export default {
@@ -46,8 +52,8 @@ export default {
   data:  function () {
     return {
       tab: 1,
-      // feedImages: []
-      feedImages: [
+      feedImages: [],
+      feedDummyImages: [
         {
         posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample1.jpg",
         profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
@@ -292,12 +298,26 @@ export default {
         create_date: "1111처음",
         update_date: "11111수정",
         },
-      ]
+      ],
+      page: 0,
+      size: 9,
+      busy: false,
+      loading: false,
+      offsetTop: 0,
     }
   },
   methods: {
     getFeedImages: function () {
       // feedImages에 이미지 집어넣기
+      axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
+      .then(res => {
+        const append = res.data.slice(this.feedImages.length, this.feedImages.length + this.size)
+        this.feedImages = this.feedImages.concat(append)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
     },
     clickFeed: function (e) {
       this.tab= 1
@@ -325,16 +345,51 @@ export default {
       this.tab= 3
       e.target.style.color="skyblue"
     },
+
+    // 윈도우 이벤트 리스너
+    scrollloadMore() {
+        var clientHeight = document.documentElement.clientHeight
+        var scrollTop = document.documentElement.scrollTop
+        var scrollHeight = document.documentElement.scrollHeight
+        console.log(clientHeight, scrollTop, scrollHeight)
+        if(clientHeight+scrollTop+20>=scrollHeight){
+            this.page++;
+            this.getFeedImages()
+        }
+      
+		},
+
+    loadMore() {
+      console.log("scrolling");
+      this.busy = true;   
+      axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
+      .then(res => {
+        const append = res.data.slice(this.feedImages.length, this.feedImages.length + this.size)
+        this.feedImages = this.feedImages.concat(append)
+        this.page = this.page + 1
+      })
+      .catch(err => {
+        console.log(err)
+        this.busy = false;
+      })
+    },
+
+
   },
   computed: {
     ...mapState([
+      'host',
       'isLogon',
-    ])
+      'userInfo'
+    ]),
   },
-  // 처음엔 피드 이미지
   created() {
+    // this.loadMore()
     this.getFeedImages()
-  }, 
+    window.addEventListener('scroll', this.scrollloadMore, true)
+  },
+
+
 }
 </script>
 
