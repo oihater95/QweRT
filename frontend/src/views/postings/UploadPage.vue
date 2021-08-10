@@ -26,7 +26,7 @@
           :placeholder="'설명\n\n도용 및 저작권 침해에 주의해주세요'"
           >
           </v-textarea>
-          <div class="mx-1 col-6">
+          <div class="mx-1 button-group">
               <div v-if="$route.params.imgSrc" class="d-inline">
                   <v-btn
                       class="mb-2 mx-2 mt-1 posting-btns"
@@ -101,7 +101,7 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
       },
-      category: ["인물", "동물", "식물", "풍경", "음식","건물", "패션", "캐릭터","낙서", "3D", "흑백","기타"],
+      category: ['동물', '사물', '풍경', '인물', '건물', '식물', '캐릭터', '기타'],
       toggleCategoryId: [],
       imageData: {
         drawing: false,
@@ -117,7 +117,7 @@ export default {
         postingTitle: '',
         postingContent: '',
         postingImage: '',
-        categoryId: '',
+        categoryId: 0,
       }
     }
   },
@@ -196,54 +196,59 @@ export default {
     },
 
     uploadImage: async function () {
-      
-      if (this.imageInfo.filename.length > 0 || this.imageInfo.drawing === true) {
-          const response = await axios({
-            method: 'GET',
-            url: API_ENDPOINT
-          })
-          console.log('Response: ', response)
-          let binary = atob(this.imageInfo.image.split(',')[1])
-          let array = []
-          for (var i = 0; i < binary.length; i++) {
-            array.push(binary.charCodeAt(i))
-          }
-          let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-          // Put request for upload to S3
-          const result = await fetch(response.data.uploadURL, {
-            method: 'PUT',
-            // lambda에 적어준 내용과 일치해야 한다.
-            // headers: {
-            //   'Content-type': 'image/jpeg'
-            // },
-            body: blobData
-          })
-          console.log('Result: ', result)
-    
-          let fileKey = response.data.Key
-          let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
-          this.postingData.postingImage = fileKey
-          this.postingData.categoryId = parseInt(this.toggleCategoryId[0])
-          this.postingData.userId = this.userInfo.userId
-
-          axios ({
-            method: 'post',
-            url: `${this.host}/postings`,
-            data: this.postingData,
-            headers: { token: localStorage.getItem('jwtToken') }
-          })
-            .then(res => {  
-              console.log(res)
-              this.$store.dispatch('setPostingInfo', res.data)
-              this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
-            })
-            .catch(err => {
-              console.log(err)
-            })
-          
+      if (this.toggleCategoryId.length < 1) {
+        alert('카테고리를 선택해주세요')
       } else {
-        alert('파일이 없습니다')
+        if (this.imageInfo.filename.length > 0 || this.imageInfo.drawing === true) {
+            const response = await axios({
+              method: 'GET',
+              url: API_ENDPOINT
+            })
+            console.log('Response: ', response)
+            let binary = atob(this.imageInfo.image.split(',')[1])
+            let array = []
+            for (var i = 0; i < binary.length; i++) {
+              array.push(binary.charCodeAt(i))
+            }
+            let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+            // Put request for upload to S3
+            const result = await fetch(response.data.uploadURL, {
+              method: 'PUT',
+              // lambda에 적어준 내용과 일치해야 한다.
+              // headers: {
+              //   'Content-type': 'image/jpeg'
+              // },
+              body: blobData
+            })
+            console.log('Result: ', result)
+      
+            let fileKey = response.data.Key
+            let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
+            this.postingData.postingImage = fileKey
+            let categoryid = Number(this.toggleCategoryId[0]) + 1
+            this.postingData.categoryId = categoryid
+            this.postingData.userId = this.userInfo.userId
+  
+  
+            axios ({
+              method: 'post',
+              url: `${this.host}/postings`,
+              data: this.postingData,
+              headers: { token: localStorage.getItem('jwtToken') }
+            })
+              .then(res => {  
+                console.log(res)
+                this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
+              })
+              .catch(err => {
+                console.log(err)
+              })
+            
+        } else {
+          alert('파일이 없습니다')
+        }
       }
+      
 
     },
     // 데이터 삭제
@@ -272,7 +277,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['host', 'imageInfo', 'userInfo', 'postingInfo'])
+    ...mapState(['host', 'imageInfo', 'userInfo'])
   },
 }
 </script>
