@@ -8,17 +8,18 @@
     >
       <div class="feed-image__div">
         <img
-          :src="image.posting_image"
+          :src="printPosting"
           alt="posting_image"
           @click="clickToGoDetail"
         >
       </div>
       <div class="d-flex align-center ml-2 info-div">
         <img
-          :src="image.profile_image"
+          v-if="image.postingProfileImg"
+          :src="image.postingProfileImg"
           alt="profile_image"
         >
-        <h3 class="nickname ml-2">{{image.nickname}}</h3>
+        <h3 class="nickname ml-2">{{this.userInfo.nickname}}</h3>
       </div>
       <h4 class="ml-1">{{image.title}}</h4>
       <v-icon 
@@ -27,11 +28,11 @@
         fas fa-heart
       </v-icon>
       <v-icon v-else>far fa-heart</v-icon>
-      {{image.liked_cnt}}
+      {{image.likeCnt}}
       <v-icon class="ml-2">fas fa-comment</v-icon>
-      {{image.comment_cnt}}
+      {{image.commentCnt}}
       <v-icon class="ml-2">far fa-image</v-icon>
-      {{image.curated_cnt}}
+      {{image.curatedCnt}}
     </v-card>
   </v-col>
 </template>
@@ -40,6 +41,7 @@
 
 <script>
 import "@/css/postings/FeedImage.scss"
+import { mapState } from 'vuex'
 
 export default {
   name: "MainImage",
@@ -48,10 +50,31 @@ export default {
       type: Object
     }
   },
+  data: function() {
+    return {
+      imgSrc: ''
+    }
+  },
+
   methods: {
     clickToGoDetail: function() {
-      this.$router.push({name: 'PostingDetail', params: {filename: this.image.title, imageSrc: this.image.posting_image}})
+      this.$router.push({
+        name: 'PostingDetail', 
+        params: {
+          filename: this.image.title, 
+          imageSrc: 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + this.image.postingImg
+          }
+        })
     },
+  },
+  computed: {
+    printPosting () {
+      return 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + this.image.postingImg
+    },
+    ...mapState([
+      'host',
+      'userInfo'
+    ])
   }
 }
 </script>
