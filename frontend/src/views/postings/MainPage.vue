@@ -1,27 +1,27 @@
 <template>
   <v-container fluid>
     <div class="d-flex justify-center menu-tab">
-      <div @click="clickMy">피드</div>
+      <div v-if="isLogon" @click="clickFeed">피드</div>
       <div @click="clickPopular">인기</div>
       <div @click="clickNew">최신</div>
     </div>
      <v-row v-if="tab===1">
       <FeedImage
-        v-for="(image, idx) in myImages" 
+        v-for="(image, idx) in feedImages" 
         :key="1-idx"
         :image="image"
       />
     </v-row>
     <v-row v-if="tab===2">
       <MainImage
-        v-for="(image, idx) in myImages" 
+        v-for="(image, idx) in popularImages" 
         :key="2-idx"
         :image="image"
       />
     </v-row>
     <v-row v-if="tab===3">
       <MainImage
-        v-for="(image, idx) in myImages" 
+        v-for="(image, idx) in newImages" 
         :key="3-idx"
         :image="image"
       />
@@ -34,6 +34,8 @@
 import "@/css/postings/MainPage.scss"
 import FeedImage from "@/components/postings/FeedImage"
 import MainImage from "@/components/postings/MainImage"
+import { mapState } from 'vuex'
+
 
 export default {
   name: "MainPage",
@@ -44,10 +46,10 @@ export default {
   data:  function () {
     return {
       tab: 1,
-      // myImages: []
-      myImages: [
+      // feedImages: []
+      feedImages: [
         {
-        posting_image: "http://weekly.chosun.com/up_fd/wc_news/2116/bimg_org/2116_74_01.jpg",
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample1.jpg",
         profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
         nickname: "호랑이1", 
         title: "고흐의 해바라기",
@@ -59,7 +61,7 @@ export default {
         update_date: "11111수정",
         },
         {
-        posting_image: "https://i.pinimg.com/474x/d6/8a/c4/d68ac49173eff89c2c6f4ecb81389ba4.jpg",
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
         profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035724_001_20210727102309284.jpg?type=w647",
         nickname: "닉네임2",
         title: "고흐의 자화상",
@@ -71,7 +73,7 @@ export default {
         update_date: "2222수정",
         },
         {
-        posting_image: "https://www.sciencetimes.co.kr/wp-content/uploads/2017/12/%EA%B3%A0%ED%9D%902.jpg",
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample3.jpg",
         profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035728_001_20210727122509659.jpg?type=w647",
         nickname: "닉네임3",
         title: "작품1",
@@ -83,7 +85,7 @@ export default {
         update_date: "33333수정",
         },
         {
-        posting_image: "https://images.chosun.com/resizer/sSQl4eaMeNGMJUZzTvTiGpYX7T4=/464x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/XKDKYF6W3XNBOFWOXQRPUI4UQQ.jpg",
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample4.jpg",
         profile_image: "https://im-media.voltron.voanews.com/Drupal/01live-211/styles/892x501/s3/2019-08/C479B173-9839-43CA-B441-0735785B95C3.png?itok=rshkbR3A",
         nickname: "호랑이4",
         title: "고흐1",
@@ -94,36 +96,244 @@ export default {
         create_date: "4444처음",
         update_date: "",
         },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample5.jpg",
+        profile_image: "https://im-media.voltron.voanews.com/Drupal/01live-211/styles/892x501/s3/2019-08/C479B173-9839-43CA-B441-0735785B95C3.png?itok=rshkbR3A",
+        nickname: "호랑이4",
+        title: "고흐1",
+        comment_cnt: "4",
+        like_state: "4",
+        liked_cnt: "1",
+        curated_cnt: "4",
+        create_date: "4444처음",
+        update_date: "",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample6.jpg",
+        profile_image: "https://im-media.voltron.voanews.com/Drupal/01live-211/styles/892x501/s3/2019-08/C479B173-9839-43CA-B441-0735785B95C3.png?itok=rshkbR3A",
+        nickname: "호랑이4",
+        title: "고흐1",
+        comment_cnt: "4",
+        like_state: "4",
+        liked_cnt: "1",
+        curated_cnt: "4",
+        create_date: "4444처음",
+        update_date: "",
+        },
+      ],
+      popularImages: [
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample5.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample6.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample7.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample8.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample9.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample1.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+      ],
+      newImages: [
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample3.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample4.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample1.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample5.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample6.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample7.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
       ]
     }
   },
   methods: {
-    getMyImages: function () {
-      // myImages에 이미지 집어넣기
+    getFeedImages: function () {
+      // feedImages에 이미지 집어넣기
     },
-    clickMy: function (e) {
+    clickFeed: function (e) {
       this.tab= 1
       e.target.style.color="skyblue"
       e.target.nextSibling.style.color="black"
       e.target.nextSibling.nextSibling.style.color="black"
     },
     clickPopular: function (e) {
+      if (this.isLogon) {
+        e.target.previousSibling.style.color="black"
+        e.target.nextSibling.style.color="black"
+      } else {
+        e.target.nextSibling.style.color="black"
+      }
       this.tab= 2
       e.target.style.color="skyblue"
-      e.target.previousSibling.style.color="black"
-      e.target.nextSibling.style.color="black"
-
     },
     clickNew: function (e) {
+      if (this.isLogon) {
+        e.target.previousSibling.style.color="black"
+        e.target.previousSibling.previousSibling.style.color="black"
+      } else {
+        e.target.previousSibling.style.color="black"
+      }
       this.tab= 3
       e.target.style.color="skyblue"
-      e.target.previousSibling.style.color="black"
-      e.target.previousSibling.previousSibling.style.color="black"
     },
+  },
+  computed: {
+    ...mapState([
+      'isLogon',
+    ])
   },
   // 처음엔 피드 이미지
   created() {
-    this.getMyImages()
+    this.getFeedImages()
   }, 
 }
 </script>
