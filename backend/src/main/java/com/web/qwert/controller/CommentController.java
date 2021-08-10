@@ -23,7 +23,7 @@ import com.web.qwert.model.comment.CommentDto;
 import com.web.qwert.model.comment.CommentRequest;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
-import com.web.qwert.service.CommentServiceImpl;
+import com.web.qwert.service.CommentService;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.PostingService;
 import com.web.qwert.service.UserService;
@@ -45,7 +45,7 @@ public class CommentController {
 	UserService userService;
 	
 	@Autowired
-	CommentServiceImpl commentService;
+	CommentService commentService;
 
 	@PostMapping("{postingId}")
 	@ApiOperation("댓글 달기")
@@ -96,7 +96,7 @@ public class CommentController {
 	
 	@PutMapping("{commentId}")
 	@ApiOperation("댓글 수정")
-	public Object updatePosting(@PathVariable int commentId, @RequestHeader String token,
+	public Object updateComment(@PathVariable int commentId, @RequestHeader String token,
 			@RequestBody String content) {
 		
 		Optional<Comment> commentOpt = commentService.getComment(commentId);
