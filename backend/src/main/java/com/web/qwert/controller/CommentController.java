@@ -96,7 +96,7 @@ public class CommentController {
 	
 	@PutMapping("{commentId}")
 	@ApiOperation("댓글 수정")
-	public Object updatePosting(@PathVariable int commentId, @RequestHeader String token,
+	public Object updateComment(@PathVariable int commentId, @RequestHeader String token,
 			@RequestBody String content) {
 		
 		Optional<Comment> commentOpt = commentService.getComment(commentId);

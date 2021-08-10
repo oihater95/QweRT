@@ -3,7 +3,7 @@ package com.web.qwert.model.curation;
 import lombok.Data;
 
 @Data
-public class NewCurationRequest {
+public class CurationRequest {
 	
 	private String title;
 	private String content;
