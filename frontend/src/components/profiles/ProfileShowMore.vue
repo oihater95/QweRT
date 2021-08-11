@@ -3,9 +3,12 @@
     justify="center"
     class="profile-showMore"
   >
+    <!-- 여백을 위한 빈칸 -->
     <v-col cols="12"></v-col>
     <v-col cols="12"></v-col>
+    <!-- 프로필 상세정보 -->
     <v-col cols="11">
+      <!-- 상단 탭 -->
       <v-row justify="space-around">
         <v-col
           :cols="tabOnView === 1 ? 4 : 3"
@@ -29,18 +32,22 @@
           <h3>큐레이션</h3>
         </v-col>
       </v-row>
+      <!-- 내 게시물 -->
+      <button @click="loadMyPostings">asdf</button>
       <MyPostings
         v-if="tabOnView === 1"
         class="content"
         :tab="tab1"
-        @scroll.native="loadContent"
+        @scroll.native="loadMyPostings"
       />
+      <!-- 내가 좋아하는 게시물 -->
       <MyFavoritePostings
         v-if="tabOnView === 2"
         class="content"
         :tab="tab2"
         @scroll.native="loadContent"
       />
+      <!-- 내 큐레이션 -->
       <MyCurations
         v-if="tabOnView === 3"
         class="content"
@@ -57,7 +64,7 @@ import MyFavoritePostings from '@/components/profiles/MyFavoritePostings'
 import MyCurations from '@/components/profiles/MyCurations'
 import '@/css/profiles/ProfileShowMore.scss'
 import { mapState } from 'vuex'
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   name: 'ProfileShowMore',
@@ -71,8 +78,8 @@ export default {
       tabOnView: 1,
       tab1: {
         size: 12,
-        page: 1,
-        contents: [1],
+        page: 0,
+        contents: [],
       },
       tab2: {
         size: 12,
@@ -107,6 +114,29 @@ export default {
         setTimeout(() => {
           this.scrollDelay = false
         }, 500)
+      }
+    },
+    loadMyPostings: function () {
+      const content = document.querySelector('.profile-showMore div.content')
+      if (((content.scrollTop + content.offsetHeight) >= content.scrollHeight) && !this.scrollDelay) {
+        this.scrollDelay = true
+        axios({
+          method: 'get',
+          url: `${this.host}/postings/${this.$route.params.userId}?page=${this.tab1.page}&size=${this.tab1.size}`,
+        })
+          .then(res => {
+            console.log(res)
+            this.tab1.contents.concat(res.data)
+            this.tab1.page ++
+          })
+          .catch(err => {
+            console.log(err)
+          })
+          .then(() => {
+            setTimeout(() => {
+              this.scrollDelay = false
+            }, 300)
+          })
       }
     },
   },
