@@ -27,6 +27,12 @@ public class LikeServiceImpl implements LikeService {
 	@Autowired
 	PostingDao postingDao;
 	
+	
+	@Override
+	public Optional<Like> getLike(User user, Posting posting) {
+		return likeDao.findLikeByUserAndPosting(user, posting);
+	}
+
 	@Override
 	@Transactional
 	public void updateLike(User user, Posting posting) {
@@ -57,4 +63,5 @@ public class LikeServiceImpl implements LikeService {
 		return likeDao.findLikeByUser(user, pageable);
 	}
 
+	
 }
