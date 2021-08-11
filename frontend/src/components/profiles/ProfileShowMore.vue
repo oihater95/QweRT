@@ -37,14 +37,14 @@
         v-if="tabOnView === 1"
         class="content"
         :tab="tab1"
-        @next-page="loadNextPage(tab1)"
+        @next-page-tab1="loadNextPage(tab1)"
       />
       <!-- 내가 좋아하는 게시물 -->
       <MyFavoritePostings
         v-if="tabOnView === 2"
         class="content"
         :tab="tab2"
-        @scroll.native="loadContent"
+        @next-page-tab2="loadNextPage(tab2)"
       />
       <!-- 내 큐레이션 -->
       <MyCurations
@@ -76,14 +76,14 @@ export default {
     return {
       tabOnView: 1,
       tab1: {     // 내 게시물
-        size: 4,
+        size: 6,
         page: 0,
         contents: [],
       },
       tab2: {     // 내가 좋아하는 게시물
-        size: 12,
-        page: 100,
-        contents: [99, 100],
+        size: 6,
+        page: 0,
+        contents: [],
       },
       tab3: {     // 내 큐레이션
         size: 9,
@@ -94,6 +94,7 @@ export default {
     }
   },
   methods: {
+    // 인피니티스크롤 시험용으로 만든 함수. 이후에 삭제 예정
     loadContent: function () {
       const content = document.querySelector('.profile-showMore div.content')
       console.log('window:', window.scrollY, window.innerHeight, document.body.offsetHeight)
@@ -117,9 +118,15 @@ export default {
     },
     // 다음 페이지를 불러오는 함수 (한 페이지마다 size만큼씩)
     loadNextPage: function (tab) {
+      let path
+      if (tab === this.tab1) {
+        path = `postings/${this.$route.params.userId}`
+      } else if (tab === this.tab2) {
+        path = `postings/${this.$route.params.userId}`
+      }
       axios({
         method: 'get',
-        url: `${this.host}/postings/${this.$route.params.userId}?page=${tab.page}&size=${tab.size}`,
+        url: `${this.host}/${path}?page=${tab.page}&size=${tab.size}`,
       })
         .then(res => {
           console.log(res)
