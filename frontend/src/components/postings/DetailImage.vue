@@ -7,10 +7,10 @@
     max-width="850px"
     max-height="850px"
     >
-      <img 
-      id="DetailImage"
-      class="col-12"
-      :src="$route.params.imageSrc">
+    <img 
+    id="DetailImage"
+    class="col-12"
+    :src="$route.params.imageSrc">
     </v-card>
   </div>
 </template>
@@ -19,9 +19,19 @@
 // import axios from'axios'
 import "@/css/postings/DetailImage.scss"
 
+import { mapState } from 'vuex'
+
 export default {
   name: 'DetailImage',
+  data: function() {
+    return {
+      img: ''
+    }
+  },
   
+  computed: {
+    ...mapState(['host', 'userInfo'])
+  },
 }
 </script>
 

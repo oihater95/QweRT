@@ -229,6 +229,7 @@ export default {
       this.vueCanvas.clearRect(0, 0, canvas.width, canvas.height);
       this.vueCanvas.fillStyle = 'white'
       this.vueCanvas.fillRect(0, 0, canvas.width, canvas.height);
+      this.vueCanvas.fillStyle = this.currentColor
       document.getElementById("uploadBtn").disabled = true
     },
     // 채우기
