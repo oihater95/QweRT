@@ -113,6 +113,7 @@ ALTER TABLE `comment`
     ADD CONSTRAINT FK_comment_user FOREIGN KEY (user_id) REFERENCES user (user_id);
 
 
+
 -- 6. 큐레이션 테이블 생성
 DROP TABLE IF EXISTS curation;
 
@@ -128,9 +129,28 @@ CREATE TABLE curation
     CONSTRAINT PK_curation PRIMARY KEY (curation_id)
 );
 
-ALTER TABLE curation COMMENT '큐레이션';
 
 ALTER TABLE curation
     ADD CONSTRAINT FK_curation_user FOREIGN KEY (user_id) REFERENCES user (user_id) ;
+
+
+-- 7. 큐레이션 게이슬 관계 테이블 생성
+DROP TABLE IF EXISTS curation_has_posting;
+
+CREATE TABLE curation_has_posting
+(
+    `id`           INT         NOT NULL    AUTO_INCREMENT,
+    `curation_id`  INT         NOT NULL, 
+    `posting_id`    INT         NOT NULL, 
+    `curate_date`  DATETIME    DEFAULT current_timestamp(),
+    CONSTRAINT PK_curation_and_board PRIMARY KEY (id)
+);
+
+
+ALTER TABLE curation_has_posting
+    ADD CONSTRAINT FK_curation_has_posting_curation FOREIGN KEY (curation_id) REFERENCES curation (curation_id);
+
+ALTER TABLE curation_has_posting
+    ADD CONSTRAINT FK_curation_has_posting_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
 
 use qwertdb;
