@@ -13,4 +13,6 @@ import com.web.qwert.model.posting.Posting;
 public interface CurationHasPostingDao extends JpaRepository<CurationHasPosting, Integer>{
 	
 	Optional<CurationHasPosting> findByCurationAndPosting (Curation curation, Posting posting);
+	
+	int countByPosting (Posting posting);
 }
