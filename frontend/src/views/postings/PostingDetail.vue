@@ -1,11 +1,15 @@
 <template>
 <div id="posting-detail__container" class="container">
   <DetailImage :postingImg="postingImg"/>
-  <div class="d-inline">
-    <h3>{{ postingTitle }}</h3>
-    <h4>{{ postingContent }}</h4>
-    <h5>{{ postingUserNickname }}</h5>
-  </div>
+  <v-card
+    id="posting-description"
+    class="mt-5"
+    color="#f1f3f5"
+  >
+    <v-card-title class="text-h5 ps-4 my-2 posting-title">{{ postingTitle }}</v-card-title>
+    <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
+    <v-card-subtitle class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
+  </v-card>
   <div id="posting-icon__buttons">
     <div class="me-5 my-5 icon-buttons">
       <v-btn
@@ -41,7 +45,10 @@
     </div>
   </div>
 
-  <CommentFrame />
+  <CommentFrame 
+  :postingId="postingId" 
+  :postingCommentCnt="postingCommentCnt" 
+  :postingDocentCnt="postingDocentCnt"/>
 </div>
 
 </template>
@@ -59,12 +66,6 @@ export default {
     DetailImage,
     CommentFrame,
   },
-  // params로 받아서 props로 받을 수 있음
-  // filename = $route.params.filename
-  // imageSrc = $route.params.imageSrc
-  // api 구현되면 /postings/{posting_id}로 axios get 요청 이미지 불러오기
-  // api 구현되면 /comments/{posting_id}/ : page로 axios get 요청 댓글 불러오기
-  // /comments/{posting_id}/docent/ : page => 도슨트 댓글(docent_flag)
 
   data: function() {
     return {
@@ -83,6 +84,32 @@ export default {
     }
   },
 
+  methods: {
+    getDetails: function() {
+      axios({
+        method: 'get',
+        url: `${this.host}/postings/detail/${this.$route.params.postingId}/`,
+        })
+        .then(res => {
+          this.postingId = res.data.postingId
+          this.postingImg = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + res.data.postingImg
+          this.postingTitle = res.data.title
+          this.postingContent = res.data.content
+          this.postingCreateDate = res.data.createdate
+          this.postingUpdateDate = res.data.updatedate
+          this.postingLikeCnt = res.data.likeCnt
+          this.postingCommentCnt = res.data.commentCnt
+          this.postingDocentCnt = res.data.docentCnt
+          this.postingUserId = res.data.userId
+          this.postingUserNickname = res.data.nickname
+          this.postingCategoryId = res.data.categoryId
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+
   computed: {
     ...mapState([
         'host',
@@ -91,29 +118,9 @@ export default {
   },
 
   created() {
-    axios({
-      method: 'get',
-      url: `${this.host}/postings/detail/${this.$route.params.postingId}/`,
-    })
-      .then(res => {
-        this.postingId = res.data.postingId
-        this.postingImg = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + res.data.postingImg
-        this.postingTitle = res.data.title
-        this.postingContent = res.data.content
-        this.postingCreateDate = res.data.createdate
-        this.postingUpdateDate = res.data.updatedate
-        this.postingLikeCnt = res.data.likeCnt
-        this.postingCommentCnt = res.data.commentCnt
-        this.postingDocentCnt = res.data.docentCnt
-        this.postingUserId = res.data.userId
-        this.postingUserNickname = res.data.nickname
-        this.postingCategoryId = res.data.categoryId
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
+    this.getDetails()
+  },
+  
 }
 
 </script>
