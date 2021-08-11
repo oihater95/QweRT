@@ -24,6 +24,11 @@ public class PostingDto {
     
     private int likeCnt; // 좋아요 받은 수 
     
+    private int commentCnt; // 전제 일반 댓글 수
+    
+    private int docentCnt; // 전체 도슨트 댓글 수
+    
+    private int curatedCnt; // 큐레이팅 된 수
     
     private int userId; // 업로더 아이디
     
