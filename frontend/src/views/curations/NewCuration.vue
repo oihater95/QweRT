@@ -6,7 +6,18 @@
         <div>선택사항: 큐레이션 썸네일</div>
         <div>큐레이션 썸네일을 업로드하지 않으면 큐레이션에 제일 먼저 담긴 세 작품이 썸네일로 보입니다.</div>
         <div class="d-flex new-thumbnail_last">
-            <dragNdrop class="new-curation__component" />
+            <DragDrop class="new-curation__component"/>
+        </div>
+        <div class="new-curation__color">
+          <input type="checkbox" id="checkbox" v-model="checked">
+          <label for="checkbox" class="new-curation__label">선택사항: 배경색 고르기</label>
+          <span>
+          (배경색을 고르지 않으면 흰 색으로 설정됩니다.)
+
+          </span>
+          <div v-if="checked">
+            <SelectColor/>
+          </div>
         </div>
         <button class="curation-make__btn">CREATE</button>
       </div>
@@ -17,14 +28,21 @@
 <script>
 import "@/css/curations/NewCuration.scss"
 import CurationInfo from "@/components/curations/CurationInfo"
-import dragNdrop from "@/components/common/dragNdrop"
+import DragDrop from "@/components/common/DragDrop"
+import SelectColor from "@/components/curations/SelectColor"
 
 export default {
-    name: "NewCuration",
-    components: {
-      CurationInfo,
-        dragNdrop,
-    },
+  name: "NewCuration",
+  components: {
+    CurationInfo,
+    DragDrop,
+    SelectColor
+  },
+  data: function () {
+    return {
+     checked: false
+    }
+  },
 }
 </script>
 

@@ -2,7 +2,6 @@ package com.web.qwert.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.CategoryDao;
+import com.web.qwert.dao.CommentDao;
 import com.web.qwert.dao.PostingDao;
 import com.web.qwert.dao.UserDao;
 import com.web.qwert.model.category.Category;
@@ -38,6 +38,9 @@ public class PostingServiceImpl implements PostingService {
 	
 	@Autowired
 	LikeService likeService;
+	
+	@Autowired
+	CommentDao commentDao;
 	
 	@Override
 	public boolean createPosting(UploadRequest request) {
@@ -114,7 +117,9 @@ public class PostingServiceImpl implements PostingService {
 		postingDto.setCategoryId(posting.getCategory().getCategoryId());
 		postingDto.setUserId(uploader.getUserId());
 		postingDto.setNickname(uploader.getNickname());
-		
+		postingDto.setCommentCnt(commentDao.countByPostingAndDocentFlag(posting, false));
+		postingDto.setDocentCnt(commentDao.countByPostingAndDocentFlag(posting, true));
+		postingDto.setCuratedCnt(Integer.MAX_VALUE); // 임시값
 		return postingDto;
 	}
 

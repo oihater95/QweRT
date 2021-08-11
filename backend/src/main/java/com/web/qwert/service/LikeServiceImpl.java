@@ -27,15 +27,22 @@ public class LikeServiceImpl implements LikeService {
 	@Autowired
 	PostingDao postingDao;
 	
+	
+	@Override
+	public Optional<Like> getLike(User user, Posting posting) {
+		return likeDao.findLikeByUserAndPosting(user, posting);
+	}
+
 	@Override
 	@Transactional
 	public void updateLike(User user, Posting posting) {
-		System.out.println("updatelike");
 		Optional<Like> likeOpt = likeDao.findLikeByUserAndPosting(user, posting);
+		
 		if(likeOpt.isPresent()) { // 좋아요가 있다면 
 			likeDao.delete(likeOpt.get()); // 삭제
 			posting.setLikeCnt( posting.getLikeCnt() - 1);
 			postingDao.save(posting);
+		
 		} else { // 좋아요 없다면
 			Like like = new Like();
 			like.setUser(user);
@@ -56,4 +63,5 @@ public class LikeServiceImpl implements LikeService {
 		return likeDao.findLikeByUser(user, pageable);
 	}
 
+	
 }

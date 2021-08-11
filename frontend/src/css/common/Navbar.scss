@@ -28,11 +28,16 @@
 
 .logo {
   cursor: pointer;
-  margin-left: 140px;
+  margin-left: 90px;
 }
 
 .tab:hover {
   color: skyblue;
   cursor: pointer;
-}    
+}
+
+.navbar-down__icon{
+  position: fixed !important;
+  z-index: 1;
+}
     

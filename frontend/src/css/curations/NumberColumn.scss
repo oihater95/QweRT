@@ -1,0 +1,45 @@
+.channel {
+    position: relative;
+    width: 3vmax;
+    height: 3vmax;
+    user-select: none;
+    pointer-events: none;
+    &:hover:not(.hash) .digits {
+      background: rgba(255, 255, 255, .1)
+    }
+    cursor: -webkit-grab;
+    &.moving {
+      cursor: -webkit-grabbing;
+      .digits {
+        transition-duration: 120ms;
+      }
+    }
+}
+
+.digits {
+    position: relative;
+    transform: translateY(var(--y));
+    transition: transform 650ms;
+    pointer-events: auto;
+    border-radius: .3em;
+}
+
+.digit {
+    padding: 50%;
+    line-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: .3;
+    transition: all 300ms;
+    &.current {
+      border-radius: .3em;
+      opacity: 1;
+      span {
+        font-size: 2.7em;
+      }
+    }
+    span {
+      font-size: 1.5em;
+    }
+}

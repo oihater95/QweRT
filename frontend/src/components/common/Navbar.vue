@@ -92,7 +92,7 @@
     <div>
       <v-icon 
         @click="toggleNavbar"
-        class="down-icon"
+        class="down-icon navbar-down__icon"
       >
       mdi-chevron-down
       </v-icon>
