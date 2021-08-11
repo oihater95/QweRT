@@ -53,6 +53,8 @@ export default {
     return {
       tab: 1,
       feedImages: [],
+      popularImages: [],
+      newImages: [],
       feedDummyImages: [
         {
         posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample1.jpg",
@@ -127,7 +129,7 @@ export default {
         update_date: "",
         },
       ],
-      popularImages: [
+      popularDummyImages: [
         {
         posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample5.jpg",
         profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
@@ -212,8 +214,128 @@ export default {
         create_date: "1111처음",
         update_date: "11111수정",
         },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
+        {
+        posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
+        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
+        nickname: "호랑이1", 
+        title: "고흐의 해바라기",
+        comment_cnt: "11",
+        like_state: "true",
+        liked_cnt: "1",
+        curated_cnt: "1",
+        create_date: "1111처음",
+        update_date: "11111수정",
+        },
       ],
-      newImages: [
+      newDummyImages: [
         {
         posting_image: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample3.jpg",
         profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
@@ -299,26 +421,46 @@ export default {
         update_date: "11111수정",
         },
       ],
-      page: 0,
+      feedPage: 0,
+      popularPage: 0,
+      newPage: 0,
       size: 9,
-      busy: false,
-      loading: false,
-      offsetTop: 0,
     }
   },
   methods: {
     getFeedImages: function () {
       // feedImages에 이미지 집어넣기
-      axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
+      axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.feedPage, size: this.size } })
       .then(res => {
-        const append = res.data.slice(this.feedImages.length, this.feedImages.length + this.size)
-        this.feedImages = this.feedImages.concat(append)
+        this.feedImages = this.feedImages.concat(res.data)
       })
       .catch(err => {
         console.log(err)
       })
-
     },
+
+    getPopularImages: function () {
+      // popularImages에 이미지 집어넣기
+      axios.get(`${this.host}/postings/popular/`, { params: { page: this.popularPage, size: this.size } })
+      .then(res => {
+        this.popularImages = this.popularImages.concat(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
+    getNewImages: function () {
+      // newImages에 이미지 집어넣기
+      axios.get(`${this.host}/postings/new/`, { params: { page: this.newPage, size: this.size } })
+      .then(res => {
+        this.newImages = this.newImages.concat(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
     clickFeed: function (e) {
       this.tab= 1
       e.target.style.color="skyblue"
@@ -346,34 +488,26 @@ export default {
       e.target.style.color="skyblue"
     },
 
-    // 윈도우 이벤트 리스너
+    // 스크롤이 끝에 닿을 때 쯤 추가 페이지 받아오기
     scrollloadMore() {
         var clientHeight = document.documentElement.clientHeight
         var scrollTop = document.documentElement.scrollTop
         var scrollHeight = document.documentElement.scrollHeight
         console.log(clientHeight, scrollTop, scrollHeight)
         if(clientHeight+scrollTop+20>=scrollHeight){
-            this.page++;
-            this.getFeedImages()
+            if(this.tab === 1) {
+              this.feedPage = this.feedPage + 1;
+              this.getFeedImages()
+            } 
+            else if (this.tab === 2) {
+              this.popularPage = this.popularPage + 1;
+              this.getPopularImages()
+            } else {
+              this.newPage = this.newPage + 1;
+              this.getNewImages()
+            }
         }
-      
 		},
-
-    loadMore() {
-      console.log("scrolling");
-      this.busy = true;   
-      axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
-      .then(res => {
-        const append = res.data.slice(this.feedImages.length, this.feedImages.length + this.size)
-        this.feedImages = this.feedImages.concat(append)
-        this.page = this.page + 1
-      })
-      .catch(err => {
-        console.log(err)
-        this.busy = false;
-      })
-    },
-
 
   },
   computed: {
@@ -384,9 +518,17 @@ export default {
     ]),
   },
   created() {
-    // this.loadMore()
+    // 게시물 받아오기
     this.getFeedImages()
-    window.addEventListener('scroll', this.scrollloadMore, true)
+    this.getPopularImages()
+    this.getNewImages()
+    // this.getPopularImages() => 인기 게시물 받아오기
+    window.addEventListener('scroll', this.scrollloadMore)
+  },
+
+  // 페이지 이동할 때 스크롤 이벤트 리스너 삭제
+  beforeDestroy () { 
+    window.removeEventListener('scroll', this.scrollloadMore) 
   },
 
 
