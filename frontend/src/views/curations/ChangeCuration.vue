@@ -12,6 +12,13 @@
           <div class="d-flex new-thumbnail_last">
             <DragDrop class="new-curation__component" />
           </div>
+          <div class="new-curation__color">
+          <input type="checkbox" id="checkbox" v-model="checked">
+          <label for="checkbox" class="new-curation__label">배경색 고르기</label>
+          <div v-if="checked">
+            <SelectColor/>
+          </div>
+        </div>
         </div>
       </v-container>
     </v-form>
@@ -33,16 +40,20 @@ import "@/css/curations/ChangeCuration.scss"
 import CurationInfo from "@/components/curations/CurationInfo"
 import DragDrop from "@/components/common/DragDrop"
 import MainImage from "@/components/postings/MainImage"
+import SelectColor from "@/components/curations/SelectColor"
+
 
 export default {
   name: "ChangeCuration",
   components: {
     CurationInfo,
     DragDrop,
-    MainImage
+    SelectColor,
+    MainImage,
   },
   data:  function () {
     return {
+     checked: false,
       curationImages: [
         {
         posting_image: "http://weekly.chosun.com/up_fd/wc_news/2116/bimg_org/2116_74_01.jpg",

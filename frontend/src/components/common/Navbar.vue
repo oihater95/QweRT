@@ -47,7 +47,7 @@
                     </v-list-item>
                   </v-list-group>
                   
-                  <v-list-item>
+                  <v-list-item @click.native="clickNewCuration">
                     <v-list-item-title class="tab ms-4">새 큐레이션</v-list-item-title>
                   </v-list-item>
                   
@@ -82,7 +82,7 @@
             <v-icon @click.native="clickSearch">fas fa-search</v-icon>
           </div>
           <div v-else class="icon-div">
-            <v-icon @click.native="clickSignup">fas fa-user-plus</v-icon>
+            <v-icon @click.native="clickSignup" class="navbar-signup__icon">fas fa-user-plus</v-icon>
             <v-icon @click.native="clickLogin">mdi-login</v-icon>
             <v-icon @click.native="clickSearch">fas fa-search</v-icon>
           </div>
@@ -130,6 +130,9 @@ export default {
     },
     clickNotify: function () {
       this.$router.push({ name: 'NotifyPage' })
+    },
+    clickNewCuration: function () {
+      this.$router.push({ name: 'NewCuration' })
     },
     clickProfile: function () {
       this.$router.push({ name: 'Profile', params: {userId: this.userInfo.userId} })
