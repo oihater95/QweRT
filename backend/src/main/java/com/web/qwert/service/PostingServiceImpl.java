@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.CategoryDao;
 import com.web.qwert.dao.CommentDao;
+import com.web.qwert.dao.CurationHasPostingDao;
 import com.web.qwert.dao.PostingDao;
 import com.web.qwert.dao.UserDao;
 import com.web.qwert.model.category.Category;
@@ -41,6 +42,9 @@ public class PostingServiceImpl implements PostingService {
 	
 	@Autowired
 	CommentDao commentDao;
+	
+	@Autowired
+	CurationServiceImpl curationService;
 	
 	@Override
 	public boolean createPosting(UploadRequest request) {
@@ -119,7 +123,7 @@ public class PostingServiceImpl implements PostingService {
 		postingDto.setNickname(uploader.getNickname());
 		postingDto.setCommentCnt(commentDao.countByPostingAndDocentFlag(posting, false));
 		postingDto.setDocentCnt(commentDao.countByPostingAndDocentFlag(posting, true));
-		postingDto.setCuratedCnt(Integer.MAX_VALUE); // 임시값
+		postingDto.setCuratedCnt(curationService.getCuratedCnt(posting));
 		return postingDto;
 	}
 
