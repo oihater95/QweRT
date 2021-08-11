@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.web.qwert.model.category.Category;
 import com.web.qwert.model.comment.Comment;
+import com.web.qwert.model.curation.CurationHasPosting;
 import com.web.qwert.model.like.Like;
 import com.web.qwert.model.user.User;
 
@@ -71,5 +72,7 @@ public class Posting {
     @JsonIgnore
     private List<Comment> comments;
     
-    
+    @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<CurationHasPosting> curationHasPostings;
 }
