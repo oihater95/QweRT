@@ -90,4 +90,47 @@ ALTER TABLE `like`
     ADD CONSTRAINT FK_like_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
 
 
+-- 5. 댓글 테이블 생성
+
+DROP TABLE IF EXISTS `comment`;
+
+CREATE TABLE `comment`
+(
+    `comment_id`   INT             NOT NULL    AUTO_INCREMENT, 
+    `content`      VARCHAR(128)    NOT NULL, 
+    `create_date`  DATETIME        DEFAULT current_timestamp(), 
+    `update_date`  DATETIME        NULL, 
+    `docent_flag`  BIT(1)          NULL, 
+    `user_id`      INT             NOT NULL, 
+    `posting_id`   INT             NOT NULL, 
+    CONSTRAINT PK_comment PRIMARY KEY (comment_id)
+);
+
+ALTER TABLE `comment`
+    ADD CONSTRAINT FK_comment_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
+
+ALTER TABLE `comment`
+    ADD CONSTRAINT FK_comment_user FOREIGN KEY (user_id) REFERENCES user (user_id);
+
+
+-- 6. 큐레이션 테이블 생성
+DROP TABLE IF EXISTS curation;
+
+CREATE TABLE curation
+(
+    `curation_id`    INT             NOT NULL    AUTO_INCREMENT, 
+    `title`          VARCHAR(20)     NOT NULL, 
+    `create_date`    DATETIME        DEFAULT current_timestamp(), 
+    `content`        VARCHAR(100)    NOT NULL, 
+    `thumbnail_img`  VARCHAR(256)    NULL, 
+    `color`          VARCHAR(45)     DEFAULT 'ffffff', 
+    `user_id`        INT             NOT NULL, 
+    CONSTRAINT PK_curation PRIMARY KEY (curation_id)
+);
+
+ALTER TABLE curation COMMENT '큐레이션';
+
+ALTER TABLE curation
+    ADD CONSTRAINT FK_curation_user FOREIGN KEY (user_id) REFERENCES user (user_id) ;
+
 use qwertdb;
