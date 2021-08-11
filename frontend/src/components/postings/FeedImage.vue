@@ -19,7 +19,7 @@
           :src="image.postingProfileImg"
           alt="profile_image"
         >
-        <h3 class="nickname ml-2">{{this.userInfo.nickname}}</h3>
+        <h3 class="nickname ml-2">{{ this.nickname }}</h3>
       </div>
       <h4 class="ml-1">{{image.title}}</h4>
       <v-icon 
@@ -42,6 +42,7 @@
 <script>
 import "@/css/postings/FeedImage.scss"
 import { mapState } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: "MainImage",
@@ -52,20 +53,24 @@ export default {
   },
   data: function() {
     return {
-      imgSrc: ''
+      nickname: '',
     }
   },
 
   methods: {
     clickToGoDetail: function() {
-      this.$router.push({
-        name: 'PostingDetail', 
-        params: {
-          filename: this.image.title, 
-          imageSrc: 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + this.image.postingImg
-          }
-        })
+      this.$router.push({name: 'PostingDetail', params: {postingId: this.image.postingId}})
     },
+    getUserNickname() {
+      axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
+      .then(res => {
+        this.nickname = res.data.nickname
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
   },
   computed: {
     printPosting () {
@@ -75,7 +80,10 @@ export default {
       'host',
       'userInfo'
     ])
-  }
+  },
+  created() {
+    this.getUserNickname()
+  },
 }
 </script>
 

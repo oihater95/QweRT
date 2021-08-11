@@ -118,7 +118,9 @@ export default {
         postingContent: '',
         postingImage: '',
         categoryId: 0,
-      }
+      },
+      page: 0,
+      size: 1
     }
   },
   props: {
@@ -223,7 +225,6 @@ export default {
             console.log('Result: ', result)
       
             let fileKey = response.data.Key
-            let fileImageSrc = 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + fileKey
             this.postingData.postingImage = fileKey
             let categoryid = Number(this.toggleCategoryId[0]) + 1
             this.postingData.categoryId = categoryid
@@ -238,11 +239,20 @@ export default {
             })
               .then(res => {  
                 console.log(res)
-                this.$router.push({name: 'PostingDetail', params: {filename: fileKey, imageSrc: fileImageSrc}})
+                // this.$router.push({name: 'MainPage'})
+                axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
+                .then(res => {
+                  console.log(res)
+                  this.$router.push({name: 'PostingDetail', params: {postingId: res.data[0].postingId}})
+                })
+                .catch(err => {
+                  console.log(err)
+                })
               })
               .catch(err => {
                 console.log(err)
               })
+
             
         } else {
           alert('파일이 없습니다')
