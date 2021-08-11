@@ -22,7 +22,7 @@ import com.web.qwert.model.user.User;
 import com.web.qwert.model.user.UserDto;
 
 @Service
-public class CommentServiceImpl {
+public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	CommentDao commentDao;
@@ -30,6 +30,7 @@ public class CommentServiceImpl {
 	@Autowired
 	PostingDao postingDao;
 	
+	@Override
 	public void addComment (User user, Posting posting, CommentRequest request) {
 		
 		Comment comment = new Comment();
@@ -40,20 +41,24 @@ public class CommentServiceImpl {
 		commentDao.save(comment);
 	}
 	
+	@Override
 	public Optional<Comment> getComment (int commentId) {
 		return commentDao.findById(commentId);
 	}
 	
+	@Override
 	public void deleteComment (Comment comment) {
 		commentDao.delete(comment);
 	}
 	
+	@Override
 	public void updateComment (Comment comment, String content) {
 		comment.setContent(content);
 		comment.setUpdateDate(LocalDateTime.now());
 		commentDao.save(comment);
 	}
 	
+	@Override
 	public List<CommentDto> getComments (Posting posting, int page, int size) {
 		
 		// 게시물의 최신 순 댓글들을 size만큼 페이징해서 가져움
@@ -74,6 +79,7 @@ public class CommentServiceImpl {
 		return results;
 	}
 	
+	@Override
 	public List<CommentDto> getDocentComments (Posting posting, int page, int size) {
 		
 		// 게시물의 오래된 순 도슨트 댓글들을 size만큼 페이징해서 가져움
