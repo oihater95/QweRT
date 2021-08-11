@@ -493,7 +493,6 @@ export default {
         var clientHeight = document.documentElement.clientHeight
         var scrollTop = document.documentElement.scrollTop
         var scrollHeight = document.documentElement.scrollHeight
-        console.log(clientHeight, scrollTop, scrollHeight)
         if(clientHeight+scrollTop+20>=scrollHeight){
             if(this.tab === 1) {
               this.feedPage = this.feedPage + 1;
