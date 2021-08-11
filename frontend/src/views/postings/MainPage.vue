@@ -5,12 +5,7 @@
       <div @click="clickPopular">인기</div>
       <div @click="clickNew">최신</div>
     </div>
-    <v-row 
-    v-if="tab===1"
-    
-    >
-    <!-- @scroll="scrollloadMore"
-    v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="size" -->
+    <v-row v-if="tab===1">
       <FeedImage
         v-for="(image, idx) in feedImages" 
         :key="1-idx"
@@ -429,7 +424,7 @@ export default {
   },
   methods: {
     getFeedImages: function () {
-      // feedImages에 이미지 집어넣기
+      // feedImages에 이미지 집어넣기, 현재 팔로우 구현되지 않아 내 게시물만 넣어놨습니다
       axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.feedPage, size: this.size } })
       .then(res => {
         this.feedImages = this.feedImages.concat(res.data)
@@ -489,7 +484,7 @@ export default {
     },
 
     // 스크롤이 끝에 닿을 때 쯤 추가 페이지 받아오기
-    scrollloadMore() {
+    scrollLoadMore() {
         var clientHeight = document.documentElement.clientHeight
         var scrollTop = document.documentElement.scrollTop
         var scrollHeight = document.documentElement.scrollHeight
@@ -522,12 +517,12 @@ export default {
     this.getPopularImages()
     this.getNewImages()
     // this.getPopularImages() => 인기 게시물 받아오기
-    window.addEventListener('scroll', this.scrollloadMore)
+    window.addEventListener('scroll', this.scrollLoadMore)
   },
 
   // 페이지 이동할 때 스크롤 이벤트 리스너 삭제
   beforeDestroy () { 
-    window.removeEventListener('scroll', this.scrollloadMore) 
+    window.removeEventListener('scroll', this.scrollLoadMore) 
   },
 
 
