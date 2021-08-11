@@ -1,19 +1,13 @@
 <template>
-  <v-row>
-    <!-- <v-col cols="12" v-for="i in tab.contents" :key="i">
-      <v-img :src="`https://picsum.photos/500/300?image=${i * 5 + 10}`"></v-img>
-      <h1>{{tab.page}}</h1>
-    </v-col> -->
-    <v-col cols="4" v-for="(content, i) in tab.contents" :key="i">
-      <!-- <v-img :src="content."></v-img> -->
+  <v-row justify="center" align="center" class="profile-myPostings" @scroll="getMoreContents">
+    <v-col cols="6" v-for="(content, i) in tab.contents" :key="i">
+      <v-img contain :src="`https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/${content.postingImg}`"></v-img>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import '@/css/profiles/MyPostings.scss'
-import { mapState } from 'vuex'
-import axios from 'axios'
 
 export default {
   name: 'MyPosting',
@@ -22,27 +16,26 @@ export default {
       type: Object
     },
   },
+  data: function () {
+    return {
+      scrollDelay: false,
+    }
+  },
   methods: {
-    getMyPostings: function () {
-      axios({
-        method: 'get',
-        url: `${this.host}/postings/${this.$route.params.userId}?page=${this.page}&size=${this.size}`,
-      })
-        .then(res => {
-          console.log(res)
-          this.$emit('next-page')
-          this.postings.concat(res.data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    getMoreContents: function () {
+      const content = document.querySelector('.profile-showMore div.content')
+      if (((this.tab.contents.length === 0) || (content.scrollTop + content.offsetHeight >= content.scrollHeight)) && !this.scrollDelay) {
+        this.scrollDelay = true
+        this.$emit('next-page')
+        setTimeout(() => {
+          this.scrollDelay = false
+        }, 200)
+      }
     },
   },
-  computed: {
-    ...mapState([
-      'host',
-    ])
-  },
+  created: function () {
+    this.getMoreContents()
+  }
 }
 </script>
 

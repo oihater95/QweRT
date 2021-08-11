@@ -33,12 +33,11 @@
         </v-col>
       </v-row>
       <!-- 내 게시물 -->
-      <button @click="loadMyPostings">asdf</button>
       <MyPostings
         v-if="tabOnView === 1"
         class="content"
         :tab="tab1"
-        @scroll.native="loadMyPostings"
+        @next-page="loadNextPage(tab1)"
       />
       <!-- 내가 좋아하는 게시물 -->
       <MyFavoritePostings
@@ -76,20 +75,20 @@ export default {
   data: function () {
     return {
       tabOnView: 1,
-      tab1: {
-        size: 12,
+      tab1: {     // 내 게시물
+        size: 4,
         page: 0,
         contents: [],
       },
-      tab2: {
+      tab2: {     // 내가 좋아하는 게시물
         size: 12,
         page: 100,
-        contents: [100],
+        contents: [99, 100],
       },
-      tab3: {
+      tab3: {     // 내 큐레이션
         size: 9,
         page: 200,
-        contents: [200],
+        contents: [199, 200],
       },
       scrollDelay: false,
     }
@@ -116,28 +115,22 @@ export default {
         }, 500)
       }
     },
-    loadMyPostings: function () {
-      const content = document.querySelector('.profile-showMore div.content')
-      if (((content.scrollTop + content.offsetHeight) >= content.scrollHeight) && !this.scrollDelay) {
-        this.scrollDelay = true
-        axios({
-          method: 'get',
-          url: `${this.host}/postings/${this.$route.params.userId}?page=${this.tab1.page}&size=${this.tab1.size}`,
+    // 다음 페이지를 불러오는 함수 (한 페이지마다 size만큼씩)
+    loadNextPage: function (tab) {
+      axios({
+        method: 'get',
+        url: `${this.host}/postings/${this.$route.params.userId}?page=${tab.page}&size=${tab.size}`,
+      })
+        .then(res => {
+          console.log(res)
+          if (res.data.length !== 0) {
+            tab.contents = tab.contents.concat(res.data)
+            tab.page ++
+          }
         })
-          .then(res => {
-            console.log(res)
-            this.tab1.contents.concat(res.data)
-            this.tab1.page ++
-          })
-          .catch(err => {
-            console.log(err)
-          })
-          .then(() => {
-            setTimeout(() => {
-              this.scrollDelay = false
-            }, 300)
-          })
-      }
+        .catch(err => {
+          console.log(err)
+        })
     },
   },
   computed: {
