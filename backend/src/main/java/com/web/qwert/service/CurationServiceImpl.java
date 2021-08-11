@@ -55,4 +55,8 @@ public class CurationServiceImpl {
 		curationHasPosting.setPosting(posting);
 		curationHasPostingDao.save(curationHasPosting);
 	}
+	
+	public void cancelCurate (CurationHasPosting curationHasPosting) {
+		curationHasPostingDao.delete(curationHasPosting);
+	}
 }
