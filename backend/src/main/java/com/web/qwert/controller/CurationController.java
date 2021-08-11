@@ -154,6 +154,37 @@ public class CurationController {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 	}
+	
+	@DeleteMapping("{curationId}/{postingId}")
+	@ApiOperation("큐레이션에서 게시글 삭제")
+	public Object deletePostingInCuration(@RequestHeader String token, @PathVariable int curationId,
+			@PathVariable int postingId) {
+
+		Optional<Curation> curationOpt = curationService.getCuration(curationId);
+		Optional<Posting> postingOpt = postingService.getPosting(postingId);
+		if (!curationOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 큐레이션
+		if (!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시글
+		
+		Curation curation = curationOpt.get();
+		Posting posting = postingOpt.get();
+		int userId = curation.getUser().getUserId();
+		try {
+			if (userId == jwtService.getUserId(token)) { // 요청한 유저와 큐레이션 주인이 같다면
+
+				Optional<CurationHasPosting> curateOpt = curationService.curateCheck(curation, posting);
+				if(!curateOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 큐레이션에 게시글 없음 
+				
+				curationService.cancelCurate(curateOpt.get());
+				return new ResponseEntity<>(HttpStatus.OK); 
+
+			} else { // 인증 실패
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+		} catch (Exception e) { // 유효하지 않은 토큰
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+	}
 
 //	@GetMapping("{userId}")
 //	@ApiOperation("유저의 큐레이션 조회")
