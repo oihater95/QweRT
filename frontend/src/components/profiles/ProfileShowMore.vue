@@ -122,7 +122,7 @@ export default {
       if (tab === this.tab1) {
         path = `postings/${this.$route.params.userId}`
       } else if (tab === this.tab2) {
-        path = `postings/${this.$route.params.userId}`
+        path = `postings/${this.$route.params.userId}/like`
       }
       axios({
         method: 'get',
