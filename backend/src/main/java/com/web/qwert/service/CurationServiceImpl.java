@@ -21,7 +21,7 @@ import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
 
 @Service
-public class CurationServiceImpl {
+public class CurationServiceImpl implements CurationService {
 
 	@Autowired
 	CurationDao curationDao;
@@ -29,6 +29,7 @@ public class CurationServiceImpl {
 	@Autowired
 	CurationHasPostingDao curationHasPostingDao;
 
+	@Override
 	public void createCuration(User user, CurationRequest request) {
 		Curation curation = new Curation();
 		BeanUtils.copyProperties(request, curation);
@@ -38,14 +39,17 @@ public class CurationServiceImpl {
 		curationDao.save(curation);
 	}
 
+	@Override
 	public Optional<Curation> getCuration(int curationId) {
 		return curationDao.findById(curationId);
 	}
 
+	@Override
 	public void deleteCuration(Curation curation) {
 		curationDao.delete(curation);
 	}
 
+	@Override
 	public void updateCuration(Curation curation, CurationRequest request) {
 		BeanUtils.copyProperties(request, curation);
 		if (curation.getColor() == null)
@@ -53,10 +57,12 @@ public class CurationServiceImpl {
 		curationDao.save(curation);
 	}
 
+	@Override
 	public Optional<CurationHasPosting> curateCheck(Curation curation, Posting posting) {
 		return curationHasPostingDao.findByCurationAndPosting(curation, posting);
 	}
 
+	@Override
 	public void curatePosting(Curation curation, Posting posting) {
 		CurationHasPosting curationHasPosting = new CurationHasPosting();
 		curationHasPosting.setCuration(curation);
@@ -64,15 +70,18 @@ public class CurationServiceImpl {
 		curationHasPostingDao.save(curationHasPosting);
 	}
 
+	@Override
 	public void cancelCurate(CurationHasPosting curationHasPosting) {
 		curationHasPostingDao.delete(curationHasPosting);
 	}
 
+	@Override
 	public int getCuratedCnt(Posting posting) {
 		return curationHasPostingDao.countByPosting(posting);
 	}
 
 	// 큐레이팅 된 게시글 리스트 가져오기
+	@Override
 	public List<Posting> getCuratedPostings(Curation curation, int page, int size) {
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by("curateDate")); // 먼저 큐레이팅 된 순으로 게시글 정렬
@@ -86,6 +95,7 @@ public class CurationServiceImpl {
 	}
 
 	// 최신 큐레이션 가져오기
+	@Override
 	public List<CurationDto> getNewCurations(int page, int size) {
 		List<CurationDto> curationDtos = new ArrayList<CurationDto>();
 		// 최신 큐레이션을 페이징해서 가져온다.
@@ -114,6 +124,7 @@ public class CurationServiceImpl {
 	}
 
 	// 특정 유저의 큐레이션 가져오기
+	@Override
 	public List<CurationDto> getCurationsByUser(User user, int page, int size) {
 		List<CurationDto> curationDtos = new ArrayList<CurationDto>();
 		// 유저의 큐레이션을 페이징해서 가져온다.
