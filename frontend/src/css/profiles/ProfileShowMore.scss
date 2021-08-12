@@ -1,0 +1,41 @@
+.profile-showMore {
+  margin-bottom: 30px;
+  .tabs {
+    z-index: 1;
+    background-color: #e7e5cf;
+    border: {
+      style: double double none;
+      width: 6px;
+      radius: 10px 10px 0 0;
+      color: #857B1A;
+    };
+    h3 {
+      text-align: center;
+    }
+    &:hover {
+      cursor: pointer;
+      box-shadow: inset 0 15px 20px 0 #ddd379;
+    }
+  }
+  .tab-onView {
+    background-color: floralwhite;
+    outline: {
+      style: solid;
+      width: 2px;
+      color: floralwhite;
+    };
+  }
+  .content {
+    z-index: -1;
+    height: 600px;
+    overflow: auto;
+    background-color: floralwhite;
+    padding: 30px;
+    border: {
+      style: solid;
+      width: 2px;
+      radius: 5px;
+      color: #857B1A;
+    };
+  }
+}

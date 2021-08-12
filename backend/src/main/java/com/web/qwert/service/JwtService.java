@@ -28,7 +28,7 @@ public static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 	//@Value("${secret.key}")
 	private String signature = "MyLittleGallery";
 	
-	private Long expireMin = 30L;
+	private Long expireMin = 3000L; // 토큰 유효기간 30분으로 설정, 개발중에는 3000분
 	
 	
 	//	로그인 성공시 사용자 정보를 기반으로 JWTToken을 생성하여 반환.
@@ -52,7 +52,7 @@ public static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 			.setHeader(headerMap)
 			.setSubject("JWToken") // 토큰의 제목 설정
 			.setExpiration(expireTime) // 유효기간 설정
-			.claim("user_id", user.getUser_id()) // 회원 정보 저장
+			.claim("user_id", user.getUserId()) // 회원 정보 저장
 			.claim("nickname", user.getNickname())
 			.signWith(signatureAlgorithm, signingKey);//암호화
 		String jwt = jwtBuilder.compact(); // 직렬화

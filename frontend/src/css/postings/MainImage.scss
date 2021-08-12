@@ -9,11 +9,13 @@
       z-index: 2;
       background-color: white;
       width: 100%;
+      height: 115px;
         img {
           width: 40px;
           height: 40px;
           border-radius: 15px;
           object-fit: contain;
+          cursor: pointer;
         }
         i.v-icon.v-icon {
           color: rgb(230, 129, 62);

@@ -20,12 +20,12 @@
               width="130"
             />
           </div>
-          <div class="icon-div">
+          <div v-if="isLogon" class="icon-div">
             <v-icon @click.native="clickCuration">far fa-images</v-icon>
             <v-icon @click.native="clickHome">mdi-home</v-icon>
             <div class="text-center">
               <!-- offset-y가 있어야 클릭 시에 드롭다운이 아래로 내려온다. -->
-              <v-menu offset-y open-on-hover>
+              <v-menu offset-y open-on-hover :close-on-content-click="false">
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon class="icon"
                     v-bind="attrs"
@@ -35,12 +35,22 @@
                   </v-icon>
                 </template>
                 <v-list>
-                  <v-list-item>
-                    <v-list-item-title class="tab">그림 업로드</v-list-item-title>
+                  <v-list-group>
+                    <v-list-item slot="activator">
+                      <v-list-item-title class="tab">그림 업로드</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item :to="{ path: '/postings/drawing'}" >
+                      <v-list-item-title class="tab ms-8">그리기</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item :to="{ path: '/postings'}">
+                      <v-list-item-title class="tab ms-8">파일 업로드</v-list-item-title>
+                    </v-list-item>
+                  </v-list-group>
+                  
+                  <v-list-item @click.native="clickNewCuration">
+                    <v-list-item-title class="tab ms-4">새 큐레이션</v-list-item-title>
                   </v-list-item>
-                  <v-list-item>
-                    <v-list-item-title class="tab">새 큐레이션</v-list-item-title>
-                  </v-list-item>
+                  
                 </v-list>
               </v-menu>
             </div>
@@ -57,18 +67,23 @@
                   </v-icon>
                 </template>
                 <v-list>
-                  <v-list-item>
+                  <v-list-item @click.native="clickProfile">
                     <v-list-item-title class="tab">내 프로필</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click.native="clickNotify">
                     <v-list-item-title class="tab">알림</v-list-item-title>
                   </v-list-item>
-                  <v-list-item>
+                  <v-list-item @click.native="clickLogout">
                     <v-list-item-title class="tab">로그아웃</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
             </div>
+            <v-icon @click.native="clickSearch">fas fa-search</v-icon>
+          </div>
+          <div v-else class="icon-div">
+            <v-icon @click.native="clickSignup" class="navbar-signup__icon">fas fa-user-plus</v-icon>
+            <v-icon @click.native="clickLogin">mdi-login</v-icon>
             <v-icon @click.native="clickSearch">fas fa-search</v-icon>
           </div>
         </v-layout>
@@ -77,7 +92,7 @@
     <div>
       <v-icon 
         @click="toggleNavbar"
-        class="down-icon"
+        class="down-icon navbar-down__icon"
       >
       mdi-chevron-down
       </v-icon>
@@ -87,6 +102,7 @@
 
 <script>
 import "@/css/common/Navbar.scss"
+import { mapState } from 'vuex'
 
 export default {
   name: 'Navbar',
@@ -115,6 +131,28 @@ export default {
     clickNotify: function () {
       this.$router.push({ name: 'NotifyPage' })
     },
-  }
+    clickNewCuration: function () {
+      this.$router.push({ name: 'NewCuration' })
+    },
+    clickProfile: function () {
+      this.$router.push({ name: 'Profile', params: {userId: this.userInfo.userId} })
+    },
+    clickSignup: function () {
+      this.$router.push({ name: 'Signup' })
+    },
+    clickLogin: function () {
+      this.$router.push({ name: 'Login' })
+    },
+    clickLogout: function () {
+      this.$store.dispatch('removeUserInfo')
+      this.$router.push({ name: 'MainPage', query: { t: new Date().getTime() }})
+    },
+  },
+  computed: {
+    ...mapState([
+      'isLogon',
+      'userInfo',
+    ])
+  },
 }
 </script>

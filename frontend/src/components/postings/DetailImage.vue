@@ -4,13 +4,13 @@
     id="DetailImg-card"
     class="row"
     elevation="5"
-    max-width="1050px"
-    max-height="1050px"
+    max-width="850px"
+    max-height="850px"
     >
-      <img 
-      id="DetailImage"
-      class="col-12"
-      :src="$route.params.imageSrc">
+    <img 
+    id="DetailImage"
+    class="col-12"
+    :src="postingImg">
     </v-card>
   </div>
 </template>
@@ -21,7 +21,11 @@ import "@/css/postings/DetailImage.scss"
 
 export default {
   name: 'DetailImage',
-  
+  props: {
+    postingImg: {
+      type: String
+    }
+  },
 }
 </script>
 

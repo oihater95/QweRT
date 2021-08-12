@@ -5,7 +5,7 @@
         2. @dragover : 항목이 드롭 영역 위로 드래그되는 시점 감지
         3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
         4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
-    <v-card id="drop-card" class="col-6">
+    <v-card id="drop-card" class="col-12">
       <div  v-if="imageSrc" class="upload-image">
         <img id="previewImg" 
         :src="imageSrc" 
@@ -28,12 +28,13 @@
         class="form-control col-12"
         :class="{ 'grey lighten-3': dragover }"
         placeholder="Drag & Drop or Select"
+        readonly
         >
     </v-card>
-    <div class="col-2 mx-3">
-      <div class="file-button">
+    <div class="mx-1 col-6">
+      <div class="file-button d-inline me-2">
         <label for="ex_file">
-          <i class="fa fa-paperclip drag-search__icon"> Search</i>
+          <i class="fa fa-paperclip drag-search__icon "></i>
         </label>
         <input 
           id="ex_file" 
@@ -43,20 +44,24 @@
           ref="fileInput" 
           @change="onFileChange">
       </div>
-      <br>
-      <div class="input-group-append">
-        <v-btn 
-          color="error"
-          elevation="1"
-          class="mb-2"
-          @click.stop="clearInput">CLEAR
-        </v-btn>
-        <br>
+
+      <div class="input-group-append d-inline">
         <v-btn
-          color="primary"
-          elevation="1"
-          class="my-2"
-          @click="onClickUpload">Upload
+          class="mb-2 mx-2 mt-1 posting-btns"
+          @click.stop="clearInput"
+          icon>
+          <v-icon id="posting-clear__btn">
+            mdi-trash-can-outline
+          </v-icon>
+        </v-btn>
+        
+        <v-btn
+          class="mb-2 mx-2 mt-1 posting-btns"
+          @click="onClickUpload"
+          icon>
+          <v-icon id="posting-upload__btn">
+            mdi-upload-outline
+          </v-icon>
         </v-btn>
       </div>
     </div>
@@ -112,7 +117,6 @@ export default {
         // }
         // localStorage.setItem(this.filename, JSON.stringify(image))
         localStorage.setItem(this.filename, this.imageSrc)
-        console.log('OK')
         this.$router.push({name: 'PostingDetail', params: {filename: this.filename, imageSrc: this.imageSrc}})
         this.clearInput()
         } else {

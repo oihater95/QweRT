@@ -190,6 +190,7 @@
 <script>
 import Modal from '@/components/common/Modal'
 import '@/css/accounts/Signup.scss'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -237,7 +238,7 @@ export default {
     emailcheck: function () {
       axios ({
         method: 'get',
-        url: `http://localhost/qwert/accounts/emailcheck/?email=${this.credentials.email}`
+        url: `${this.host}/accounts/emailcheck/?email=${this.credentials.email}`
       })
         .then(res => {
           console.log(res)
@@ -247,14 +248,6 @@ export default {
           // 중복되지 않음을 오버레이로 알림
           this.checkResult = '가입 가능한 이메일입니다.'
           this.showOverlay = true
-        })
-        .then(() => {
-          // 중복확인 rules를 갱신하기 위한 꼼수 (다시 공백을 지워서 email 입력을 갱신)
-          this.credentials.email = this.credentials.email.trim()
-          // 1초 후 오버레이 내리기
-          setTimeout(() => {
-            this.showOverlay = false
-          }, 1000)
         })
         .catch(err => {
           console.log(err)
@@ -267,7 +260,7 @@ export default {
         })
         .then(() => {
           // 중복확인 rules를 갱신하기 위한 꼼수 (다시 공백을 지워서 email 입력을 갱신)
-          this.credentials.email = this.credentials.email.trim()
+          this.credentials.email = this.credentials.email.slice(0, this.credentials.email.length-1)
           // 1초 후 오버레이 내리기
           setTimeout(() => {
             this.showOverlay = false
@@ -278,7 +271,7 @@ export default {
     nicknamecheck: function () {
       axios ({
         method: 'get',
-        url: `http://localhost/qwert/accounts/nicknamecheck/?nickname=${this.credentials.nickname}`
+        url: `${this.host}/accounts/nicknamecheck/?nickname=${this.credentials.nickname}`
       })
         .then(res => {
           console.log(res)
@@ -286,12 +279,6 @@ export default {
           this.credentials.nickname = this.credentials.nickname + ' '
           this.checkResult = '사용 가능한 닉네임입니다.'
           this.showOverlay = true
-        })
-        .then(() => {
-          this.credentials.nickname = this.credentials.nickname.trim()
-          setTimeout(() => {
-            this.showOverlay = false
-          }, 1000)
         })
         .catch(err => {
           console.log(err)
@@ -301,7 +288,7 @@ export default {
           this.showOverlay = true
         })
         .then(() => {
-          this.credentials.nickname = this.credentials.nickname.trim()
+          this.credentials.nickname = this.credentials.nickname.slice(0, this.credentials.nickname.length-1)
           setTimeout(() => {
             this.showOverlay = false
           }, 1000)
@@ -322,7 +309,7 @@ export default {
     signup: function () {
       axios ({
         method: 'post',
-        url: 'http://localhost/qwert/accounts/signup/',
+        url: `${this.host}/accounts/signup/`,
         data: this.credentials
       })
         .then(res => {
@@ -350,7 +337,12 @@ export default {
           modalBtn.click()
         })
     },
-  }
+  },
+  computed: {
+    ...mapState([
+      'host',
+    ])
+  },
 }
 </script>
 

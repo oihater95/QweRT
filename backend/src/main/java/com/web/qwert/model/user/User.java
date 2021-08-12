@@ -13,6 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.qwert.model.comment.Comment;
+import com.web.qwert.model.curation.Curation;
+import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +33,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int user_id;
+    private int userId;
     
     @Column(name = "email")
     private String email;
@@ -42,14 +46,14 @@ public class User {
     
     // 가입일은 자동 입력
     @Column(insertable = false, updatable = false)
-    private LocalDateTime create_Date;
+    private LocalDateTime createDate;
     
     // 소개와 프로필 사진은 회원 수정에서 입력
 	@Column(name = "introduction")
     private String introduction;
     
     @Column(name = "profile_img")
-    private String profile_img;
+    private String profileImg;
     
     @Builder
     public User(String email, String nickname, String password) {
@@ -60,5 +64,19 @@ public class User {
 	}
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // posting의 user 객체 변수로 맵핑, 삭제시 post도 삭제
+    @JsonIgnore
     private List<Posting> postings;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Like> likes;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comment> comments;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Curation> curations;
+    
 }

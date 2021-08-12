@@ -28,11 +28,20 @@
 
 .logo {
   cursor: pointer;
-  margin-left: 140px;
+  margin-left: 150px;
 }
 
 .tab:hover {
   color: skyblue;
   cursor: pointer;
-}    
-    
+}
+
+.navbar-down__icon {
+  position: fixed !important;
+  z-index: 1;
+}
+
+// 아이콘 수와 관련없이 네브바 로고 중앙 정렬을 위함
+.navbar-signup__icon {
+  padding-left: 55px;
+}

@@ -1,0 +1,78 @@
+.profileModification-container {
+  background-color: #F4F2DA;
+  border: 0.5rem double #857B1A;
+  margin-bottom: 20px;
+  .row {
+    .v-btn {
+      background-color: #E8D48D;
+    }
+    .warning-btn {
+      background-color: #F4A380;
+    }
+  }
+  .profile-image__loader {
+    .v-image {
+      width: 140px;
+      height: 140px;
+      border-radius: 50% 50% 50% 50%;
+      &:hover {
+        cursor: pointer;
+        box-shadow: 0 0 40px 4px skyblue
+      }
+    }
+    .v-input {
+      display: none;
+    }
+  }
+  .profile-masterpieces__loader {
+    .box-minus {
+      position: relative;
+      .v-image {
+        border: 10px solid #F4F2DA;
+        outline: auto #8B8A87;
+        max-height: 200px;
+      }
+      .v-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(230, 129, 62);
+        opacity: 0;
+      }
+      &:hover {
+        cursor: pointer;
+        box-shadow: inset 0 0 20px 2px #8B8A87, 0 0 20px 2px #8B8A87;
+        .v-image {
+          opacity: 0.25;
+        }
+        .v-icon {
+          opacity: 1;
+        }
+      }
+    }
+    .box-add {
+      position: relative;
+      width: 100%;
+      padding-bottom: 61.8%;
+      border: 2px dotted #8B8A87;
+      border-radius: 5px;
+      .content {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate( -50%, -50% );
+        text-align: center;
+      }
+      &:hover {
+        cursor: pointer;
+        border: 2px solid #8B8A87;
+        box-shadow: inset 0 0 10px 2px #8B8A87, 0 0 20px 2px #8B8A87;
+        .v-icon {
+          color: rgb(230, 129, 62);
+        }
+      }
+    }
+  }
+}

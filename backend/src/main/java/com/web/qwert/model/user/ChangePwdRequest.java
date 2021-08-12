@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ChangePwdRequest {
 	private String password;
-	private String new_password;
+	private String newPassword;
 }
