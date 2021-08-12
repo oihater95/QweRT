@@ -79,6 +79,14 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on">
+                    <v-icon small>fas fa-paint-brush</v-icon> {{ postingCnt }}
+                  </span>
+                </template>
+                <span>업로드한 게시물 개수</span>
+              </v-tooltip> |
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
                     <v-icon small>fas fa-heart</v-icon> {{ likedCnt }}
                   </span>
                 </template>
@@ -210,6 +218,7 @@ export default {
       introduction: '',
       followerCnt: null,
       followingCnt: null,
+      postingCnt: null,
       likedCnt: null,
       curatedCnt: null,
       followState: false,
@@ -257,6 +266,7 @@ export default {
         this.introduction = res.data.introduction
         this.followerCnt = res.data.followerCnt
         this.followingCnt = res.data.followingCnt
+        this.postingCnt = res.data.postingCnt
         this.likedCnt = res.data.likedCnt
         this.curatedCnt = res.data.curatedCnt
         this.masterpieces = res.data.masterpieces

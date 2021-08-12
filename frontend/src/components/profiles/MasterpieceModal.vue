@@ -79,7 +79,7 @@ export default {
     getMyPostings: function () {
       const content = document.querySelector('.posting-list')
       if (((this.postings.length === 0) || (content.scrollTop + content.offsetHeight >= content.scrollHeight)) && !this.scrollDelay) {
-        console.log(content.scrollTop, content.offsetHeight, content.scrollHeight)
+        // console.log(content.scrollTop, content.offsetHeight, content.scrollHeight)
         this.scrollDelay = true
         axios({
           method: 'get',
