@@ -28,11 +28,11 @@
         fas fa-heart
       </v-icon>
       <v-icon v-else>far fa-heart</v-icon>
-      {{image.likeCnt}}
+      {{this.likeCnt}}
       <v-icon class="ml-2">fas fa-comment</v-icon>
-      {{image.commentCnt}}
+      {{this.commentCnt + this.docentCnt}}
       <v-icon class="ml-2">far fa-image</v-icon>
-      {{image.curatedCnt}}
+      {{this.curatedCnt}}
     </v-card>
   </v-col>
 </template>
@@ -54,6 +54,10 @@ export default {
   data: function() {
     return {
       nickname: '',
+      likeCnt: 0,
+      commentCnt: 0,
+      docentCnt: 0,
+      curatedCnt: 0
     }
   },
 
@@ -61,10 +65,14 @@ export default {
     clickToGoDetail: function() {
       this.$router.push({name: 'PostingDetail', params: {postingId: this.image.postingId}})
     },
-    getUserNickname() {
+    getDetail() {
       axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
       .then(res => {
         this.nickname = res.data.nickname
+        this.likeCnt = res.data.likeCnt
+        this.commentCnt = res.data.commentCnt
+        this.docentCnt = res.data.docentCnt
+        this.curatedCnt = res.data.curatedCnt
       })
       .catch(err => {
         console.log(err)
@@ -82,7 +90,7 @@ export default {
     ])
   },
   created() {
-    this.getUserNickname()
+    this.getDetail()
   },
 }
 </script>
