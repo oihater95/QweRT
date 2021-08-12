@@ -164,7 +164,7 @@
               </div>
             </div>
             <MasterpieceModal
-              v-if="masterpieceSelectorOn"
+              v-if="masterpieceSelecterOn"
               :masterpieceIds="masterpieces.map(masterpiece => masterpiece.postingId)"
               class="d-none"
               @masterpiece-selected="addMasterpiece"
@@ -343,7 +343,7 @@ export default {
       showCheckResult: false,
       introduction: '',
       masterpieces: [],
-      masterpieceSelectorOn: true,
+      masterpieceSelecterOn: true,
       password: '',
       newPassword: '',
       newPasswordConfirmation: '',
@@ -457,10 +457,10 @@ export default {
     resetMasterpieceSelecter: function () {
       return new Promise((resolve) => {
         resolve()
-        this.masterpieceSelectorOn = false
+        this.masterpieceSelecterOn = false
       })
         .then(() => {
-          this.masterpieceSelectorOn = true
+          this.masterpieceSelecterOn = true
         })
     },
     // 회원정보 수정 함수
