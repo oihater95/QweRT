@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 .icon-buttons {
   text-align: right;
   max-width: 950px;
@@ -5,4 +6,20 @@
 
 #posting-detail__container {
   max-width: 1050px;
+  text-align: center;
+}
+
+#posting-description {
+  width: 850px;
+  display: inline-block;
+  text-align: start;
+
+  .posting-content {
+    padding-bottom: 10px;
+    color: #7a7d7c;
+  }
+  .posting-nickname {
+    text-align: end;
+    padding-top: 0;
+  }
 }

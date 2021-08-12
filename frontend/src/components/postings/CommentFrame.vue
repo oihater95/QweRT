@@ -7,8 +7,8 @@
       id="comment-menu__tab"
       class="d-flex justify-center menu-tab my-0"
       >
-        <div class="mt-3" @click="clickComment">Comment {{ this.nonDocentsArray.length }}</div>
-        <div class="mt-3" @click="clickDocent">Docent {{ this.docentsArray.length }}</div>
+        <div class="mt-3" @click="clickComment">Comment {{ commentCnt }}</div>
+        <div class="mt-3" @click="clickDocent">Docent {{ docentCnt }}</div>
       </div>
       <div class="comment-create__section" align="right">
         <v-btn 
@@ -19,13 +19,13 @@
         </v-btn>
       </div>
       <v-row 
+      @scroll="onScroll"
       id="scroll-target__comment"
       v-if="tab===1"
       class="overflow-y-auto comment-row pe-0">
         <v-btn
           fab
           v-show="fab"
-          v-scroll:#scroll-target__comment="onScroll"
           icon
           fixed
           bottom
@@ -39,16 +39,16 @@
         class="col"
         max-height="600">
 
-          <template v-for="(comment, idx) in nonDocentsArray">
+          <template v-for="(comment, idx) in comments">
             <v-list-item-content
-            :class="`nonDocent-id__${idx}`"
+            :class="`comment-id__${idx}`"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
-                <a class="comment-nickname mb-0" href="#">{{ comment.nickname }}</a>
+                <a class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</a>
               </v-list-item-subtitle>
               <div>
-                <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.comment_content }}</p>
-                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.create_date) }}</p>
+                <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.content }}</p>
+                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.createDate) }}</p>
                 <v-divider></v-divider>
               </div>
             </v-list-item-content>
@@ -57,10 +57,11 @@
       </v-row>
       <v-row 
       v-if="tab===2"
+      @scroll="onScroll"
       class="overflow-y-auto comment-row pe-0">
         <v-btn
-          v-scroll="onScroll"
           v-show="fab"
+          icon
           fab
           fixed
           bottom
@@ -70,16 +71,16 @@
           <v-icon>mdi-arrow-up-drop-circle-outline</v-icon>
         </v-btn>
         <v-list class="col" max-height="600">
-          <template v-for="(comment, idx) in docentsArray">
+          <template v-for="(comment, idx) in docents">
             <v-list-item-content 
             :class="`docent-id__${idx}`"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
-                <a class="comment-nickname mb-0" href="#">{{ comment.nickname }}</a>
+                <a class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</a>
               </v-list-item-subtitle>
               <div>
-                <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.comment_content }}</p>
-                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.create_date) }}</p>
+                <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.content }}</p>
+                <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.createDate) }}</p>
                 <v-divider></v-divider>
               </div>
             </v-list-item-content>
@@ -104,17 +105,19 @@
           <v-text-field
           class="d-inline"
           cols="10"
-          v-model="commentForm.comment_content"
-          label="Comment"
+          v-model="commentForm.commentContent"
+          :label="CommentFormLabel"
           :rules="rules"
           hide-details="auto"
+          @keyup.enter="CommentUpload"
           ></v-text-field>
         </v-col>
         <v-col id="comment-create__btn"
         class="me-1">
           <v-btn 
           icon
-          @click="clickCommentForm">
+          @click="CommentUpload"
+          >
             <v-icon>mdi-check-bold</v-icon>  
           </v-btn>
         </v-col>
@@ -124,15 +127,27 @@
 </template>
 
 <script>
-// import axios from'axios'
+import axios from'axios'
+import { mapState } from 'vuex'
 import "@/css/postings/CommentFrame.scss"
 
 export default {
   name: 'CommentFrame',
+  props: {
+    postingId: {
+      type: Number
+    },
+    postingCommentCnt: {
+      type: Number
+    },
+    postingDocentCnt: {
+      type: Number
+    }
+  },
   data: function() {
     return {
       tab: 1,
-      comments: [
+      dummyComments: [
         {
           comment_id : 1,
           comment_content : '잘그리셨네요',
@@ -215,48 +230,79 @@ export default {
           docent_flag: 0
         },
       ],
-      fab: false,
-      scrollPosition: 0,
+      commentForm: {
+        commentContent : null,
+      },
+      docents: [],
+      comments: [],
+      commentPage: 0,
+      docentPage: 0,
+      size: 6,
+      CommentFormLabel: 'Comment',
+      commentItem : {
+        content: '',
+        userId: 0,
+        docentFlag: false
+      },
       commentFormToggle: false,
       rules: [
         value => !!value || 'Required.',
       ],
-      commentForm: {
-        comment_content : null,
-      },
-      docentsArray: [],
-      nonDocentsArray: []
-      
+      commentCnt: 0,
+      docentCnt: 0,
+      // 스크롤 flag
+      fab: false,
     }
   },
 
   methods: {
     clickComment: function (e) {
-      this.tab= 1
+      this.tab = 1
+      this.CommentFormLabel = 'Comment'
       e.target.style.color="skyblue"
       e.target.nextSibling.style.color="black"
     },
     clickDocent: function (e) {
-      this.tab= 2
+      this.tab = 2
+      this.CommentFormLabel = 'Docent'
       e.target.style.color="skyblue"
       e.target.previousSibling.style.color="black"
     },
+
     // clickNickname: function (e) {
     // },
+
     // 스크롤 감지 및 위로가기 버튼 보이기/숨기기
     onScroll (e) {
-      this.scrollPosition = e.target.scrollTop;
-      if (this.scrollPosition > 200) {
+      if (e.target.scrollTop > 200) {
         this.fab = true
       } else {
         this.fab = false
       }
+      if(e.target.clientHeight+e.target.scrollTop+20>=e.target.scrollHeight){
+            if(this.tab === 1) {
+              if(this.comments.length !==0 && this.comments.length < this.commentCnt) {
+                if(this.commentCnt > 0 && this.commentPage < parseInt((this.commentCnt-1)/this.size)) {
+                  this.commentPage = this.commentPage + 1
+                  this.getComments()
+                }
+              }
+            } 
+            else {
+              if(this.docents.length !==0 && this.docents.length < this.docentCnt) {
+                if(this.docentCnt > 0 && this.docentPage < parseInt((this.docentCnt-1)/this.size)) {
+                  this.docentPage = this.docentPage + 1
+                  this.getDocents()
+                }
+              }
+            } 
+        }
     },
     
     // 수정 필요
     toTopComment () {
       if (this.tab === 1) {
-        const topComment = document.querySelector('.nonDocent-id__0')
+        const topComment = document.querySelector('.comment-id__0')
         topComment.scrollIntoView(true)
       } else {
         const topComment = document.querySelector('.docent-id__0')
@@ -265,9 +311,9 @@ export default {
     },
 
     // 현재시간과 비교하여 몇분, 몇시간, 며칠 전인지 출력
-    displayTimeAt: function(create_date) {  // computed로
+    displayTimeAt: function(createDate) {  
       const timeNow = new Date()
-      const milliSeconds = timeNow - create_date
+      const milliSeconds = timeNow - Date.parse(createDate)
       const seconds = milliSeconds / 1000
       if (seconds < 60) return `방금 전`
       const minutes = seconds / 60
@@ -293,41 +339,122 @@ export default {
       }
     },
 
-    clickCommentForm: function() {
-      const commentItem = {
-        comment_id: this.comments[this.comments.length-1].id + 1,
-        comment_content : this.commentForm.comment_content,
-        create_date : new Date(), 
-        update_date : new Date(),
-        user_id : 1,
-        nickname : 'OiHater',
-        docent_flag: this.tab - 1
-      }
+    CommentUpload: function() {
+      this.commentItem.content = this.commentForm.commentContent,
+      this.commentItem.userId = this.userInfo.userId,
+      this.commentItem.docentFlag = false
+      
       if (this.tab === 1) {
-        this.nonDocentsArray.push(commentItem)
+        this.commentItem.docentFlag = false
       } else {
-        this.docentsArray.push(commentItem)
+        this.commentItem.docentFlag = true
       }
-      this.comments.push(commentItem)
-      this.commentForm.comment_content = ''
+
+      axios ({
+        method: 'post',
+        url: `${this.host}/comments/${this.postingId}`,
+        data: this.commentItem,
+        headers: { token: localStorage.getItem('jwtToken') }
+      })
+        .then(res => {  
+          console.log(res)
+          if (this.tab === 1) {
+            this.getCnt()
+            if(this.commentCnt > 0 && this.commentPage < parseInt((this.commentCnt)/this.size)) {
+              this.commentPage = this.commentPage + 1
+            }
+            this.getComments()
+          } else {
+            this.getCnt()
+            if(this.docentCnt > 0 && this.docentPage < parseInt((this.docentCnt)/this.size)) {
+              this.docentPage = this.docentPage + 1
+            }
+            this.getDocents()
+          }
+          this.commentForm.commentContent = ''
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // 일반 댓글 불러오기
+    getComments() {
+      // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
+      axios.get(`${this.host}/comments/${this.$route.params.postingId}/`, { params: { page: this.commentPage, size: this.size } })
+      .then(res => {
+        console.log(res.data)
+        if(this.comments.length < this.commentCnt && this.comments.length % this.size === 0) {
+          this.comments = this.comments.concat(res.data)
+        } else if (this.comments.length < this.commentCnt && this.comments.length % this.size !== 0){
+          const append = res.data.slice(this.comments.length % this.size)
+          this.comments = this.comments.concat(append)
+        } else if (this.commentPage === 0 && this.commentCnt === 0 && this.comments.length === 0){
+          this.comments = this.comments.concat(res.data)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
+    // 도슨트 댓글 불러오기
+    getDocents: function() {
+      // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
+      axios.get(`${this.host}/comments/${this.$route.params.postingId}/docent/`, { params: { page: this.docentPage, size: this.size } })
+      .then(res => {
+        console.log(res.data)
+        if(this.docents.length < this.docentCnt && this.docents.length % this.size === 0) {
+          this.docents = this.docents.concat(res.data)
+        } else if (this.docents.length < this.docentCnt && this.docents.length % this.size !== 0){
+          const append = res.data.slice(this.docents.length % this.size)
+          this.docents = this.docents.concat(append)
+        } else if (this.docentPage === 0 && this.docentCnt === 0 && this.docents.length === 0){
+          this.docents = this.docents.concat(res.data)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
+    getCnt: function() {
+      axios({
+        method: 'get',
+        url: `${this.host}/postings/detail/${this.$route.params.postingId}/`,
+        })
+        .then(res => {
+          this.commentCnt = res.data.commentCnt
+          this.docentCnt = res.data.docentCnt
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
 
   },
 
-  mounted() {
-    const newNonDocentArr = []
-    const newDocentArr = []
-    for (var i=0; i <this.comments.length; i++) {
-      if (this.comments[i].docent_flag === 0) {
-        newNonDocentArr.push(this.comments[i])
-      } else {
-        newDocentArr.push(this.comments[i])
-      }
-    }
-    this.nonDocentsArray = newNonDocentArr
-    this.docentsArray = newDocentArr
-    
+  created() {
+    this.getCnt()
+    this.getComments()
+    this.getDocents()
   },
+
+  computed: {
+    ...mapState([
+        'host',
+        'userInfo',
+        'isLogon'
+      ])
+  },
+
+  watch: {
+    comments() {
+      this.getCnt()
+    },
+    docents(){
+      this.getCnt()
+    }
+  }
 
 }
 

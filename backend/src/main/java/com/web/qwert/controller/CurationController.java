@@ -188,7 +188,7 @@ public class CurationController {
 		}
 	}
 	
-	@GetMapping("{curationId}")
+	@GetMapping("/detail/{curationId}")
 	@ApiOperation("큐레이션 상세 조회")
 	public Object watchCuration (@PathVariable int curationId) {
 		Optional<Curation> curationOpt = curationService.getCuration(curationId);
@@ -209,13 +209,12 @@ public class CurationController {
 	}
 	
 	
-//	@GetMapping("{userId}")
-//	@ApiOperation("유저의 큐레이션 조회")
-//	public Object getComments (@PathVariable int userId, @RequestParam int page, @RequestParam int size) {
-//		Optional<User> userOpt = userService.getUser(userId);
-//		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시물
-//		
-//		List<CommentDto> results = commentService.getComments(postingOpt.get(), page, size);
-//		return new ResponseEntity<>(results, HttpStatus.OK);
-//	}
+	@GetMapping("{userId}")
+	@ApiOperation("유저의 큐레이션 조회")
+	public Object getComments (@PathVariable int userId, @RequestParam int page, @RequestParam int size) {
+		Optional<User> userOpt = userService.getUser(userId);
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
+		
+		return new ResponseEntity<>(curationService.getCurationsByUser(userOpt.get(), page, size), HttpStatus.OK);
+	}
 }
