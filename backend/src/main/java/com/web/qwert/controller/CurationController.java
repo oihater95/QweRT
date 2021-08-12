@@ -1,6 +1,8 @@
 package com.web.qwert.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,7 +187,20 @@ public class CurationController {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 	}
-
+	
+	@GetMapping("{curationId}")
+	@ApiOperation("큐레이션 상세 조회")
+	public Object watchCuration (@PathVariable int curationId) {
+		Optional<Curation> curationOpt = curationService.getCuration(curationId);
+		System.out.println(curationId);
+		if(!curationOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 큐레이션
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("color", curationOpt.get().getColor());
+		resultMap.put("postings", curationService.getCuratedPostings(curationOpt.get(), 0, 100));
+		return new ResponseEntity<>(resultMap,HttpStatus.OK);
+	}
+	
 //	@GetMapping("{userId}")
 //	@ApiOperation("유저의 큐레이션 조회")
 //	public Object getComments (@PathVariable int userId, @RequestParam int page, @RequestParam int size) {
