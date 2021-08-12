@@ -164,6 +164,8 @@
               </div>
             </div>
             <MasterpieceModal
+              v-if="masterpieceSelectorOn"
+              :masterpieceIds="masterpieces.map(masterpiece => masterpiece.postingId)"
               class="d-none"
               @masterpiece-selected="addMasterpiece"
             />
@@ -341,6 +343,7 @@ export default {
       showCheckResult: false,
       introduction: '',
       masterpieces: [],
+      masterpieceSelectorOn: true,
       password: '',
       newPassword: '',
       newPasswordConfirmation: '',
@@ -443,10 +446,22 @@ export default {
     // 대표작을 추가하는 함수
     addMasterpiece: function (posting) {
       this.masterpieces.push(posting)
+      this.resetMasterpieceSelecter()
     },
     // 대표작을 제거하는 함수
     removeMasterpiece: function (i) {
       this.masterpieces.splice(i, 1)
+      this.resetMasterpieceSelecter()
+    },
+    // 대표작 선택 모달 창을 초기화하는 함수
+    resetMasterpieceSelecter: function () {
+      return new Promise((resolve) => {
+        resolve()
+        this.masterpieceSelectorOn = false
+      })
+        .then(() => {
+          this.masterpieceSelectorOn = true
+        })
     },
     // 회원정보 수정 함수
     changeUserInfo: function () {

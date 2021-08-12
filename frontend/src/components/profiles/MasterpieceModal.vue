@@ -60,6 +60,11 @@ import axios from 'axios'
 
 export default {
   name: 'MasterpieceModal',
+  props: {
+    masterpieceIds: {
+      type: Array
+    }
+  },
   data: function () {
     return {
       dialog: false,
@@ -75,6 +80,7 @@ export default {
       const content = document.querySelector('.posting-list')
       if (((this.postings.length === 0) || (content.scrollTop + content.offsetHeight >= content.scrollHeight)) && !this.scrollDelay) {
         console.log(content.scrollTop, content.offsetHeight, content.scrollHeight)
+        this.scrollDelay = true
         axios({
           method: 'get',
           url: `${this.host}/postings/${this.$route.params.userId}?page=${this.page}&size=${this.size}`
@@ -82,15 +88,21 @@ export default {
           .then(res => {
             console.log(res)
             if (res.data.length !== 0) {
-              this.postings = this.postings.concat(res.data)
+              const postingArray = res.data.filter(posting => !this.masterpieceIds.includes(posting.postingId))
+              this.postings = this.postings.concat(postingArray)
               this.page ++
             }
           })
           .catch(err => {
             console.log(err)
           })
+          .then(() => {
+            setTimeout(() => {
+              this.scrollDelay = false
+            }, 200)
+          })
       }
-    }
+    },
   },
   computed: {
     ...mapState([
