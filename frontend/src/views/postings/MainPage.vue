@@ -513,9 +513,17 @@ export default {
   },
   created() {
     // 게시물 받아오기
-    this.getFeedImages()
-    this.getPopularImages()
-    this.getNewImages()
+    if (this.isLogon === true) {
+      this.getFeedImages()
+      this.getPopularImages()
+      this.getNewImages()
+      this.tab = 1
+    } else {
+      this.getPopularImages()
+      this.getNewImages()
+      this.tab = 2
+    }
+    
     // this.getPopularImages() => 인기 게시물 받아오기
     window.addEventListener('scroll', this.scrollLoadMore)
   },
