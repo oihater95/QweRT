@@ -30,4 +30,8 @@ public class FollowServiceImpl {
 		}
 
 	}
+	
+	public Optional<Follow> getFollow(User fromUser, User toUser) {
+		return followDao.findByFromUserAndToUser(fromUser, toUser);
+	}
 }
