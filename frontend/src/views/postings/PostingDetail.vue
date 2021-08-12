@@ -45,10 +45,7 @@
     </div>
   </div>
 
-  <CommentFrame 
-  :postingId="postingId" 
-  :postingCommentCnt="postingCommentCnt" 
-  :postingDocentCnt="postingDocentCnt"/>
+  <CommentFrame :postingId="postingId" />
 </div>
 
 </template>
@@ -81,6 +78,7 @@ export default {
       postingUserId: 0,
       postingUserNickname: '',
       postingCategoryId: 0,
+      postingCuratedCnt: 0,
     }
   },
 
@@ -103,6 +101,7 @@ export default {
           this.postingUserId = res.data.userId
           this.postingUserNickname = res.data.nickname
           this.postingCategoryId = res.data.categoryId
+          this.postingCuratedCnt = res.data.curatedCnt
         })
         .catch(err => {
           console.log(err)
@@ -111,7 +110,7 @@ export default {
   },
 
   computed: {
-    ...mapState([
+      ...mapState([
         'host',
         'userInfo'
       ])

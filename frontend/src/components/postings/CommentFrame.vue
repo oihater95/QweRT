@@ -7,8 +7,8 @@
       id="comment-menu__tab"
       class="d-flex justify-center menu-tab my-0"
       >
-        <div class="mt-3" @click="clickComment">Comment {{ postingCommentCnt }}</div>
-        <div class="mt-3" @click="clickDocent">Docent {{ postingDocentCnt }}</div>
+        <div class="mt-3" @click="clickComment">Comment {{ commentCnt }}</div>
+        <div class="mt-3" @click="clickDocent">Docent {{ docentCnt }}</div>
       </div>
       <div class="comment-create__section" align="right">
         <v-btn 
@@ -237,7 +237,7 @@ export default {
       comments: [],
       commentPage: 0,
       docentPage: 0,
-      size: 10,
+      size: 6,
       CommentFormLabel: 'Comment',
       commentItem : {
         content: '',
@@ -248,7 +248,8 @@ export default {
       rules: [
         value => !!value || 'Required.',
       ],
-      
+      commentCnt: 0,
+      docentCnt: 0,
       // 스크롤 flag
       fab: false,
     }
@@ -280,14 +281,20 @@ export default {
       }
       if(e.target.clientHeight+e.target.scrollTop+20>=e.target.scrollHeight){
             if(this.tab === 1) {
-              if(this.comments.length % this.size === 0) {
-                this.commentPage = this.commentPage + 1;
+              if(this.comments.length !==0 && this.comments.length < this.commentCnt) {
+                if(this.commentCnt > 0 && this.commentPage < parseInt((this.commentCnt-1)/this.size)) {
+                  this.commentPage = this.commentPage + 1
+                  this.getComments()
+                }
               }
-              this.getComments()
             } 
             else {
-              this.docentPage = this.docentPage + 1;
-              this.getDocents()
+              if(this.docents.length !==0 && this.docents.length < this.docentCnt) {
+                if(this.docentCnt > 0 && this.docentPage < parseInt((this.docentCnt-1)/this.size)) {
+                  this.docentPage = this.docentPage + 1
+                  this.getDocents()
+                }
+              }
             } 
         }
     },
@@ -352,11 +359,17 @@ export default {
         .then(res => {  
           console.log(res)
           if (this.tab === 1) {
+            this.getCnt()
+            if(this.commentCnt > 0 && this.commentPage < parseInt((this.commentCnt)/this.size)) {
+              this.commentPage = this.commentPage + 1
+            }
             this.getComments()
-            this.postingCommentCnt++
           } else {
+            this.getCnt()
+            if(this.docentCnt > 0 && this.docentPage < parseInt((this.docentCnt)/this.size)) {
+              this.docentPage = this.docentPage + 1
+            }
             this.getDocents()
-            this.postingDocentCnt++
           }
           this.commentForm.commentContent = ''
         })
@@ -369,12 +382,14 @@ export default {
       // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
       axios.get(`${this.host}/comments/${this.$route.params.postingId}/`, { params: { page: this.commentPage, size: this.size } })
       .then(res => {
-        console.log(res.data, this.commentPage)
-        if (this.comments.length % this.size === 0) {
+        console.log(res.data)
+        if(this.comments.length < this.commentCnt && this.comments.length % this.size === 0) {
           this.comments = this.comments.concat(res.data)
-        } else {
-          const append = res.data.slice(this.comments.length)
+        } else if (this.comments.length < this.commentCnt && this.comments.length % this.size !== 0){
+          const append = res.data.slice(this.comments.length % this.size)
           this.comments = this.comments.concat(append)
+        } else if (this.commentPage === 0 && this.commentCnt === 0 && this.comments.length === 0){
+          this.comments = this.comments.concat(res.data)
         }
       })
       .catch(err => {
@@ -387,11 +402,14 @@ export default {
       // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
       axios.get(`${this.host}/comments/${this.$route.params.postingId}/docent/`, { params: { page: this.docentPage, size: this.size } })
       .then(res => {
-        if (this.docents.length % this.size === 0) {
+        console.log(res.data)
+        if(this.docents.length < this.docentCnt && this.docents.length % this.size === 0) {
           this.docents = this.docents.concat(res.data)
-        } else {
-          const append = res.data.slice(this.docents.length)
+        } else if (this.docents.length < this.docentCnt && this.docents.length % this.size !== 0){
+          const append = res.data.slice(this.docents.length % this.size)
           this.docents = this.docents.concat(append)
+        } else if (this.docentPage === 0 && this.docentCnt === 0 && this.docents.length === 0){
+          this.docents = this.docents.concat(res.data)
         }
       })
       .catch(err => {
@@ -399,9 +417,24 @@ export default {
       })
     },
 
+    getCnt: function() {
+      axios({
+        method: 'get',
+        url: `${this.host}/postings/detail/${this.$route.params.postingId}/`,
+        })
+        .then(res => {
+          this.commentCnt = res.data.commentCnt
+          this.docentCnt = res.data.docentCnt
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+
   },
 
-  mounted() {
+  created() {
+    this.getCnt()
     this.getComments()
     this.getDocents()
   },
@@ -409,9 +442,19 @@ export default {
   computed: {
     ...mapState([
         'host',
-        'userInfo'
+        'userInfo',
+        'isLogon'
       ])
   },
+
+  watch: {
+    comments() {
+      this.getCnt()
+    },
+    docents(){
+      this.getCnt()
+    }
+  }
 
 }
 
