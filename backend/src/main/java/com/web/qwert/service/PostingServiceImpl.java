@@ -44,7 +44,7 @@ public class PostingServiceImpl implements PostingService {
 	CommentDao commentDao;
 	
 	@Autowired
-	CurationServiceImpl curationService;
+	CurationService curationService;
 	
 	@Override
 	public boolean createPosting(UploadRequest request) {
