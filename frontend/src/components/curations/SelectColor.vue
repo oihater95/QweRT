@@ -48,6 +48,7 @@ export default {
         this.colorName = ntc.name(color)[1]
         // ??
         document.documentElement.style.setProperty('--color', color)
+        this.$emit('changeColor', this.color)
       },
       // 글자를 움직임에 따라서 색 업데이트 용도
       updateColorChannel: function(index, digit){

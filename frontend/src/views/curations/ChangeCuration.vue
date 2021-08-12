@@ -56,7 +56,7 @@ export default {
      checked: false,
       curationImages: [
         {
-        posting_image: "http://weekly.chosun.com/up_fd/wc_news/2116/bimg_org/2116_74_01.jpg",
+        postingImg: "sample2.jpg",
         profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
         nickname: "호랑이1", 
         title: "고흐의 해바라기",
@@ -68,7 +68,7 @@ export default {
         update_date: "11111수정",
         },
         {
-        posting_image: "https://i.pinimg.com/474x/d6/8a/c4/d68ac49173eff89c2c6f4ecb81389ba4.jpg",
+        postingImg: "sample3.jpg",
         profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035724_001_20210727102309284.jpg?type=w647",
         nickname: "닉네임2",
         title: "고흐의 자화상",
@@ -80,7 +80,7 @@ export default {
         update_date: "2222수정",
         },
         {
-        posting_image: "https://www.sciencetimes.co.kr/wp-content/uploads/2017/12/%EA%B3%A0%ED%9D%902.jpg",
+        postingImg: "sample4.jpg",
         profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035728_001_20210727122509659.jpg?type=w647",
         nickname: "닉네임3",
         title: "작품1",
@@ -92,7 +92,7 @@ export default {
         update_date: "33333수정",
         },
         {
-        posting_image: "https://images.chosun.com/resizer/sSQl4eaMeNGMJUZzTvTiGpYX7T4=/464x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/XKDKYF6W3XNBOFWOXQRPUI4UQQ.jpg",
+        postingImg: "sample5.jpg",
         profile_image: "https://im-media.voltron.voanews.com/Drupal/01live-211/styles/892x501/s3/2019-08/C479B173-9839-43CA-B441-0735785B95C3.png?itok=rshkbR3A",
         nickname: "호랑이4",
         title: "고흐1",

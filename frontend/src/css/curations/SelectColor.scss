@@ -1,12 +1,13 @@
 .select-color__name {
     position: absolute;
-    top: 1150px;
-    right: 75%;
+    top: 50%;
+    right: 70%;
     margin: 0;
     transform: translate(0%, -50%);
   }
 
 .select-color__div {
+  position: relative;
   height: 700px;
   width: 700px;
   align-items: center;
