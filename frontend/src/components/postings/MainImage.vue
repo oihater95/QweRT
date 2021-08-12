@@ -56,7 +56,9 @@ export default {
     },
 
     getUserNickname() {
-      axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
+      console.log(this.image)
+      // axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
+      axios.get(`${this.host}/postings/detail/1`)
       .then(res => {
         this.nickname = res.data.nickname
       })

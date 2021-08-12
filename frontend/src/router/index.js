@@ -29,7 +29,7 @@ import store from "../vuex/store"
 
 Vue.use(VueRouter)
 
-// 로그인되지 않아도 갈 수 있는 곳: 회원가입, 로그인, 검색, 메인페이지, 그림 상세페이지, 프로필
+// 로그인되지 않아도 갈 수 있는 곳: 회원가입, 로그인, 검색, 메인페이지, 그림 상세페이지, 프로필, 큐레이션 메인페이지, 큐레이션 상세페이지
 // next('/login') : 로그인 페이지로 이동시키기
 // next() : 원하는대로 이동시키기
 const authenticated = (_to, _from, next) => {
@@ -51,9 +51,9 @@ const routes = [
   { path: '/profile/:userId', name: 'Profile', component: Profile },
   { path: '/profile/:userId/edit', name: 'ModifyProfile', component: ModifyProfile, beforeEnter: authenticated },
 
-  { path: '/curation', name: 'CurationPage', component: CurationPage, beforeEnter: authenticated },
+  { path: '/curation', name: 'CurationPage', component: CurationPage },
   { path: '/curation/new', name: 'NewCuration', component: NewCuration, beforeEnter: authenticated },
-  { path: '/curation/:id', name: 'CurationDetail', component: CurationDetail, beforeEnter: authenticated },
+  { path: '/curation/:id', name: 'CurationDetail', component: CurationDetail },
   { path: '/curation/:id/edit', name: 'ChangeCuration', component: ChangeCuration, beforeEnter: authenticated },
 
   { path: '/postings/detail/:postingId', name: 'PostingDetail', component: PostingDetail },

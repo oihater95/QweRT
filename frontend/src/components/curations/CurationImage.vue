@@ -69,7 +69,7 @@ export default {
       this.$router.push({ name: 'CurationDetail' })
     },
     clickChangeCuration: function () {
-      this.$router.push({ name: 'ChangeCuration' })
+      this.$router.push({ name: 'ChangeCuration', params: { id: this.curation.id} })
     },
   },
 }
