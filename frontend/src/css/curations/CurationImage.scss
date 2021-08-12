@@ -1,6 +1,10 @@
 .curation-image__col {
     padding: 0px;
     padding-left: 20px;
+    .curation-edit__btn {
+        left: 645px;
+        bottom: 3px;
+    }
     .curation-image__div {
         background-color: floralwhite;
         height: 425px;
@@ -11,9 +15,13 @@
             cursor: pointer;
         }
         
-        h1 {
-            padding-top: 10px;
+        .curation-title__span {
+            font-size: 35px;
+            font-weight: bold;
             padding-left: 20px;
+        }
+        .curation-user__span {
+            margin-left: 10px;
         }
         p {
             padding-top: 10px;

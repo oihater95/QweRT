@@ -37,6 +37,7 @@ export default {
     getMoreContents: function () {
       const content = document.querySelector('.profile-showMore div.content')
       if (((this.tab.contents.length === 0) || (content.scrollTop + content.offsetHeight >= content.scrollHeight)) && !this.scrollDelay) {
+        // console.log(content.scrollTop, content.offsetHeight, content.scrollHeight)
         this.scrollDelay = true
         this.$emit('next-page-tab2')
         // 인피니티스크롤이 한꺼번에 많이 일어나지 않도록 0.2초 텀을 둔다.
@@ -47,7 +48,7 @@ export default {
     },
   },
   // 처음 로드되는 상황이라면 첫 페이지를 불러오기 위해서
-  created: function () {
+  mounted: function () {
     this.getMoreContents()
   }
 }

@@ -1,14 +1,20 @@
 package com.web.qwert.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.CurationDao;
 import com.web.qwert.dao.CurationHasPostingDao;
 import com.web.qwert.model.curation.Curation;
+import com.web.qwert.model.curation.CurationDto;
 import com.web.qwert.model.curation.CurationHasPosting;
 import com.web.qwert.model.curation.CurationRequest;
 import com.web.qwert.model.posting.Posting;
@@ -61,7 +67,48 @@ public class CurationServiceImpl {
 	}
 	
 	public int getCuratedCnt (Posting posting) {
-		System.out.println(curationHasPostingDao.countByPosting(posting));
 		return curationHasPostingDao.countByPosting(posting);
 	}
+	
+	// 큐레이팅 된 게시글 리스트 가져오기
+	public List<Posting> getCuratedPostings (Curation curation, int page, int size) {
+		
+		Pageable pageable = PageRequest.of(page, size, Sort.by("curateDate")); // 먼저 큐레이팅 된 순으로 게시글 정렬
+		List<CurationHasPosting> curationHasPostings = curationHasPostingDao.findByCuration(curation, pageable);
+		
+		List<Posting> postings = new ArrayList<Posting>(); 
+		for(CurationHasPosting curatedPosting : curationHasPostings) {
+			postings.add(curatedPosting.getPosting());
+		}
+		return postings;
+	}
+	
+	//최신 큐레이션 가져오기
+	public List<CurationDto> getNewCurations (int page, int size) {
+		List<CurationDto> curationDtos = new ArrayList<CurationDto>();
+		// 최신 큐레이션을 페이징해서 가져온다.
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate")); // 먼저 생성 된 순으로 큐레이션 정렬
+		List<Curation> curations = curationDao.findAll(pageable).getContent();
+		
+		// 응답용 큐레이션 겍체 리스트 생성
+		for(Curation curation : curations) {
+			CurationDto curationDto = new CurationDto();
+			BeanUtils.copyProperties(curation, curationDto);
+			curationDto.setThumbnail(curation.getThumbnailImg());
+			// 썸네일이 없는 큐레이션은 미리보기 게시글 최대 3개 추가한다.
+			if(curation.getThumbnailImg() == null) {
+				
+				List<Posting> postings = getCuratedPostings(curation, 0, 3);
+				List<String> images = new ArrayList<String>();
+				for(Posting posting : postings) {
+					images.add(posting.getPostingImg());
+				}
+				curationDto.setImages(images);
+			}		
+			curationDtos.add(curationDto);
+			
+		}
+		return curationDtos;
+	}
+
 }
