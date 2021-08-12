@@ -57,19 +57,19 @@
 </template>
 
 <script>
-  export default {
-    name: 'Modal',
-    props: {
-      msg: {
-        type: Object
-      }
-    },
-    data: function () {
-      return {
-        dialog: false,
-      }
-    },
-  }
+export default {
+  name: 'Modal',
+  props: {
+    msg: {
+      type: Object
+    }
+  },
+  data: function () {
+    return {
+      dialog: false,
+    }
+  },
+}
 </script>
 
 <style>
