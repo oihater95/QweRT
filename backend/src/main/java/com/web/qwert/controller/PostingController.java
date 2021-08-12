@@ -50,7 +50,6 @@ public class PostingController {
 	@ApiOperation(value = "게시물 업로드")
 	public Object upload(@RequestBody UploadRequest request, @RequestHeader String token) {
 		ResponseEntity response = null;
-		System.out.println("업로드");
 		int user_id = request.getUserId();
 
 		try {
@@ -79,7 +78,6 @@ public class PostingController {
 	public Object myPostings(@PathVariable int user_id, @RequestParam int page, @RequestParam int size) {
 		Optional<User> userOpt = userService.getUser(user_id);
 		ResponseEntity response = null;
-		System.out.println("내 게시물");
 
 		if (userOpt.isPresent()) { // 회원이면
 			List<Posting> result = postingService.getPostingsByUser(userOpt.get(), page, size);
@@ -95,7 +93,6 @@ public class PostingController {
 	@ApiOperation(value = "최신 게시글 검색")
 	public Object newPostings(@RequestParam int page, @RequestParam int size) {
 		ResponseEntity response = null;
-		System.out.println("최신 게시물");
 
 		List<Posting> result = postingService.getNewPostings(page, size);
 		response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -106,7 +103,6 @@ public class PostingController {
 	@GetMapping("detail/{postingId}")
 	@ApiOperation(value = "게시물 상세 정보 조회")
 	public Object postingDetail(@PathVariable int postingId) {
-		System.out.println("게시물 상세 정보");
 		Optional<Posting> postingOpt = postingService.getPosting(postingId);
 
 		if (!postingOpt.isPresent())
@@ -122,7 +118,6 @@ public class PostingController {
 	@ApiOperation(value = "인기 게시글 검색")
 	public Object popularPostings(@RequestParam int page, @RequestParam int size) {
 		ResponseEntity response = null;
-		System.out.println("인기 게시물");
 
 		List<Posting> result = postingService.getPopularPostings(page, size);
 		response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -136,7 +131,6 @@ public class PostingController {
 	public Object myFavoritePostings(@PathVariable int userId, @RequestParam int page, @RequestParam int size) {
 		Optional<User> userOpt = userService.getUser(userId);
 		ResponseEntity response = null;
-		System.out.println("내가 좋아하는 게시물");
 
 		if (userOpt.isPresent()) { // 회원이면
 			List<Posting> result = postingService.getFavoritePostings(userOpt.get(), page, size);
