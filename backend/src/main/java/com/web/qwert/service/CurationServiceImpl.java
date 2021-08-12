@@ -1,9 +1,14 @@
 package com.web.qwert.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.CurationDao;
@@ -61,7 +66,20 @@ public class CurationServiceImpl {
 	}
 	
 	public int getCuratedCnt (Posting posting) {
-		System.out.println(curationHasPostingDao.countByPosting(posting));
 		return curationHasPostingDao.countByPosting(posting);
 	}
+	
+	public List<Posting> getCuratedPostings (Curation curation, int page, int size) {
+		
+		Pageable pageable = PageRequest.of(page, size, Sort.by("curateDate")); // 먼저 큐레이팅 된 순으로 게시글 정렬
+		List<CurationHasPosting> curationHasPostings = curationHasPostingDao.findByCuration(curation, pageable);
+		
+		List<Posting> postings = new ArrayList<Posting>();
+		
+		for(CurationHasPosting curatedPosting : curationHasPostings) {
+			postings.add(curatedPosting.getPosting());
+		}
+		return postings;
+	}
+
 }
