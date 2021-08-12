@@ -239,7 +239,6 @@ export default {
             })
               .then(res => {  
                 console.log(res)
-                // this.$router.push({name: 'MainPage'})
                 axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
                 .then(res => {
                   console.log(res)
