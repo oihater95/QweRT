@@ -10,38 +10,55 @@
     <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
     <v-card-subtitle class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
   </v-card>
-  <div id="posting-icon__buttons">
-    <div class="me-5 my-5 icon-buttons">
-      <v-btn
-        class="mx-2"
-        fab
-        small
-        outlined
-        color="green darken-3">
-        <v-icon dark>
-          mdi-expand-all-outline
-        </v-icon>
-      </v-btn>
-      <v-btn
-        class="mx-2"
-        fab
-        small
-        outlined
-        color="blue darken-3">
-        <v-icon dark>
-          mdi-image-edit-outline
-        </v-icon>
-      </v-btn>
-      <v-btn
-        class="mx-2"
-        fab
-        small
-        outlined
-        color="red darken-1">
-        <v-icon dark>
-          mdi-trash-can-outline
-        </v-icon>
-      </v-btn>
+  <div id="posting-btns">
+    <div id="posting-icon__forUser">
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon>
+          <v-icon id="posting-like__btn">
+            mdi-heart-outline
+          </v-icon>
+        </v-btn>
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon>
+          <v-icon id="posting-add__curation">
+            mdi-expand-all-outline
+          </v-icon>
+        </v-btn>
+    </div>
+
+    <div id="posting-icon__authority" v-if="checkPostingAuthority">
+      <div class="icon-buttons">
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon>
+          <v-icon id="posting-icon__edit">
+            mdi-image-edit-outline
+          </v-icon>
+        </v-btn>
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon>
+          <v-icon id="posting-icon__delete">
+            mdi-trash-can-outline
+          </v-icon>
+        </v-btn>
+      </div>
+    </div>
+  </div>
+  <div id="cnt-group">
+    <div>
+      <span id="like-cnt">{{ postingLikeCnt }}</span>
+      <span id="curated-cnt">{{ postingCuratedCnt }}</span>
     </div>
   </div>
 
@@ -106,13 +123,25 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    }
+    },
+
   },
 
   computed: {
+    // 게시물 작성자 본인인지 확인, 본인이 아니라면 false
+    checkPostingAuthority() {
+      if(this.userInfo.userId === this.postingUserId) {
+        console.log('True')
+        return true 
+      } else {
+        console.log('False')
+        return false
+      }
+    },
       ...mapState([
         'host',
-        'userInfo'
+        'userInfo',
+        'isLogon'
       ])
   },
 
