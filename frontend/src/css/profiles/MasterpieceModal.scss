@@ -1,0 +1,18 @@
+.masterpiece-modal {
+  .header {
+    background-color: #FFFFF0;
+  }
+  .posting-list {
+    height: 500px;
+    overflow: auto;
+    .v-image {
+      height: 200px;
+      background-color: floralwhite;
+      box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.1);
+      &:hover {
+        cursor: pointer;
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+}
