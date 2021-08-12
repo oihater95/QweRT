@@ -201,6 +201,14 @@ public class CurationController {
 		return new ResponseEntity<>(resultMap,HttpStatus.OK);
 	}
 	
+	@GetMapping("new")
+	@ApiOperation("최신 큐레이션 조회")
+	public Object newCurations (@RequestParam int page, @RequestParam int size) {
+
+		return new ResponseEntity<>(curationService.getNewCurations(page, size), HttpStatus.OK);
+	}
+	
+	
 //	@GetMapping("{userId}")
 //	@ApiOperation("유저의 큐레이션 조회")
 //	public Object getComments (@PathVariable int userId, @RequestParam int page, @RequestParam int size) {
