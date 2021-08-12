@@ -42,7 +42,7 @@ export default {
       myCurationImages: [
         {
         user_name : "연필사랑",
-        id : 11,
+        curationId : 11,
         title : "흑백그림전",
         content : "그 어떤 작품보다 화려한 흑백그림 모음 큐레이션",
         thumbnail : "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/thumb4.jpg",
@@ -54,7 +54,7 @@ export default {
         },
         {
           user_name : "피카소덕후",
-          id : 22,
+          curationId : 22,
           title : "야옹이展",
           content : "귀여운 야옹이 작품들 모아봤습니다. 힐링하고 가세요.",
           thumbnail : "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/thumb1.jpg",
@@ -66,7 +66,7 @@ export default {
         },
         {
         user_name : "봄봄",
-        id : 3,
+        curationId : 3,
         title : "봄을 담은 그림들",
         content : "저는 봄을 참 좋아합니다. 봄이 지나가서 너무 아쉬운 마음에 봄을 담은 그림들로 큐레이션을 만들어봤습니다. 재밌게 봐주시면 좋겠습니다.",
         thumbnail : "",
@@ -78,7 +78,7 @@ export default {
         },
         {
         user_name : "쿼티",
-        id : 4,
+        curationId : 4,
         title : "색다른 시선전",
         content : "색다른 시선으로 바라본 작품들만 모아봤습니다.",
         thumbnail : "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/thumb2.jpg",

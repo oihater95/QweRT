@@ -5,6 +5,7 @@
     <v-card
       elevation=0
       class="v-card offset-1 v-card__main"
+      :data-postingId="image.postingId"
     >
       <div class="main-image__div">
         <img
@@ -57,8 +58,7 @@ export default {
 
     getUserNickname() {
       console.log(this.image)
-      // axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
-      axios.get(`${this.host}/postings/detail/1`)
+      axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
       .then(res => {
         this.nickname = res.data.nickname
       })
