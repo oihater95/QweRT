@@ -18,7 +18,7 @@
             :src="image.postingProfileImg"
             alt="profile_image"
           >
-          <h3>{{ UserNickname }}</h3>
+          <h3>{{ this.nickname }}</h3>
           <h4>{{image.title}}</h4>
           <span>
             <v-icon v-if="image.like_state">fas fa-heart</v-icon>
@@ -47,18 +47,12 @@ export default {
   },
   data: function() {
     return {
-      imgSrc: '',
-      nickname: ''
+      nickname: '',
     }
   },
   methods: {
     clickToGoDetail: function() {
-      this.$router.push({name: 'PostingDetail', 
-        params: {
-          filename: this.image.title, 
-          imageSrc: 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + this.image.postingImg
-          }
-        })
+      this.$router.push({name: 'PostingDetail', params: {postingId: this.image.postingId}})
     },
 
     getUserNickname() {
@@ -75,9 +69,6 @@ export default {
   computed: {
     printPosting () {
       return 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + this.image.postingImg
-    },
-    UserNickname() {
-      return this.nickname
     },
     ...mapState([
         'host',

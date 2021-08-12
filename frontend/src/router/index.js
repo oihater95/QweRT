@@ -56,7 +56,7 @@ const routes = [
   { path: '/curation/:id', name: 'CurationDetail', component: CurationDetail, beforeEnter: authenticated },
   { path: '/curation/:id/edit', name: 'ChangeCuration', component: ChangeCuration, beforeEnter: authenticated },
 
-  { path: '/postings/detail', name: 'PostingDetail', component: PostingDetail, props: true },
+  { path: '/postings/detail/:postingId', name: 'PostingDetail', component: PostingDetail },
   { path: '/postings/drawing', name: 'Drawing', component: Drawing , beforeEnter: authenticated },
   { path: '/postings',  name: 'UploadPage', component: UploadPage, props: true , beforeEnter: authenticated },
 

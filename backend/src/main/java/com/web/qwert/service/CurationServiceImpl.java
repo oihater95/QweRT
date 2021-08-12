@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.CurationDao;
+import com.web.qwert.dao.CurationHasPostingDao;
 import com.web.qwert.model.curation.Curation;
+import com.web.qwert.model.curation.CurationHasPosting;
 import com.web.qwert.model.curation.CurationRequest;
+import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
 
 @Service
@@ -16,6 +19,9 @@ public class CurationServiceImpl {
 	
 	@Autowired
 	CurationDao curationDao;
+	
+	@Autowired 
+	CurationHasPostingDao curationHasPostingDao;
 
 	public void createCuration(User user, CurationRequest request) {
 		Curation curation = new Curation();
@@ -37,5 +43,25 @@ public class CurationServiceImpl {
 		BeanUtils.copyProperties(request, curation);
 		if(curation.getColor() == null) curation.setColor("ffffff"); // 기본 색은 흰색
 		curationDao.save(curation);
+	}
+	
+	public Optional<CurationHasPosting> curateCheck (Curation curation, Posting posting) {
+		return curationHasPostingDao.findByCurationAndPosting(curation, posting);
+	}
+	
+	public void curatePosting (Curation curation, Posting posting) {
+		CurationHasPosting curationHasPosting = new CurationHasPosting();
+		curationHasPosting.setCuration(curation);
+		curationHasPosting.setPosting(posting);
+		curationHasPostingDao.save(curationHasPosting);
+	}
+	
+	public void cancelCurate (CurationHasPosting curationHasPosting) {
+		curationHasPostingDao.delete(curationHasPosting);
+	}
+	
+	public int getCuratedCnt (Posting posting) {
+		System.out.println(curationHasPostingDao.countByPosting(posting));
+		return curationHasPostingDao.countByPosting(posting);
 	}
 }

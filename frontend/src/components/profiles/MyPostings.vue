@@ -1,16 +1,24 @@
 <template>
-  <v-row>
-    <v-col cols="12" v-for="i in tab.contents" :key="i">
-      <v-img :src="`https://picsum.photos/500/300?image=${i * 5 + 10}`"></v-img>
-      <h1>{{tab.page}}</h1>
+  <!-- 내 게시물 목록 -->
+  <v-row
+    class="profile-myPostings"
+    @scroll="getMoreContents"
+  >
+    <v-col
+      cols="6"
+      v-for="(content, i) in tab.contents"
+      :key="i"
+    >
+      <v-img
+        :src="`https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/${content.postingImg}`"
+        contain
+      ></v-img>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import '@/css/profiles/MyPostings.scss'
-import { mapState } from 'vuex'
-import axios from 'axios'
 
 export default {
   name: 'MyPosting',
@@ -19,27 +27,29 @@ export default {
       type: Object
     },
   },
+  data: function () {
+    return {
+      scrollDelay: false,
+    }
+  },
   methods: {
-    getMyPostings: function () {
-      axios({
-        method: 'get',
-        url: `${this.host}/postings/${this.$route.params.userId}?page=${this.page}&size=${this.size}`,
-      })
-        .then(res => {
-          console.log(res)
-          this.$emit('next-page')
-          this.postings.concat(res.data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    // 처음 로드할 때와 인피니티스크롤을 할 때를 감지하는 함수
+    getMoreContents: function () {
+      const content = document.querySelector('.profile-showMore div.content')
+      if (((this.tab.contents.length === 0) || (content.scrollTop + content.offsetHeight >= content.scrollHeight)) && !this.scrollDelay) {
+        this.scrollDelay = true
+        this.$emit('next-page-tab1')
+        // 인피니티스크롤이 한꺼번에 많이 일어나지 않도록 0.2초 텀을 둔다.
+        setTimeout(() => {
+          this.scrollDelay = false
+        }, 200)
+      }
     },
   },
-  computed: {
-    ...mapState([
-      'host',
-    ])
-  },
+  // 처음 로드되는 상황이라면 첫 페이지를 불러오기 위해서
+  created: function () {
+    this.getMoreContents()
+  }
 }
 </script>
 

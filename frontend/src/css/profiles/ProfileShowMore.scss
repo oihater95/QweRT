@@ -1,6 +1,7 @@
 .profile-showMore {
   margin-bottom: 30px;
   .tabs {
+    z-index: 1;
     background-color: #e7e5cf;
     border: {
       style: double double none;
@@ -22,12 +23,14 @@
       style: solid;
       width: 2px;
       color: floralwhite;
-    }
+    };
   }
   .content {
-    height: 500px;
+    z-index: -1;
+    height: 600px;
     overflow: auto;
     background-color: floralwhite;
+    padding: 30px;
     border: {
       style: solid;
       width: 2px;
