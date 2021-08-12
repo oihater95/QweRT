@@ -8,9 +8,22 @@
       elevation=1
       class="v-card mb-5"
     >
-      <div class="curation-image__div">
+      <v-btn
+        v-if="tab===1"
+        class="curation-edit__btn"
+        elevation="1"
+        @click="clickChangeCuration"
+        small
+      >
+        <v-icon left>
+          mdi-pencil
+        </v-icon>
+        수정하기
+      </v-btn>
+      <div class="curation-image__div" @click="clickCurationDiv">
 
-        <h1># {{curation.title}}</h1>
+        <span class="curation-title__span"># {{curation.title}}</span>
+        <span v-if="tab===2" class="curation-user__span">by {{curation.user_name}}</span>
         <p>{{curation.content}}</p>
         <img v-if="curation.thumbnail"
           :src="curation.thumbnail"
@@ -45,7 +58,19 @@ export default {
   props: {
     curation: {
       type: Object
-    }
+    },
+    tab: {
+      type: Number
+    },
+  
+  },
+  methods: {
+    clickCurationDiv: function () {
+      this.$router.push({ name: 'CurationDetail' })
+    },
+    clickChangeCuration: function () {
+      this.$router.push({ name: 'ChangeCuration', params: { id: this.curation.id} })
+    },
   },
 }
 </script>

@@ -4,7 +4,7 @@
       cols="5"
       class="d-flex"
     >
-      <span class="new-curation__span">큐레이션 이름</span>
+      <span class="new-curation__span">큐레이션 제목</span>
       <v-text-field
         v-model="title"
         :rules="titleRule"
@@ -42,13 +42,25 @@ export default {
       title: '',
       description: '',
       titleRule: [
-        v => !!v || '큐레이션 이름을 적어주세요',
+        v => !!v || '큐레이션 제목을 적어주세요',
       ],
       descriptionRule: [
         v => !!v || '큐레이션 설명을 적어주세요',
       ],
     }
   },
+  methods: {
+    // title과 description이 바뀔 때마다 알려준다.
+    changeHappen: function() {
+      this.$emit('change', this.title, this.description)
+      console.log("change")
+    },
+
+  },
+  watch: {
+    title: 'changeHappen',
+    description: 'changeHappen',
+  }
 }
 </script>
 
