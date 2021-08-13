@@ -26,7 +26,7 @@
           fab
           small
           icon>
-          <v-icon id="posting-add__curation">
+          <v-icon id="posting-add__curation" @click="addCuration">
             mdi-expand-all-outline
           </v-icon>
         </v-btn>
@@ -66,9 +66,11 @@
 
   <CommentFrame :postingId="postingId" />
   <Modal
+    @addCuratiaddMn-no-sign="noSign"
     class="d-none"
     :msg="modalMsg"
     @checkDeletePosting-ok-sign="deletePosting"/>
+  />
 </div>
 
 </template>
@@ -112,6 +114,8 @@ export default {
         positiveBtn: '',
         negativeBtn: '',
       },
+      page: 0,
+      size: 10,
     }
   },
 
@@ -140,7 +144,41 @@ export default {
           console.log(err)
         })
     },
+    addCuration: function() {
+      axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.page, size: this.size } })
+        .then(res => {
+          const curations = res.data
+          this.modalMsg.text = curations
+          if (this.modalMsg.text.length === 0) {
+            this.modalMsg.title = '만든 큐레이션이 없습니다. 큐레이션을 만들어주세요.'
+          } else {
+            this.modalMsg.title = '그림을 넣을 큐레이션을 선택하세요'
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
 
+      this.modalMsg.name='addCuration'
+      this.modalMsg.triggerBtn = ''
+      this.modalMsg.positiveBtn = '돌아가기'
+      this.modalMsg.negativeBtn = '추가하기'
+
+      const modalBtn = document.querySelector('#modalBtn')
+      modalBtn.click()
+    },
+    noSign: function (array) {
+      for (const id of array) {
+        axios ({
+          method: 'POST',
+          headers: { token: localStorage.getItem('jwtToken') },
+          url: `${this.host}/curations/${id}/${this.$route.params.postingId}/`,
+        })
+          .then(res => {
+            console.log(res)
+          })
+      }
+    },
     editPosting: function() {
       if (this.userInfo.userId === this.postingUserId) {
         axios ({

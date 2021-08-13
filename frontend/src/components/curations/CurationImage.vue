@@ -66,10 +66,10 @@ export default {
   },
   methods: {
     clickCurationDiv: function () {
-      this.$router.push({ name: 'CurationDetail' })
+      this.$router.push({ name: 'CurationDetail' , params: { id: this.curation.curationId}})
     },
     clickChangeCuration: function () {
-      this.$router.push({ name: 'ChangeCuration', params: { id: this.curation.id} })
+      this.$router.push({ name: 'ChangeCuration', params: { id: this.curation.curationId} })
     },
   },
 }

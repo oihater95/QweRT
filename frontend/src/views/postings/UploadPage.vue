@@ -96,7 +96,7 @@ export default {
     DragDrop,
     RoundedBtn,
   },
-  data() {
+  data: function() {
     return {
       rules: {
         required: value => !!value || 'Required.',

@@ -5,6 +5,7 @@
     <v-card
       elevation=0
       class="v-card offset-1 v-card__main"
+      :data-postingId="image.postingId"
     >
       <div class="main-image__div">
         <img

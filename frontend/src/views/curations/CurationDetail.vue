@@ -38,8 +38,8 @@
 import ImageMain from '@/components/curations/ImageMain'
 import ImageThumbnail from '@/components/curations/ImageThumbnail'
 import ImageArticle from '@/components/curations/ImageArticle'
-
-// import '@/css/curations/CurationDetail.scss'
+import { mapState } from 'vuex'
+import axios from "axios"
 
 export default {
     name: "CurationPage",
@@ -128,6 +128,19 @@ export default {
             });
         }
 
+    },
+    computed: {
+      ...mapState([ 'host'])
+    },
+    created() {
+      axios.get(`${this.host}/curations/${this.$route.params.id}`)
+        .then(res => {
+          console.log(res)
+          // 큐레이션에 그림 넣기 추가되면 그걸 받아서 여기에다가 넣자   
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     mounted() {
         // 버튼 혹은 썸네일을 통해서 동작한다.
