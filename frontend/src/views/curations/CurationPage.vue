@@ -3,7 +3,7 @@
     class="container"
     fluid>
     <div class="d-flex justify-center curation-menu__tab">
-      <div @click="clickMy">My</div>
+      <div v-if="isLogon" @click="clickMy">My</div>
       <div @click="clickNew">최신</div>
     </div>
     <v-row v-if="tab===1">
@@ -42,6 +42,8 @@ export default {
       tab: 1,
       newPage: 0,
       myPage: 0,
+      newEnd: false,
+      myEnd: false,
       size: 6,
       myCurationImages: [],
       newCurationImages: [],
@@ -55,36 +57,69 @@ export default {
       e.target.nextSibling.style.color="black"
     },
     clickNew: function (e) {
-      this.tab= 2
-      e.target.style.color="skyblue"
-      e.target.previousSibling.style.color="black"
+      if (this.isLogon) {
+        this.tab= 2
+        e.target.style.color="skyblue"
+        e.target.previousSibling.style.color="black"
+      }
     },
     getMyCuration: async function () {
-      axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.newPage, size: this.size }} )
-      .then(res => {
-        this.myCurationImages = res.data
-        console.log(this.myCurationImages)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      if (!this.myEnd) {
+        axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.myPage, size: this.size }} )
+          .then(res => {
+            const arr = res.data
+             // 마지막이라는 뜻
+            if (arr.length < 6) {
+              this.myEnd = true
+            }
+            this.myCurationImages = this.myCurationImages.concat(arr)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
     getNewCuration: async function () {
+      if (!this.newEnd) {
       axios.get(`${this.host}/curations/new`, { params: { page: this.newPage, size: this.size }} )
-      .then(res => {
-        this.newCurationImages = res.data
-      })
-      .catch(err => {
-        console.log(err)
-      })
+        .then(res => {
+          const arr = res.data
+          // 마지막이라는 뜻
+          if (arr.length < 6) {
+            this.newEnd = true
+          }
+          this.newCurationImages = this.newCurationImages.concat(arr)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
     },
+    checkScroll: function () {
+      const {scrollTop, clientHeight, scrollHeight} = document.documentElement
+      if (scrollHeight-scrollTop < clientHeight+150) {
+        if (this.tab === 1) {
+          this.myPage += 1
+          this.getMyCuration()
+          } else {
+          this.newPage += 1
+          this.getNewCuration()
+        }
+      }
+    }
   },
   computed: {
-    ...mapState(['host', 'userInfo']),
+    ...mapState(['host', 'isLogon', 'userInfo']),
   },
   created() {
-    this.getMyCuration()
-    this.getNewCuration()
+    if (!this.isLogon) {
+      this.tab= 2
+      this.getNewCuration()
+    } else {
+        this.getMyCuration()
+      this.getNewCuration()
+    }
+     window.addEventListener('scroll', this.checkScroll);
   }
 }
 </script>

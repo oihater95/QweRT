@@ -15,6 +15,8 @@
           <div class="new-curation__color">
           <input type="checkbox" id="checkbox" v-model="checked">
           <label for="checkbox" class="new-curation__label">배경색 고르기</label>
+          <span class="ml-3 mr-1">(현재 배경색:</span>
+          <span>{{this.color}})</span>
           <div v-if="checked">
             <SelectColor/>
           </div>
@@ -70,7 +72,8 @@ export default {
       positiveBtn: '',
       negativeBtn: '',
       },
-      curationImages: []
+    curationImages: [],
+    color: "흰 색"
     }
   },
   methods: {
@@ -130,9 +133,11 @@ export default {
   mounted: function () {
     axios.get(`${this.host}/curations/detail/${this.$route.params.id}`)
       .then(res => {
-        console.log(res)
         this.curationImages = res.data.postings
         console.log(res.data)
+        if (res.data.color) {
+          this.color = '#' + res.data.color
+        } 
       })
       .catch(err => {
         console.log(err)
