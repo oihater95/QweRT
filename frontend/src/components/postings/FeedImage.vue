@@ -15,8 +15,8 @@
       </div>
       <div class="d-flex align-center ml-2 info-div">
         <img
-          v-if="image.postingProfileImg"
-          :src="image.postingProfileImg"
+          v-if="getProfileImg"
+          :src="getProfileImg"
           alt="profile_image"
         >
         <h3 class="nickname ml-2">{{ this.nickname }}</h3>
@@ -54,10 +54,12 @@ export default {
   data: function() {
     return {
       nickname: '',
+      userId: 0,
       likeCnt: 0,
       commentCnt: 0,
       docentCnt: 0,
-      curatedCnt: 0
+      curatedCnt: 0,
+      profileImg: '',
     }
   },
 
@@ -69,6 +71,7 @@ export default {
       axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
       .then(res => {
         this.nickname = res.data.nickname
+        this.userId = res.data.userId
         this.likeCnt = res.data.likeCnt
         this.commentCnt = res.data.commentCnt
         this.docentCnt = res.data.docentCnt
@@ -79,10 +82,26 @@ export default {
       })
     },
 
+    getProfile(){
+      axios.get(`${this.host}/profile/${this.userId}`)
+      .then(res => {
+        this.profileImg = res.data.profileImg
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+
   },
   computed: {
     printPosting () {
       return 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + this.image.postingImg
+    },
+    getProfileImg() {
+      if (this.userId !== 0) {
+        this.getProfile()
+      }
+      return this.profileImg
     },
     ...mapState([
       'host',
