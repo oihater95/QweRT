@@ -1,5 +1,6 @@
 package com.web.qwert.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.qwert.model.follow.Follow;
+import com.web.qwert.model.follow.FollowDto;
 import com.web.qwert.model.user.User;
-import com.web.qwert.service.FollowServiceImpl;
+import com.web.qwert.service.FollowService;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.UserService;
 
@@ -27,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
 public class FollowController {
 	
 	@Autowired
-	FollowServiceImpl followService;
+	FollowService followService;
 	
 	@Autowired
 	JwtService jwtService;
@@ -83,4 +86,81 @@ public class FollowController {
 		   return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	   }
 	}
+	
+	@GetMapping("to/{profileId}")
+	@ApiOperation("팔로워 목록 조회(비로그인)")
+	public Object getFollowers (@PathVariable int profileId, @RequestParam int page, @RequestParam int size) {
+		
+		Optional<User> userOpt = userService.getUser(profileId);
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
+		
+		
+		return new ResponseEntity<>(followService.getFollowers(userOpt.get(), page, size), HttpStatus.OK);
+	}
+	
+	// 프로필 유저의 팔로워들의 정보와 로그인 한 유저와의 팔로우 여부를 리턴
+	@GetMapping("to/{userId}/{profileId}")
+	@ApiOperation("팔로워 목록 조회(로그인)")
+	public Object getFollowersAndFlags (@PathVariable int userId, @PathVariable int profileId, 
+			@RequestParam int page, @RequestParam int size, @RequestHeader String token) {
+		
+		Optional<User> UserOpt = userService.getUser(userId);
+		Optional<User> profileUserOpt = userService.getUser(profileId);
+		
+		if (!UserOpt.isPresent() || !profileUserOpt.isPresent()) 
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
+		
+		try {
+			if (userId == jwtService.getUserId(token)) { // 요청한 유저와 토큰 발급한 유저가 같다면
+				
+				List<FollowDto> results = followService.getFollowersAndFlags(UserOpt.get(), profileUserOpt.get(), page, size);
+				return new ResponseEntity<>(results, HttpStatus.OK);
+
+			} else { // 인증 실패
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+		} catch (Exception e) { // 유효하지 않은 토큰
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+	}
+	
+	@GetMapping("from/{profileId}")
+	@ApiOperation("팔로잉 목록 조회(비로그인)")
+	public Object getFollowings (@PathVariable int profileId, @RequestParam int page, @RequestParam int size) {
+		
+		Optional<User> userOpt = userService.getUser(profileId);
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
+		
+		
+		return new ResponseEntity<>(followService.getFollowings(userOpt.get(), page, size), HttpStatus.OK);
+	}
+	
+	// 프로필 유저의 팔로잉들의 정보와 로그인 한 유저와의 팔로우 여부를 리턴
+	@GetMapping("from/{userId}/{profileId}")
+	@ApiOperation("팔로잉 목록 조회(로그인)")
+	public Object getFollowingsAndFlags (@PathVariable int userId, @PathVariable int profileId, 
+			@RequestParam int page, @RequestParam int size, @RequestHeader String token) {
+		
+		Optional<User> UserOpt = userService.getUser(userId);
+		Optional<User> profileUserOpt = userService.getUser(profileId);
+		
+		if (!UserOpt.isPresent() || !profileUserOpt.isPresent()) 
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
+		
+		try {
+			if (userId == jwtService.getUserId(token)) { // 요청한 유저와 토큰 발급한 유저가 같다면
+				
+				List<FollowDto> results = followService.getFollowingsAndFlags(UserOpt.get(), profileUserOpt.get(), page, size);
+				return new ResponseEntity<>(results, HttpStatus.OK);
+
+			} else { // 인증 실패
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+		} catch (Exception e) { // 유효하지 않은 토큰
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+	}
+	
 }

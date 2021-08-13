@@ -26,8 +26,12 @@ public interface CurationService {
 
 	void cancelCurate(CurationHasPosting curationHasPosting);
 
+	// 게시글의 큐레이팅 된 수 구하기
 	int getCuratedCnt(Posting posting);
-
+	
+	// 유저의 총 큐레이팅 된 수 구하기
+	int getTotalCuratedCnt(User user);
+	
 	// 큐레이팅 된 게시글 리스트 가져오기
 	List<Posting> getCuratedPostings(Curation curation, int page, int size);
 

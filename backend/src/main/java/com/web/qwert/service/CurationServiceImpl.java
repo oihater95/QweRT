@@ -22,7 +22,7 @@ import com.web.qwert.model.user.User;
 
 @Service
 public class CurationServiceImpl implements CurationService {
-
+	
 	@Autowired
 	CurationDao curationDao;
 
@@ -74,12 +74,26 @@ public class CurationServiceImpl implements CurationService {
 	public void cancelCurate(CurationHasPosting curationHasPosting) {
 		curationHasPostingDao.delete(curationHasPosting);
 	}
-
+	
+	// 해당 게시글의 큐레이팅 된 횟수 가져오기 
 	@Override
 	public int getCuratedCnt(Posting posting) {
 		return curationHasPostingDao.countByPosting(posting);
 	}
-
+	
+	// 해당 유저의 총 큐레이팅 된 횟수 구하기
+	@Override
+	public int getTotalCuratedCnt(User user) {
+		List<Posting> postings = user.getPostings();
+		
+		int totalCnt = 0;
+		for(Posting posting : postings) {
+			totalCnt += getCuratedCnt(posting);
+		}
+		
+		return totalCnt;
+	}
+	
 	// 큐레이팅 된 게시글 리스트 가져오기
 	@Override
 	public List<Posting> getCuratedPostings(Curation curation, int page, int size) {
