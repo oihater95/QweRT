@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.CategoryDao;
 import com.web.qwert.dao.CommentDao;
-import com.web.qwert.dao.CurationHasPostingDao;
 import com.web.qwert.dao.PostingDao;
 import com.web.qwert.dao.UserDao;
 import com.web.qwert.model.category.Category;
+import com.web.qwert.model.follow.Follow;
 import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.posting.PostingDto;
@@ -46,26 +46,33 @@ public class PostingServiceImpl implements PostingService {
 	@Autowired
 	CurationService curationService;
 	
+	@Autowired
+	FeedServiceImpl feedService;
+	
 	@Override
-	public boolean createPosting(UploadRequest request) {
+	public void createPosting(UploadRequest request) {
 		
 		int user_id = request.getUserId();
-        Optional<User> userOpt = userDao.findById(user_id); //id로 user 찾기
+    	User user = userDao.findById(user_id).get();
+    	
+        Posting posting = new Posting();
+        posting.setUser(user);
+        posting.setTitle(request.getPostingTitle());
+        posting.setContent(request.getPostingContent());
+        posting.setPostingImg(request.getPostingImage());
+        posting.setCategory(categoryDao.getOne(request.getCategoryId()));
+        postingDao.save(posting);
         
-        if (userOpt.isPresent()) { // 회원이면 posting 생성
-
-            Posting posting = new Posting();
-            posting.setUser(userOpt.get());
-            posting.setTitle(request.getPostingTitle());
-            posting.setContent(request.getPostingContent());
-            posting.setPostingImg(request.getPostingImage());
-            posting.setCategory(categoryDao.getOne(request.getCategoryId()));
-            postingDao.save(posting);
-            return true;
-            
-        } else { // 비회원
-           return false;
+        feedService.addFeed(user, posting); // 내 피드 추가
+        
+        // 팔로워 리스트 불러오기
+        List<Follow> follows = user.getFollower();
+        List<User> followers = new ArrayList<User>();
+        for(Follow follow : follows) {
+        	followers.add(follow.getFromUser());
         }
+        
+        feedService.addFeedToFollwers(followers, posting); // 팔로워들에게 피드 추가
 
 	}
 

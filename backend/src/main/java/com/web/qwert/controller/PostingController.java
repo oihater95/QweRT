@@ -26,6 +26,7 @@ import com.web.qwert.model.posting.UpdateRequest;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.ChangeInfoRequest;
 import com.web.qwert.model.user.User;
+import com.web.qwert.service.FeedServiceImpl;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.PostingService;
 import com.web.qwert.service.UserService;
@@ -45,31 +46,29 @@ public class PostingController {
 
 	@Autowired
 	UserService userService;
-
+	
+	@Autowired
+	FeedServiceImpl feedService;
+	
 	@PostMapping
 	@ApiOperation(value = "게시물 업로드")
 	public Object upload(@RequestBody UploadRequest request, @RequestHeader String token) {
-		ResponseEntity response = null;
-		int user_id = request.getUserId();
-
+		int userId = request.getUserId();	
+		Optional<User> userOpt = userService.getUser(userId);
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원	
+		
 		try {
-			if (user_id == jwtService.getUserId(token)) { // 요청한 유저와 토큰 발급한 유저가 같다면
-
-				if (postingService.createPosting(request)) { // 포스팅 성공
-
-					response = new ResponseEntity<>(HttpStatus.OK);
-				} else { // 비회원
-					response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-				}
-			} else {
-				response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			if (userId == jwtService.getUserId(token)) { // 요청자와 토큰 발급한 유저가 같다면
+				postingService.createPosting(request);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else { 
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 권한 없음
 			}
 
-		} catch (Exception e) { // 토큰 검증 실패
+		} catch (Exception e) {
 			e.printStackTrace();
-			response = new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
 		}
-		return response;
 	}
 
 	// 유저로 게시글 검색
@@ -171,8 +170,7 @@ public class PostingController {
 			@RequestBody UpdateRequest request) {
 		
 		Optional<Posting> postingOpt = postingService.getPosting(postingId);
-		if (!postingOpt.isPresent())
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 없는 게시물
+		if (!postingOpt.isPresent()) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 없는 게시물
 		
 		int userId = postingOpt.get().getUser().getUserId();		
 		try {
@@ -188,6 +186,29 @@ public class PostingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
 		}
 
+	}
+	
+	// 내 피드 불러오기
+	@GetMapping("{userId}/feed")
+	@ApiOperation(value = "내 피드 불러오기")
+	public Object myFeed(@PathVariable int userId, @RequestHeader String token,
+			@RequestParam int page, @RequestParam int size) {
+		
+		Optional<User> userOpt = userService.getUser(userId);
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원	
+		
+		try {
+			if (userId == jwtService.getUserId(token)) { // 요청자와 토큰 발급한 유저가 같다면
+				
+				return new ResponseEntity<>(feedService.getFeedByUser(userOpt.get(), page, size), HttpStatus.OK);
+			} else { 
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 권한 없음
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
+		}
 	}
 
 }

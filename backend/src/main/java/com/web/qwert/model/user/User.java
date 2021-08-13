@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.qwert.model.Feed.Feed;
 import com.web.qwert.model.comment.Comment;
 import com.web.qwert.model.curation.Curation;
 import com.web.qwert.model.follow.Follow;
@@ -82,11 +83,15 @@ public class User {
     
     @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Follow> following;
+    private List<Follow> followings;
     
     @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Follow> follower; 
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Feed> feeds;
 
 
     

@@ -12,7 +12,7 @@ import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.User;
 
 public interface PostingService {
-	public boolean createPosting(UploadRequest request);
+	public void createPosting(UploadRequest request);
 	
 	public List<Posting> getPostingsByUser(User user, int page, int size);
 	

@@ -56,7 +56,7 @@ public class FollowServiceImpl implements FollowService {
 
 		List<UserDto> results = new ArrayList<>();
 		for (Follow follow : follows) {
-
+			
 			// 팔로워 유저 정보 저장
 			UserDto follower = new UserDto();
 			BeanUtils.copyProperties(follow.getFromUser(), follower);
