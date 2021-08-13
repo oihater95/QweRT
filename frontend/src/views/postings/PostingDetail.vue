@@ -2,11 +2,54 @@
 <div id="posting-detail__container" class="container">
   <DetailImage :postingImg="postingImg"/>
   <v-card
+    v-if="editPostingFlag"
     id="posting-description"
     class="mt-5"
     color="#f1f3f5"
   >
-    <v-card-title class="text-h5 ps-4 my-2 posting-title">{{ postingTitle }}</v-card-title>
+    <v-card-title class="text-h5 ps-4 posting-first__row-edit">
+      <input class="edit-posting__title my-2" type="text" maxlength="30" v-model="postingTitle">
+      <div class="category-selector">
+        <v-select
+            :items="category"
+            :label="selectedCategory"
+            v-model="selectedCategory"
+            dense
+            solo
+            height="30"
+            background-color="#DCD8D7"
+          ></v-select>
+      </div>
+    </v-card-title>
+    <v-card-subtitle class="posting-content__edit">
+      <textarea class="edit-posting__content my-1" maxlength="200" v-model="postingContent"></textarea>
+    </v-card-subtitle>
+    <v-card-subtitle class="subtitle-2 posting-edit__check">
+      <v-btn @click="editPostingSubmit" plain>
+        Edit
+      </v-btn>
+      <v-btn @click="cancelEdit" plain color="error">
+        Cancel
+      </v-btn>
+    </v-card-subtitle>
+  </v-card>
+  <v-card
+    v-else
+    id="posting-description"
+    class="mt-5"
+    color="#f1f3f5"
+  >
+    <v-card-title class="text-h5 ps-4 posting-first__row">
+      <span class="posting-title">
+        {{ postingTitle }}
+      </span>
+      <v-sheet
+      class="rounded-lg transition-swing category-box"
+      color="#DCD8D7"
+      height="30"
+      width="50"
+      >{{ selectedCategory }}</v-sheet>
+    </v-card-title>
     <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
     <v-card-subtitle class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
   </v-card>
@@ -70,7 +113,6 @@
     class="d-none"
     :msg="modalMsg"
     @checkDeletePosting-ok-sign="deletePosting"/>
-  />
 </div>
 
 </template>
@@ -116,6 +158,9 @@ export default {
       },
       page: 0,
       size: 10,
+      category: ['동물', '사물', '풍경', '인물', '건물', '식물', '캐릭터', '기타'],
+      selectedCategory: '',
+      editPostingFlag: false,
     }
   },
 
@@ -139,6 +184,7 @@ export default {
           this.postingUserNickname = res.data.nickname
           this.postingCategoryId = res.data.categoryId
           this.postingCuratedCnt = res.data.curatedCnt
+          this.selectedCategory = this.category[this.postingCategoryId-1]
         })
         .catch(err => {
           console.log(err)
@@ -179,16 +225,30 @@ export default {
           })
       }
     },
+
     editPosting: function() {
+      this.editPostingFlag = true
+    },
+
+    cancelEdit: function() {
+      this.editPostingFlag = false
+    },
+
+    editPostingSubmit: function() {
       if (this.userInfo.userId === this.postingUserId) {
         axios ({
-          method: 'delete',
+          method: 'put',
           url: `${this.host}/postings/${this.postingId}`,
+          data: {
+            categoryId: this.category.indexOf(this.selectedCategory) + 1,
+            postingTitle: this.postingTitle,
+            postingContent: this.postingContent
+          },
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {  
             console.log(res)
-            this.$router.push({ name: 'MainPage' })
+            this.editPostingFlag = false
           })
           .catch(err => {
             console.log(err)
@@ -237,10 +297,8 @@ export default {
     // 게시물 작성자 본인인지 확인, 본인이 아니라면 false
     checkPostingAuthority() {
       if(this.userInfo.userId === this.postingUserId) {
-        console.log('True')
         return true 
       } else {
-        console.log('False')
         return false
       }
     },
