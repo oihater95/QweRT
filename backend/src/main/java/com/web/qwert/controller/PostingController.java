@@ -189,5 +189,28 @@ public class PostingController {
 		}
 
 	}
+	
+	// 내 피드 불러오기
+	@GetMapping("{userId}/feed")
+	@ApiOperation(value = "내 피드 불러오기")
+	public Object myFeed(@PathVariable int userId, @RequestHeader String token,
+			@RequestParam int page, @RequestParam int size) {
+		
+		Optional<User> userOpt = userService.getUser(userId);
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원	
+		
+		try {
+			if (userId == jwtService.getUserId(token)) { // 요청자와 토큰 발급한 유저가 같다면
+				
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else { 
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 권한 없음
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 유효하지 않은 토큰
+		}
+	}
 
 }
