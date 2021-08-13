@@ -163,6 +163,7 @@
                 <v-icon large>fas fa-plus</v-icon>
               </div>
             </div>
+            <!-- 대표작 선택 모달 창 -->
             <MasterpieceModal
               v-if="masterpieceSelecterOn"
               :masterpieceIds="masterpieces.map(masterpiece => masterpiece.postingId)"

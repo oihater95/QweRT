@@ -70,10 +70,16 @@
             class="pa-0"
           >
             <h5>
-              <span class="follow">
+              <span
+                class="follow"
+                @click="openFollowerList"
+              >
                 팔로워 {{ followerCnt }}
               </span> |
-              <span class="follow">
+              <span
+                class="follow"
+                @click="openFollowingList"
+              >
                 팔로잉 {{ followingCnt }}
               </span> |
               <v-tooltip bottom>
@@ -102,6 +108,13 @@
               </v-tooltip>
             </h5>
           </v-col>
+          <!-- 팔로워/팔로잉 목록 모달 창 -->
+          <FollowListModal
+            v-if="followListModalOn"
+            class="d-none"
+            :tab="followListTab"
+            @followList-off="resetFollowListModal"
+          />
         </v-row>
       </v-col>
       <!-- 팔로우 버튼 -->
@@ -201,6 +214,7 @@
 </template>
 
 <script>
+import FollowListModal from '@/components/profiles/FollowListModal'
 import ProfileShowMore from '@/components/profiles/ProfileShowMore'
 import '@/css/profiles/Profile.scss'
 import { mapState } from 'vuex'
@@ -209,6 +223,7 @@ import axios from 'axios'
 export default {
   name: 'Profile',
   components: {
+    FollowListModal,
     ProfileShowMore,
   },
   data: function () {
@@ -221,6 +236,8 @@ export default {
       postingCnt: null,
       likedCnt: null,
       curatedCnt: null,
+      followListTab: null,
+      followListModalOn: true,
       followState: false,
       masterpieces: [],
       // 예시로 넣어본 그림 url
@@ -241,6 +258,28 @@ export default {
     // 캐러셀에서 마우스가 떠난 상태임을 알리는 함수
     hoverOff: function () {
       this.hovered = false
+    },
+    // 팔로워 목록 모달 창을 여는 함수
+    openFollowerList: function () {
+      this.followListTab = 1
+      const btn = document.querySelector('#followListModalBtn')
+      btn.click()
+    },
+    // 팔로잉 목록 모달 창을 여는 함수
+    openFollowingList: function () {
+      this.followListTab = 2
+      const btn = document.querySelector('#followListModalBtn')
+      btn.click()
+    },
+    // 팔로워/팔로잉 목록 모달 창을 초기화하는 함수
+    resetFollowListModal: function () {
+      return new Promise((resolve) => {
+        resolve()
+        this.followListModalOn = false
+      })
+        .then(() => {
+          this.followListModalOn = true
+        })
     },
     // 임시로 작성한 팔로우 함수 (현재는 버튼이 바뀌는 것만 구현한 상태)
     follow: function () {
