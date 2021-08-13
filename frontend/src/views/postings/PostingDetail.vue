@@ -38,7 +38,8 @@
           class="mx-2 icon-button"
           fab
           small
-          icon>
+          icon
+          @click="editPosting">
           <v-icon id="posting-icon__edit">
             mdi-image-edit-outline
           </v-icon>
@@ -47,7 +48,8 @@
           class="mx-2 icon-button"
           fab
           small
-          icon>
+          icon
+          @click="checkDeletePosting">
           <v-icon id="posting-icon__delete">
             mdi-trash-can-outline
           </v-icon>
@@ -63,14 +65,19 @@
   </div>
 
   <CommentFrame :postingId="postingId" />
+  <Modal
+    class="d-none"
+    :msg="modalMsg"
+    @checkDeletePosting-ok-sign="deletePosting"/>
 </div>
 
 </template>
 
 <script>
 import DetailImage from '@/components/postings/DetailImage'
-import '@/css/postings/PostingDetail.scss'
 import CommentFrame from '@/components/postings/CommentFrame'
+import Modal from '@/components/common/Modal'
+import '@/css/postings/PostingDetail.scss'
 import { mapState } from 'vuex'
 import axios from 'axios'
 
@@ -79,6 +86,7 @@ export default {
   components: {
     DetailImage,
     CommentFrame,
+    Modal,
   },
 
   data: function() {
@@ -96,6 +104,14 @@ export default {
       postingUserNickname: '',
       postingCategoryId: 0,
       postingCuratedCnt: 0,
+      modalMsg: {
+        name: '',
+        triggerBtn: '',
+        title: '',
+        text: '',
+        positiveBtn: '',
+        negativeBtn: '',
+      },
     }
   },
 
@@ -123,6 +139,58 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+
+    editPosting: function() {
+      if (this.userInfo.userId === this.postingUserId) {
+        axios ({
+          method: 'delete',
+          url: `${this.host}/postings/${this.postingId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {  
+            console.log(res)
+            this.$router.push({ name: 'MainPage' })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        alert('작성자 본인만 가능합니다')
+      }
+    },
+
+  
+    checkDeletePosting: function() {
+      this.modalMsg = {
+        name: 'checkDeletePosting',
+        triggerBtn: '',
+        title: '게시물 삭제',
+        text: '해당 게시물을 삭제하시겠습니까?',
+        positiveBtn: '확인',
+        negativeBtn: '취소',
+      }
+      const modalBtn = document.querySelector('#modalBtn')
+      modalBtn.click()
+    },
+
+    deletePosting: function() {
+      if (this.userInfo.userId === this.postingUserId) {
+        axios ({
+          method: 'delete',
+          url: `${this.host}/postings/${this.postingId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {  
+            console.log(res)
+            this.$router.push({ name: 'MainPage' })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        alert('작성자 본인만 가능합니다')
+      }
     },
 
   },
