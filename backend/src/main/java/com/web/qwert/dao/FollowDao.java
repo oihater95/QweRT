@@ -18,4 +18,8 @@ public interface FollowDao extends JpaRepository<Follow, Integer>{
 	List<Follow> findByToUser(User toUser, Pageable pageable);
 	
 	List<Follow> findByFromUser(User fromUser, Pageable pageable);
+	
+	int countByToUser(User toUser);
+	
+	int countByFromUser(User fromUser);
 }

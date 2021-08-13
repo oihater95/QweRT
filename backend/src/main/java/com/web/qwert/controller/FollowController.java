@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.web.qwert.model.follow.Follow;
 import com.web.qwert.model.follow.FollowDto;
 import com.web.qwert.model.user.User;
-import com.web.qwert.service.FollowServiceImpl;
+import com.web.qwert.service.FollowService;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.UserService;
 
@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
 public class FollowController {
 	
 	@Autowired
-	FollowServiceImpl followService;
+	FollowService followService;
 	
 	@Autowired
 	JwtService jwtService;
