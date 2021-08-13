@@ -1,0 +1,25 @@
+.followList-modal {
+  .header {
+    background-color: #FFFFF0;
+    .tabs {
+      font-size: 20px;
+      &:hover {
+        cursor: pointer;
+        color: skyblue;
+      }
+    }
+    .tab-onView {
+      color: steelblue;
+      font-size: 25px;
+    }
+  }
+  .follow-list {
+    height: 500px;
+    overflow: auto;
+    padding: {
+      left: 30px;
+      right: 30px;
+      bottom: 30px;
+    }
+  }
+}
