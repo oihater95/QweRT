@@ -18,7 +18,7 @@
         small
         outlined
         color="green darken-3">
-        <v-icon dark>
+        <v-icon dark @click="addCuration">
           mdi-expand-all-outline
         </v-icon>
       </v-btn>
@@ -46,14 +46,19 @@
   </div>
 
   <CommentFrame :postingId="postingId" />
+  <Modal
+    :msg="modalMsg"
+    @addCuration-no-sign="noSign"
+  />
 </div>
 
 </template>
 
 <script>
-import DetailImage from '@/components/postings/DetailImage'
 import '@/css/postings/PostingDetail.scss'
+import DetailImage from '@/components/postings/DetailImage'
 import CommentFrame from '@/components/postings/CommentFrame'
+import Modal from '@/components/common/Modal'
 import { mapState } from 'vuex'
 import axios from 'axios'
 
@@ -62,6 +67,7 @@ export default {
   components: {
     DetailImage,
     CommentFrame,
+    Modal,
   },
 
   data: function() {
@@ -79,6 +85,16 @@ export default {
       postingUserNickname: '',
       postingCategoryId: 0,
       postingCuratedCnt: 0,
+      modalMsg: {
+        name: '',
+        triggerBtn: '',
+        title: '',
+        text: '',
+        positiveBtn: '',
+        negativeBtn: '',
+      },
+      page: 0,
+      size: 10,
     }
   },
 
@@ -106,6 +122,45 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    addCuration: function() {
+      axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.page, size: this.size } })
+        .then(res => {
+          const curations = res.data
+          this.modalMsg.text = curations
+          if (this.modalMsg.text.length === 0) {
+            console.log(this.modalMsg.text)
+            this.modalMsg.title = '만든 큐레이션이 없습니다. 큐레이션을 만들어주세요.'
+          } else {
+            this.modalMsg.title = '그림을 넣을 큐레이션을 선택하세요'
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+      this.modalMsg.name='addCuration'
+      this.modalMsg.triggerBtn = ''
+      this.modalMsg.positiveBtn = '돌아가기'
+      this.modalMsg.negativeBtn = '추가하기'
+
+      const modalBtn = document.querySelector('#modalBtn')
+      modalBtn.click()
+    },
+    noSign: function (array) {
+      for (const id of array) {
+        axios ({
+          method: 'POST',
+          headers: { token: localStorage.getItem('jwtToken') },
+          url: `${this.host}/curations/${id}/${this.$route.params.postingId}/`,
+        })
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
   },
 

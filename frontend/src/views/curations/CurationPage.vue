@@ -29,6 +29,7 @@
 <script>
 import "@/css/curations/CurationPage.scss"
 import CurationImage from "@/components/curations/CurationImage"
+import axios from "axios"
 import { mapState } from 'vuex'
 
 export default {
@@ -40,7 +41,7 @@ export default {
     return {
       tab: 1,
       newPage: 0,
-      myPage,
+      myPage: 0,
       size: 6,
       myCurationImages: [],
       newCurationImages: [],
