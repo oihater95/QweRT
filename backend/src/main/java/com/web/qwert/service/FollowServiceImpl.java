@@ -20,11 +20,12 @@ import com.web.qwert.model.user.User;
 import com.web.qwert.model.user.UserDto;
 
 @Service
-public class FollowServiceImpl {
+public class FollowServiceImpl implements FollowService {
 
 	@Autowired
 	FollowDao followDao;
 
+	@Override
 	public void updateFollow(User fromUser, User toUser) {
 
 		Optional<Follow> followOpt = followDao.findByFromUserAndToUser(fromUser, toUser);
@@ -40,11 +41,13 @@ public class FollowServiceImpl {
 
 	}
 
+	@Override
 	public Optional<Follow> getFollow(User fromUser, User toUser) {
 		return followDao.findByFromUserAndToUser(fromUser, toUser);
 	}
 
 	// 비로그인 상태에서 프로필 유저의 팔로워 리스트 조회
+	@Override
 	public List<UserDto> getFollowers(User profileUser, int page, int size) {
 
 		// 프로필 유저의 최신 순 팔로워를 size만큼 페이징해서 가져움
@@ -63,6 +66,7 @@ public class FollowServiceImpl {
 	}
 
 	// 로그인 상태에서 프로필 유저의 팔로워 리스트 및 각 팔로워와 로그인 유저간의 팔로우 정보 조회
+	@Override
 	public List<FollowDto> getFollowersAndFlags(User loginUser, User profileUser, int page, int size) {
 
 		// 프로필 유저의 최신 순 팔로워 정보를 size만큼 페이징해서 가져움
@@ -92,6 +96,7 @@ public class FollowServiceImpl {
 	}
 
 	// 비로그인 상태에서 프로필 유저의 팔로잉 리스트 조회
+	@Override
 	public List<UserDto> getFollowings(User profileUser, int page, int size) {
 
 		// 프로필 유저의 최신 순 팔로잉을 size만큼 페이징해서 가져움
@@ -110,6 +115,7 @@ public class FollowServiceImpl {
 	}
 
 	// 로그인 상태에서 프로필 유저의 팔로핑 리스트 및 각 팔로잉과 로그인 유저간의 팔로우 정보 조회
+	@Override
 	public List<FollowDto> getFollowingsAndFlags(User loginUser, User profileUser, int page, int size) {
 
 		// 프로필 유저의 최신 순 팔로잉 정보를 size만큼 페이징해서 가져움

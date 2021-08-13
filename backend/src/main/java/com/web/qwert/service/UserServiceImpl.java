@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.web.qwert.dao.CurationDao;
+import com.web.qwert.dao.FollowDao;
 import com.web.qwert.dao.LikeDao;
 import com.web.qwert.dao.PostingDao;
 import com.web.qwert.dao.UserDao;
@@ -29,6 +31,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	LikeDao likeDao;
+	
+	@Autowired
+	FollowDao followDao;
+	
+	@Autowired
+	CurationService curationService;
 	
 	@Override
 	public Optional<User> getUser(int user_id) {
@@ -115,16 +123,11 @@ public class UserServiceImpl implements UserService {
 		}
 		profileDto.setMasterpieces(masterpieces);
 		
-		// 테스트 용
-		profileDto.setCuratedCnt(341);
-		profileDto.setFollowerCnt(64);
-		profileDto.setFollowingCnt(534);
+		profileDto.setCuratedCnt(curationService.getTotalCuratedCnt(user));
+		profileDto.setFollowerCnt(followDao.countByToUser(user));
+		profileDto.setFollowingCnt(followDao.countByFromUser(user));
 		
 		return profileDto;
 	}
 
-
-
-
-	
 }
