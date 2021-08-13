@@ -43,29 +43,28 @@ public class FollowServiceImpl {
 	public Optional<Follow> getFollow(User fromUser, User toUser) {
 		return followDao.findByFromUserAndToUser(fromUser, toUser);
 	}
-	
-	// 비로그인  상태에서 프로필 유저의 팔로워 리스트 조회
+
+	// 비로그인 상태에서 프로필 유저의 팔로워 리스트 조회
 	public List<UserDto> getFollowers(User profileUser, int page, int size) {
-		
+
 		// 프로필 유저의 최신 순 팔로워를 size만큼 페이징해서 가져움
 		Pageable pageable = PageRequest.of(page, size, Sort.by("followId").descending());
 		List<Follow> follows = followDao.findByToUser(profileUser, pageable);
 
-
 		List<UserDto> results = new ArrayList<>();
 		for (Follow follow : follows) {
-			
+
 			// 팔로워 유저 정보 저장
-			UserDto follower = new UserDto(); 
+			UserDto follower = new UserDto();
 			BeanUtils.copyProperties(follow.getFromUser(), follower);
 			results.add(follower);
-		}	
+		}
 		return results;
 	}
-	
+
 	// 로그인 상태에서 프로필 유저의 팔로워 리스트 및 각 팔로워와 로그인 유저간의 팔로우 정보 조회
 	public List<FollowDto> getFollowersAndFlags(User loginUser, User profileUser, int page, int size) {
-		
+
 		// 프로필 유저의 최신 순 팔로워 정보를 size만큼 페이징해서 가져움
 		Pageable pageable = PageRequest.of(page, size, Sort.by("followId").descending());
 		List<Follow> follows = followDao.findByToUser(profileUser, pageable);
@@ -74,20 +73,68 @@ public class FollowServiceImpl {
 		List<FollowDto> results = new ArrayList<FollowDto>();
 		for (Follow follow : follows) {
 			FollowDto followDto = new FollowDto();
-			
+
 			// 팔로워 유저 정보 저장
 			User follower = follow.getFromUser();
-			UserDto followerDto = new UserDto(); 
+			UserDto followerDto = new UserDto();
 			BeanUtils.copyProperties(follower, followerDto);
 			followDto.setUser(followerDto);
-			
+
 			// 로그인 유저와의 팔로우 여부 저장
 			Optional<Follow> followOpt = getFollow(loginUser, follower);
-			if(followOpt.isPresent()) followDto.setFollowFlag(true);
-			
+			if (followOpt.isPresent())
+				followDto.setFollowFlag(true);
+
 			results.add(followDto);
 		}
-		
+
+		return results;
+	}
+
+	// 비로그인 상태에서 프로필 유저의 팔로잉 리스트 조회
+	public List<UserDto> getFollowings(User profileUser, int page, int size) {
+
+		// 프로필 유저의 최신 순 팔로잉을 size만큼 페이징해서 가져움
+		Pageable pageable = PageRequest.of(page, size, Sort.by("followId").descending());
+		List<Follow> follows = followDao.findByFromUser(profileUser, pageable);
+
+		List<UserDto> results = new ArrayList<>();
+		for (Follow follow : follows) {
+
+			// 팔로잉 유저 정보 저장
+			UserDto following = new UserDto();
+			BeanUtils.copyProperties(follow.getToUser(), following);
+			results.add(following);
+		}
+		return results;
+	}
+
+	// 로그인 상태에서 프로필 유저의 팔로핑 리스트 및 각 팔로잉과 로그인 유저간의 팔로우 정보 조회
+	public List<FollowDto> getFollowingsAndFlags(User loginUser, User profileUser, int page, int size) {
+
+		// 프로필 유저의 최신 순 팔로잉 정보를 size만큼 페이징해서 가져움
+		Pageable pageable = PageRequest.of(page, size, Sort.by("followId").descending());
+		List<Follow> follows = followDao.findByFromUser(profileUser, pageable);
+
+		// FollowDto에 팔로잉 유저 정보와 로그인 유저와의 팔로우 여부 저장
+		List<FollowDto> results = new ArrayList<FollowDto>();
+		for (Follow follow : follows) {
+			FollowDto followDto = new FollowDto();
+
+			// 팔로잉 유저 정보 저장
+			User following = follow.getToUser();
+			UserDto followingDto = new UserDto();
+			BeanUtils.copyProperties(following, followingDto);
+			followDto.setUser(followingDto);
+
+			// 로그인 유저와의 팔로잉 여부 저장
+			Optional<Follow> followOpt = getFollow(loginUser, following);
+			if (followOpt.isPresent())
+				followDto.setFollowFlag(true);
+
+			results.add(followDto);
+		}
+
 		return results;
 	}
 }
