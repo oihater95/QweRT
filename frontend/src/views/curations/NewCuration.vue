@@ -148,7 +148,7 @@ export default {
             data: {
               title: this.title,
               content: this.description,
-              thumbnailImg: "",
+              thumbnailImg: null,
               color: this.color,
             }
           })
@@ -212,9 +212,17 @@ export default {
     },
     clearFile: function () {
       this.$store.dispatch('clearImageInfo')
+      this.imageFile = ''
+      this.imgSrc = ''
       this.deleteFlag = true
-      this.imageData.filename = ""
-    }
+      this.checkState()
+    },
+
+    checkState() {
+      if(this.imageInfo.image === '') {
+        this.deleteFlag = false
+      }
+    },
 
   },
   computed: {

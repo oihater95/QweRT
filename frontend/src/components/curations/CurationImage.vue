@@ -39,8 +39,8 @@
             :key="idx"
           >
             <img
-              :src="image"
-              alt="curatioon_images">
+              :src="url+image"
+              alt="curation_images">
           </v-col>
         </v-row>
       </div>
@@ -62,8 +62,13 @@ export default {
     tab: {
       type: Number
     },
-  
   },
+  data:  function () {
+    return {
+      url : "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/"
+    }
+  },
+  
   methods: {
     clickCurationDiv: function () {
       this.$router.push({ name: 'CurationDetail' , params: { id: this.curation.curationId}})

@@ -109,10 +109,11 @@
 
   <CommentFrame :postingId="postingId" />
   <Modal
-    @addCuratiaddMn-no-sign="noSign"
+    @addCuration-no-sign="noSign"
     class="d-none"
     :msg="modalMsg"
-    @checkDeletePosting-ok-sign="deletePosting"/>
+    @checkDeletePosting-ok-sign="deletePosting"
+  />
 </div>
 
 </template>
@@ -222,6 +223,9 @@ export default {
         })
           .then(res => {
             console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
           })
       }
     },
