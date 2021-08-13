@@ -171,4 +171,23 @@ ALTER TABLE follow
 ALTER TABLE follow
     ADD CONSTRAINT FK_follow_to_user FOREIGN KEY (to_user_id) REFERENCES user (user_id);
 
+
+-- 9. 피드 테이블 생성
+DROP TABLE IF EXISTS feed;
+
+CREATE TABLE feed
+(
+    `feed_id`      INT         NOT NULL    AUTO_INCREMENT, 
+    `create_date`  DATETIME    DEFAULT current_timestamp(), 
+    `user_id`      INT         NOT NULL, 
+    `posing_id`    INT         NOT NULL, 
+    CONSTRAINT PK_feed PRIMARY KEY (feed_id)
+);
+
+ALTER TABLE feed
+    ADD CONSTRAINT FK_feed_user FOREIGN KEY (user_id) REFERENCES user (user_id);
+
+ALTER TABLE feed
+    ADD CONSTRAINT FK_feed_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
+
 use qwertdb;
