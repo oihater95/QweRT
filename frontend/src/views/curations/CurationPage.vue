@@ -49,19 +49,6 @@ export default {
     }
   },
   methods: {
-    getMyCuration: function () {
-      // myCurationImages에 이미지 집어넣기
-    },
-    getNewCuration: function () {
-      axios.get(`${this.host}/curations/new`, { params: { page: this.newPage, size: this.size }} )
-      .then(res => {
-        // newCurationImages에 이미지 집어넣기
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    },
     clickMy: function (e) {
       this.tab= 1
       e.target.style.color="skyblue"
@@ -72,15 +59,33 @@ export default {
       e.target.style.color="skyblue"
       e.target.previousSibling.style.color="black"
     },
+    getMyCuration: async function () {
+      axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.newPage, size: this.size }} )
+      .then(res => {
+        this.myCurationImages = res.data
+        console.log(this.myCurationImages)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    getNewCuration: async function () {
+      axios.get(`${this.host}/curations/new`, { params: { page: this.newPage, size: this.size }} )
+      .then(res => {
+        this.newCurationImages = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
   },
   computed: {
-    ...mapState(['host']),
+    ...mapState(['host', 'userInfo']),
   },
-  // 처음엔 내 큐레이션 이미지
   created() {
     this.getMyCuration()
     this.getNewCuration()
-  }, 
+  }
 }
 </script>
 

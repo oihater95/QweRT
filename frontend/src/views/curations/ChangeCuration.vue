@@ -70,60 +70,7 @@ export default {
       positiveBtn: '',
       negativeBtn: '',
       },
-      curationImages: [
-        {
-          postingId: "1",
-          postingImg: "sample2.jpg",
-          profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
-          nickname: "호랑이1", 
-          title: "고흐의 해바라기",
-          comment_cnt: "11",
-          like_state: "true",
-          liked_cnt: "1",
-          curated_cnt: "1",
-          create_date: "1111처음",
-          update_date: "11111수정",
-        },
-        {
-          postingId: "2",
-          postingImg: "sample3.jpg",
-          profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035724_001_20210727102309284.jpg?type=w647",
-          nickname: "닉네임2",
-          title: "고흐의 자화상",
-          comment_cnt: "2",
-          like_state: "1",
-          liked_cnt: "2",
-          curated_cnt: "22",
-          create_date: "2222처음",
-          update_date: "2222수정",
-        },
-        {
-          postingId: "3",
-          postingImg: "sample4.jpg",
-          profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035728_001_20210727122509659.jpg?type=w647",
-          nickname: "닉네임3",
-          title: "작품1",
-          comment_cnt: "3",
-          like_state: "",
-          liked_cnt: "3",
-          curated_cnt: "3",
-          create_date: "33333처음",
-          update_date: "33333수정",
-        },
-        {
-          postingId: "4",
-          postingImg: "sample5.jpg",
-          profile_image: "https://im-media.voltron.voanews.com/Drupal/01live-211/styles/892x501/s3/2019-08/C479B173-9839-43CA-B441-0735785B95C3.png?itok=rshkbR3A",
-          nickname: "호랑이4",
-          title: "고흐1",
-          comment_cnt: "4",
-          like_state: "4",
-          liked_cnt: "1",
-          curated_cnt: "4",
-          create_date: "4444처음",
-          update_date: "",
-        },
-      ]
+      curationImages: []
     }
   },
   methods: {
@@ -181,17 +128,30 @@ export default {
     ...mapState(['host']),
   },
   mounted: function () {
-    const cards = document.querySelectorAll(".v-card__main")  
-    for (let card of cards) {
-        const btnForDelete = document.createElement('button')
-        btnForDelete.classList.add("btn-for__delete")
-        btnForDelete.innerText = "DELETE"
-        card.prepend(btnForDelete)
-        btnForDelete.addEventListener("mouseover", this.deleteHoverOn)
-        btnForDelete.addEventListener("mouseout", this.deleteHoverOff)
-        btnForDelete.addEventListener("click", this.deleteImage)
-
-    }
+    axios.get(`${this.host}/curations/detail/${this.$route.params.id}`)
+      .then(res => {
+        console.log(res)
+        this.curationImages = res.data.postings
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  // 처음에는 axios를 created에 버튼 만들기를 mounted에 적었는데
+  // 콘솔로 찍어보니까 axios가 비동기라서 mounted에 적힌 코드가 먼저 실행되었다. 그래서 버튼이 안 생겼고 이렇게 수정한다.
+  updated: function () {
+    const cards = document.querySelectorAll(".v-card__main")
+        console.log(cards)
+        for (let card of cards) {
+            const btnForDelete = document.createElement('button')
+            btnForDelete.classList.add("btn-for__delete")
+            btnForDelete.innerText = "DELETE"
+            card.prepend(btnForDelete)
+            btnForDelete.addEventListener("mouseover", this.deleteHoverOn)
+            btnForDelete.addEventListener("mouseout", this.deleteHoverOff)
+            btnForDelete.addEventListener("click", this.deleteImage)
+        }
   }
 }
 </script>
