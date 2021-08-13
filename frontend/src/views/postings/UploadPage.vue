@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col><DragDrop imgSrc="imgSrc" :imageFile="imageFile" :deleteFlag="deleteFlag"/></v-col>
+      <v-col><DragDrop :imgSrc="imgSrc" :imageFile="imageFile" :deleteFlag="deleteFlag"/></v-col>
       <v-col>
         <div class="container">
           <v-card class="my-5 posting-title">
@@ -27,7 +27,7 @@
           >
           </v-textarea>
           <div class="mx-1 button-group">
-              <div v-if="$route.params.imgSrc" class="d-inline">
+              <div v-if="imgSrc" class="d-inline">
                   <v-btn
                       class="mb-2 mx-2 mt-1 posting-btns"
                       @click="backToDrawing"
@@ -111,7 +111,6 @@ export default {
         file: '',
       },
       imageFile: null,
-      deleteFlag: false,
       postingData: {
         userId: '',
         postingTitle: '',
@@ -120,7 +119,8 @@ export default {
         categoryId: 0,
       },
       page: 0,
-      size: 1
+      size: 1,
+      deleteFlag: false,
     }
   },
   props: {
@@ -169,6 +169,7 @@ export default {
       if (!files.length) return
       this.createImage(files[0])
       this.inputImageFile(e.target.files)
+      console.log('select', this.imageInfo)
     },
     inputImageFile (files) {
       if (files.length) {
@@ -183,7 +184,6 @@ export default {
       }
     },
     createImage (file) {
-      
       let reader = new FileReader()
       reader.onload = (e) => {
         console.log('length: ', e.target.result.includes('data:image/jpeg'))
@@ -263,7 +263,16 @@ export default {
     // 데이터 삭제
     clearInput() {
       this.$store.dispatch('clearImageInfo')
+      this.imageFile = ''
+      this.imgSrc = ''
       this.deleteFlag = true
+      this.checkState()
+    },
+
+    checkState() {
+      if(this.imageInfo.image === '') {
+        this.deleteFlag = false
+      }
     },
 
     // 그리기에서 넘어왔을 때 뒤로가기
@@ -282,6 +291,7 @@ export default {
       this.imageData.image = this.$route.params.imgSrc
       this.imageData.filename = this.$route.params.imagename
       this.$store.dispatch('setImageInfo', this.imageData)
+      console.log('drawing', this.imageInfo)
     }
     }
   },

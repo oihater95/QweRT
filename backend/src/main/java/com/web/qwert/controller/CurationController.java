@@ -27,7 +27,7 @@ import com.web.qwert.model.curation.CurationRequest;
 import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
-import com.web.qwert.service.CurationServiceImpl;
+import com.web.qwert.service.CurationService;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.PostingService;
 import com.web.qwert.service.UserService;
@@ -49,7 +49,7 @@ public class CurationController {
 	UserService userService;
 
 	@Autowired
-	CurationServiceImpl curationService;
+	CurationService curationService;
 
 	@PostMapping("{userId}")
 	@ApiOperation(value = "큐레이션 생성")

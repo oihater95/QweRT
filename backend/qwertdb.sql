@@ -153,4 +153,22 @@ ALTER TABLE curation_has_posting
 ALTER TABLE curation_has_posting
     ADD CONSTRAINT FK_curation_has_posting_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
 
+
+-- 8. 팔로우 테이블 생성
+DROP TABLE IF EXISTS follow;
+
+CREATE TABLE follow
+(
+    `follow_id`     INT    NOT NULL    AUTO_INCREMENT, 
+    `from_user_id`  INT    NOT NULL, 
+    `to_user_id`    INT    NOT NULL, 
+    CONSTRAINT PK_follow PRIMARY KEY (follow_id)
+);
+
+ALTER TABLE follow
+    ADD CONSTRAINT FK_follow_from_user FOREIGN KEY (from_user_id) REFERENCES user (user_id);
+
+ALTER TABLE follow
+    ADD CONSTRAINT FK_follow_to_user FOREIGN KEY (to_user_id) REFERENCES user (user_id);
+
 use qwertdb;

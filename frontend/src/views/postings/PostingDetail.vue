@@ -10,55 +10,76 @@
     <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
     <v-card-subtitle class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
   </v-card>
-  <div id="posting-icon__buttons">
-    <div class="me-5 my-5 icon-buttons">
-      <v-btn
-        class="mx-2"
-        fab
-        small
-        outlined
-        color="green darken-3">
-        <v-icon dark @click="addCuration">
-          mdi-expand-all-outline
-        </v-icon>
-      </v-btn>
-      <v-btn
-        class="mx-2"
-        fab
-        small
-        outlined
-        color="blue darken-3">
-        <v-icon dark>
-          mdi-image-edit-outline
-        </v-icon>
-      </v-btn>
-      <v-btn
-        class="mx-2"
-        fab
-        small
-        outlined
-        color="red darken-1">
-        <v-icon dark>
-          mdi-trash-can-outline
-        </v-icon>
-      </v-btn>
+  <div id="posting-btns">
+    <div id="posting-icon__forUser">
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon>
+          <v-icon id="posting-like__btn">
+            mdi-heart-outline
+          </v-icon>
+        </v-btn>
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon>
+          <v-icon id="posting-add__curation" @click="addCuration">
+            mdi-expand-all-outline
+          </v-icon>
+        </v-btn>
+    </div>
+
+    <div id="posting-icon__authority" v-if="checkPostingAuthority">
+      <div class="icon-buttons">
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon
+          @click="editPosting">
+          <v-icon id="posting-icon__edit">
+            mdi-image-edit-outline
+          </v-icon>
+        </v-btn>
+        <v-btn
+          class="mx-2 icon-button"
+          fab
+          small
+          icon
+          @click="checkDeletePosting">
+          <v-icon id="posting-icon__delete">
+            mdi-trash-can-outline
+          </v-icon>
+        </v-btn>
+      </div>
+    </div>
+  </div>
+  <div id="cnt-group">
+    <div>
+      <span id="like-cnt">{{ postingLikeCnt }}</span>
+      <span id="curated-cnt">{{ postingCuratedCnt }}</span>
     </div>
   </div>
 
   <CommentFrame :postingId="postingId" />
   <Modal
+    @addCuratiaddMn-no-sign="noSign"
+    class="d-none"
     :msg="modalMsg"
-    @addCuration-no-sign="noSign"
+    @checkDeletePosting-ok-sign="deletePosting"/>
   />
 </div>
 
 </template>
 
 <script>
-import '@/css/postings/PostingDetail.scss'
 import DetailImage from '@/components/postings/DetailImage'
 import CommentFrame from '@/components/postings/CommentFrame'
 import Modal from '@/components/common/Modal'
+import '@/css/postings/PostingDetail.scss'
 import { mapState } from 'vuex'
 import axios from 'axios'
 
@@ -129,7 +150,6 @@ export default {
           const curations = res.data
           this.modalMsg.text = curations
           if (this.modalMsg.text.length === 0) {
-            console.log(this.modalMsg.text)
             this.modalMsg.title = '만든 큐레이션이 없습니다. 큐레이션을 만들어주세요.'
           } else {
             this.modalMsg.title = '그림을 넣을 큐레이션을 선택하세요'
@@ -157,17 +177,77 @@ export default {
           .then(res => {
             console.log(res)
           })
+      }
+    },
+    editPosting: function() {
+      if (this.userInfo.userId === this.postingUserId) {
+        axios ({
+          method: 'delete',
+          url: `${this.host}/postings/${this.postingId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {  
+            console.log(res)
+            this.$router.push({ name: 'MainPage' })
+          })
           .catch(err => {
             console.log(err)
           })
+      } else {
+        alert('작성자 본인만 가능합니다')
       }
-    }
+    },
+
+  
+    checkDeletePosting: function() {
+      this.modalMsg = {
+        name: 'checkDeletePosting',
+        triggerBtn: '',
+        title: '게시물 삭제',
+        text: '해당 게시물을 삭제하시겠습니까?',
+        positiveBtn: '확인',
+        negativeBtn: '취소',
+      }
+      const modalBtn = document.querySelector('#modalBtn')
+      modalBtn.click()
+    },
+
+    deletePosting: function() {
+      if (this.userInfo.userId === this.postingUserId) {
+        axios ({
+          method: 'delete',
+          url: `${this.host}/postings/${this.postingId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {  
+            console.log(res)
+            this.$router.push({ name: 'MainPage' })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        alert('작성자 본인만 가능합니다')
+      }
+    },
+
   },
 
   computed: {
+    // 게시물 작성자 본인인지 확인, 본인이 아니라면 false
+    checkPostingAuthority() {
+      if(this.userInfo.userId === this.postingUserId) {
+        console.log('True')
+        return true 
+      } else {
+        console.log('False')
+        return false
+      }
+    },
       ...mapState([
         'host',
-        'userInfo'
+        'userInfo',
+        'isLogon'
       ])
   },
 

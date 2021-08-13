@@ -6,20 +6,12 @@
                 3. @dragenter : To 항목이 드롭 영역에 들어갈 때 감지
                 4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
             <v-card id="drop-card" class="col-12">
-                <div  v-if="drawing" class="upload-image">
-                    <img id="previewImg" 
-                        :src="$route.params.imgSrc" 
-                        class="col-12"
-                        @dragover.prevent="dragover = true"
-                        @dragenter.prevent="dragover = true"
-                        @dragleave.prevent="dragover = false"
-                        @drop.prevent="onDrop"
-                        :class="{ 'grey lighten-3': dragover }"
-                    >
+                <div  v-if="imgSrc" class="upload-image">
+                    <img id="previewImg" :src="imgSrc" class="col-12">
                 </div>
-                <div  v-else-if="imageSrc" class="upload-image">
+                <div  v-else-if="imageInfo.image" class="upload-image">
                     <img id="previewImg" 
-                        :src="imageSrc" 
+                        :src="imageInfo.image" 
                         class="col-12"
                         @dragover.prevent="dragover = true"
                         @dragenter.prevent="dragover = true"
@@ -80,8 +72,11 @@ export default {
     imageFile: {
       type: String,
     },
+    imgSrc: {
+      type: String,
+    },
     deleteFlag: {
-      type: Boolean
+      type: Boolean,
     }
   },
 
@@ -90,6 +85,7 @@ export default {
       this.dragover = false
       this.createImage(event.dataTransfer.files[0])
       this.inputImageFile(event.dataTransfer.files)
+      console.log('drop', this.imageInfo)
     },
     
     inputImageFile (files) {
@@ -138,6 +134,11 @@ export default {
         reader.readAsDataURL(file)
       }
     },
+
+    // clearImage() {
+    //   this.imageSrc = ''
+    //   this.imgSrc = ''
+    // }
   },
 
   mounted() {
@@ -153,15 +154,19 @@ export default {
     imageFile() {
       this.imageSrc = ''
     },
+    imageInfo() {
+      if(this.imageInfo.image === '') {
+        this.imageSrc = ''
+        this.imgSrc = ''
+        this.imageFile = ''
+      }
+    },
     deleteFlag() {
-      if (this.deleteFlag) {
-        if (this.imageSrc) {
-          this.imageSrc = ''
-        } else if (this.$route.params.imgSrc) {
-          this.$route.params.imgSrc = ''
-        } else {
-          this.imageFile = ''
-        }
+      if(this.deleteFlag === true) {
+        this.$store.dispatch('clearImageInfo')
+        this.imageSrc = ''
+        this.imgSrc = ''
+        this.imageFile = ''
       }
     }
   }

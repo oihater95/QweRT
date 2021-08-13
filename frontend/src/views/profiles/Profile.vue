@@ -79,6 +79,14 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on">
+                    <v-icon small>fas fa-paint-brush</v-icon> {{ postingCnt }}
+                  </span>
+                </template>
+                <span>업로드한 게시물 개수</span>
+              </v-tooltip> |
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
                     <v-icon small>fas fa-heart</v-icon> {{ likedCnt }}
                   </span>
                 </template>
@@ -152,7 +160,7 @@
           interval="4000"
         >
           <v-carousel-item
-            v-for="(drawing, i) in drawings"
+            v-for="(masterpiece, i) in masterpieces"
             :key="i"
           >
             <v-row
@@ -161,7 +169,7 @@
               class="profile-masterpiece"
             >
               <v-col>
-                <img :src="drawing.src">
+                <img :src="`https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/${masterpiece.postingImg}`">
               </v-col>
             </v-row>
           </v-carousel-item>
@@ -210,16 +218,17 @@ export default {
       introduction: '',
       followerCnt: null,
       followingCnt: null,
+      postingCnt: null,
       likedCnt: null,
       curatedCnt: null,
       followState: false,
       masterpieces: [],
       // 예시로 넣어본 그림 url
-      drawings: [
-        {src: 'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',},
-        {src: 'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',},
-        {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
-      ],
+      // drawings: [
+      //   {src: 'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',},
+      //   {src: 'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',},
+      //   {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
+      // ],
       hovered: false,
       showMore: false,
     }
@@ -257,6 +266,7 @@ export default {
         this.introduction = res.data.introduction
         this.followerCnt = res.data.followerCnt
         this.followingCnt = res.data.followingCnt
+        this.postingCnt = res.data.postingCnt
         this.likedCnt = res.data.likedCnt
         this.curatedCnt = res.data.curatedCnt
         this.masterpieces = res.data.masterpieces

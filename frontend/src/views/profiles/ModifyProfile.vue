@@ -137,12 +137,15 @@
         <v-row>
           <v-col
             cols="4"
-            v-for="(sampleSrc, i) in masterpieceSamples"
+            v-for="(masterpiece, i) in masterpieces"
             :key="i"
           >
-            <div class="box-minus">
+            <div
+              class="box-minus"
+              @click="removeMasterpiece(i)"
+            >
               <v-img
-                :src="sampleSrc"
+                :src="`https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/${masterpiece.postingImg}`"
                 contain
               ></v-img>
               <v-icon large>fas fa-minus</v-icon>
@@ -150,13 +153,22 @@
           </v-col>
           <v-col
             cols="4"
-            v-if="masterpieceSamples.length < 3"
+            v-if="masterpieces.length < 3"
           >
-            <div class="box-add">
+            <div
+              class="box-add"
+              @click="openMasterpieceSelecter"
+            >
               <div class="content">
                 <v-icon large>fas fa-plus</v-icon>
               </div>
             </div>
+            <MasterpieceModal
+              v-if="masterpieceSelecterOn"
+              :masterpieceIds="masterpieces.map(masterpiece => masterpiece.postingId)"
+              class="d-none"
+              @masterpiece-selected="addMasterpiece"
+            />
           </v-col>
         </v-row>
       </v-col>
@@ -308,6 +320,7 @@
 
 <script>
 import Modal from '@/components/common/Modal'
+import MasterpieceModal from '@/components/profiles/MasterpieceModal'
 import '@/css/profiles/ModifyProfile.scss'
 import { mapState } from 'vuex'
 import axios from 'axios'
@@ -316,6 +329,7 @@ export default {
   name: 'ModifyProfile',
   components: {
     Modal,
+    MasterpieceModal,
   },
   data: function () {
     return {
@@ -329,10 +343,7 @@ export default {
       showCheckResult: false,
       introduction: '',
       masterpieces: [],
-      masterpieceSamples: [
-        'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',
-        'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',
-      ],
+      masterpieceSelecterOn: true,
       password: '',
       newPassword: '',
       newPasswordConfirmation: '',
@@ -427,6 +438,31 @@ export default {
           }, 1500)
         })
     },
+    // 대표작 선택 모달 창을 여는 함수
+    openMasterpieceSelecter: function () {
+      const btn = document.querySelector('#masterpieceModalBtn')
+      btn.click()
+    },
+    // 대표작을 추가하는 함수
+    addMasterpiece: function (posting) {
+      this.masterpieces.push(posting)
+      this.resetMasterpieceSelecter()
+    },
+    // 대표작을 제거하는 함수
+    removeMasterpiece: function (i) {
+      this.masterpieces.splice(i, 1)
+      this.resetMasterpieceSelecter()
+    },
+    // 대표작 선택 모달 창을 초기화하는 함수
+    resetMasterpieceSelecter: function () {
+      return new Promise((resolve) => {
+        resolve()
+        this.masterpieceSelecterOn = false
+      })
+        .then(() => {
+          this.masterpieceSelecterOn = true
+        })
+    },
     // 회원정보 수정 함수
     changeUserInfo: function () {
       axios({
@@ -436,7 +472,7 @@ export default {
           nickname: this.nickname,
           introduction: this.introduction,
           profileImage: this.profileImageSrc,
-          masterpieceIds: this.masterpieces,
+          masterpieceIds: this.masterpieces.map(masterpiece => masterpiece.postingId),
         },
         headers: { token: localStorage.getItem('jwtToken') }
       })
