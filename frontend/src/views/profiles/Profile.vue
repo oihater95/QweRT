@@ -124,7 +124,7 @@
           color="#AEA660"
           width="100"
           class="white--text"
-          @click="follow"
+          @click="followToggle"
         >
           팔로우
         </v-btn>
@@ -133,7 +133,7 @@
           color="#857B1A"
           width="100"
           outlined
-          @click="follow"
+          @click="followToggle"
         >
           언팔로우
         </v-btn>
@@ -281,19 +281,37 @@ export default {
           this.followListModalOn = true
         })
     },
-    // 임시로 작성한 팔로우 함수 (현재는 버튼이 바뀌는 것만 구현한 상태)
-    follow: function () {
-      this.followState = !this.followState
+    // 팔로우 토글 함수
+    followToggle: function () {
+      axios({
+        method: 'put',
+        url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
+        headers: { token: localStorage.getItem('jwtToken') }
+      })
+        .then(res => {
+          console.log(res)
+          if (this.followState) {
+            this.followState = false
+            this.followerCnt -= 1
+          } else {
+            this.followState = true
+            this.followerCnt += 1
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
   },
   computed: {
     ...mapState([
       'host',
+      'isLogon',
       'userInfo',
     ])
   },
-  // 페이지가 로드될 때 유저 정보 불러오기
   created: function () {
+    // 페이지가 로드될 때 유저 정보 불러오기
     axios({
       method: 'get',
       url: `${this.host}/profile/${this.$route.params.userId}/`,
@@ -313,6 +331,22 @@ export default {
       .catch(err => {
         console.log(err)
       })
+    // 로그인 상태라면 로그인한 유저가 해당 프로필의 유저를 팔로우하고 있는지 알아보기
+    if (this.isLogon) {
+      axios({
+        method: 'get',
+        url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
+        headers: { token: localStorage.getItem('jwtToken') }
+      })
+        .then(res => {
+          console.log(res)
+          this.followState = true
+        })
+        .catch(err => {
+          console.log(err)
+          this.followState = false
+        })
+    }
   },
 }
 </script>
