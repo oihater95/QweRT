@@ -180,7 +180,7 @@ CREATE TABLE feed
     `feed_id`      INT         NOT NULL    AUTO_INCREMENT, 
     `create_date`  DATETIME    DEFAULT current_timestamp(), 
     `user_id`      INT         NOT NULL, 
-    `posing_id`    INT         NOT NULL, 
+    `posting_id`    INT         NOT NULL, 
     CONSTRAINT PK_feed PRIMARY KEY (feed_id)
 );
 
