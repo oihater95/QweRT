@@ -8,32 +8,92 @@
       justify="center"
       align="center"
       class="list"
-      v-for="i in test.list"
+      v-for="(following, i) in followings.list"
       :key="i"
     >
       <v-col cols="12">
         <v-divider></v-divider>
       </v-col>
+      <!-- 프로필 이미지 -->
       <v-col
-        cols="3"
+        v-if="isLogon"
+        cols="2"
         class="profile-image"
       >
-        <v-img :src="`https://picsum.photos/500/300?image=${i * 5 + 10}`"></v-img>
+        <v-img
+          v-if="following.user.profileImg"
+          :src="following.user.profileImg"
+        ></v-img>
+        <v-img
+          v-else
+          src="@/assets/images/profile_image_default.png"
+        ></v-img>
       </v-col>
-      <v-col cols="8">
-        <h2>following{{i}}</h2>
+      <v-col
+        v-else
+        cols="2"
+        class="profile-image"
+      >
+        <v-img
+          v-if="following.profileImg"
+          :src="following.profileImg"
+        ></v-img>
+        <v-img
+          v-else
+          src="@/assets/images/profile_image_default.png"
+        ></v-img>
       </v-col>
+      <!-- 닉네임 -->
+      <v-col
+        v-if="isLogon"
+        cols="7"
+      >
+        <h2>{{ following.user.nickname }}</h2>
+      </v-col>
+      <v-col
+        v-else
+        cols="7"
+      >
+        <h2>{{ following.nickname }}</h2>
+      </v-col>
+      <!-- 팔로우/언팔로우 버튼 -->
+      <v-col
+        v-if="isLogon"
+        cols="2"
+      >
+        <v-btn
+          v-if="!following.followFlag"
+          small
+          depressed
+          @click="$emit('follow-toggle', {following, i})"
+        >
+          팔로우
+        </v-btn>
+        <v-btn
+          v-else
+          small
+          outlined
+          @click="$emit('follow-toggle', {following, i})"
+        >
+          언팔로우
+        </v-btn>
+      </v-col>
+      <v-col
+        v-else
+        cols="2"
+      ></v-col>
     </v-row>
   </div>
 </template>
 
 <script>
 import '@/css/profiles/Followings.scss'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Followings',
   props: {
-    test: {
+    followings: {
       type: Object
     },
   },
@@ -46,7 +106,7 @@ export default {
     // 처음 로드할 때와 인피니티스크롤을 할 때를 감지하는 함수
     getMoreContents: function () {
       const content = document.querySelector('.profile-followings')
-      if (((this.test.list.length === 0) || (content.scrollTop + content.offsetHeight >= content.scrollHeight - 10)) && !this.scrollDelay) {
+      if (((this.followings.list.length === 0) || (content.scrollTop + content.offsetHeight >= content.scrollHeight - 10)) && !this.scrollDelay) {
         // console.log(content.scrollTop, content.offsetHeight, content.scrollHeight)
         this.scrollDelay = true
         this.$emit('next-page-tab2')
@@ -56,6 +116,14 @@ export default {
         }, 200)
       }
     },
+    followToggle: function () {
+
+    },
+  },
+  computed: {
+    ...mapState([
+      'isLogon',
+    ])
   },
   // 처음 로드되는 상황이라면 첫 페이지를 불러오기 위해서
   mounted: function () {

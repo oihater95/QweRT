@@ -331,8 +331,8 @@ export default {
       .catch(err => {
         console.log(err)
       })
-    // 로그인 상태라면 로그인한 유저가 해당 프로필의 유저를 팔로우하고 있는지 알아보기
-    if (this.isLogon) {
+    // 로그인 상태라면 로그인한 유저가 현재 프로필의 유저를 팔로우하고 있는지 알아보기
+    if (this.isLogon && this.userInfo.userId !== this.$route.params.userId) {
       axios({
         method: 'get',
         url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
