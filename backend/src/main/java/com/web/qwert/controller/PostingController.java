@@ -112,7 +112,6 @@ public class PostingController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	// 카테고리로 게시글 검색
 	@GetMapping("popular")
 	@ApiOperation(value = "인기 게시글 검색")
 	public Object popularPostings(@RequestParam int page, @RequestParam int size) {
