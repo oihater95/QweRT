@@ -45,7 +45,7 @@
       </span>
       <v-sheet
       class="rounded-lg transition-swing category-box"
-      color="#DCD8D7"
+      color="#EDD8C3"
       height="30"
       width="50"
       >{{ selectedCategory }}</v-sheet>
