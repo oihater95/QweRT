@@ -3,6 +3,8 @@ package com.web.qwert.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
+
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.ChangeInfoRequest;
 import com.web.qwert.model.user.ProfileDto;
@@ -22,5 +24,6 @@ public interface UserService {
 	public Posting[] updateUserInfo(User user, ChangeInfoRequest userInfo);
 	
 	public ProfileDto getProfile(User user);
-
+	
+	public List<User> searchUserByNickname(String nickname, int page, int size);
 }

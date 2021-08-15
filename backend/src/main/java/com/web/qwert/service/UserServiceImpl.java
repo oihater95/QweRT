@@ -8,6 +8,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.CurationDao;
@@ -128,6 +131,12 @@ public class UserServiceImpl implements UserService {
 		profileDto.setFollowingCnt(followDao.countByFromUser(user));
 		
 		return profileDto;
+	}
+
+	@Override
+	public List<User> searchUserByNickname(String nickname, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+		return userDao.findByNicknameContaining(nickname, pageable);
 	}
 
 }
