@@ -19,7 +19,7 @@ import com.web.qwert.model.user.User;
 import com.web.qwert.model.user.UserDto;
 
 @Service
-public class FeedServiceImpl {
+public class FeedServiceImpl implements FeedService {
 
 	@Autowired
 	FeedDao feedDao;
@@ -31,6 +31,7 @@ public class FeedServiceImpl {
 	CurationService curationService;
 	
 	// 유저에게 피드 추가
+	@Override
 	public void addFeed(User user, Posting posting) {
 		Feed feed = new Feed();
 		feed.setUser(user);
@@ -39,6 +40,7 @@ public class FeedServiceImpl {
 	}
 	
 	// 팔로워들에게 피드 추가
+	@Override
 	public void addFeedToFollwers (List<User> followers, Posting posting) {
 		List<Feed> feeds = new ArrayList<Feed>();
 		
@@ -53,6 +55,7 @@ public class FeedServiceImpl {
 	}
 	
 	// 유저의 피드 목록 불러오기
+	@Override
 	public List<FeedDto> getFeedByUser(User user, int page, int size) {
 		List<FeedDto> feedDtos = new ArrayList<FeedDto>();
 		

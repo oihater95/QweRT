@@ -18,6 +18,7 @@ import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
 import com.web.qwert.service.CategoryService;
 import com.web.qwert.service.PostingService;
+import com.web.qwert.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -32,10 +33,13 @@ public class SearchController {
 	@Autowired
 	CategoryService categoryService;
 	
+	@Autowired
+	UserService userService;
+	
 	// 카테고리로 인기 게시글 검색
 	@GetMapping("popular/category/{categoryId}")
 	@ApiOperation(value = "카테고리로 인기 게시글 검색")
-	public Object popularPostings(@PathVariable int categoryId, @RequestParam int page, @RequestParam int size) {
+	public Object searchPopularPostingsByCategory(@PathVariable int categoryId, @RequestParam int page, @RequestParam int size) {
 		
 		Optional<Category> categoryOpt = categoryService.getCategory(categoryId);
 		if (!categoryOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 카테고리
@@ -48,11 +52,21 @@ public class SearchController {
 	// 카테고리로 최신 게시글 검색
 	@GetMapping("new/category/{categoryId}")
 	@ApiOperation(value = "카테고리로 최신 게시글 검색")
-	public Object newPostings(@PathVariable int categoryId, @RequestParam int page, @RequestParam int size) {
+	public Object searchNewPostingsByCategory(@PathVariable int categoryId, @RequestParam int page, @RequestParam int size) {
 		Optional<Category> categoryOpt = categoryService.getCategory(categoryId);
 		if (!categoryOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 카테고리
 		
 		List<Posting> result = postingService.searchNewByCategory(categoryOpt.get(), page, size);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+
+	// 아티스트 검색
+	@GetMapping("artist/{term}")
+	@ApiOperation(value = "아티스트 검색")
+	public Object newPostings(@PathVariable String term, @RequestParam int page, @RequestParam int size) {
+
+		return new ResponseEntity<>(userService.searchUserByNickname(term, page, size), HttpStatus.OK);
+	}	
+	
 }
