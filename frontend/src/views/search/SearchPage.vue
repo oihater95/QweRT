@@ -9,8 +9,8 @@
             fas fa-search
           </v-icon>
           <v-text-field
-            :rules="rules"
             placeholder="검색"
+            v-model="textInput"
             @keyup.enter="inputEnter"
           >
           </v-text-field>
@@ -23,6 +23,8 @@
           v-for="(item, idx) in category" 
           :key="idx"
           :item="item"
+          :idx="idx"
+          @clickCategory="clickCategory"
         />
     </v-row>
     </div>
@@ -32,6 +34,8 @@
 <script>
 import "@/css/search/SearchPage.scss"
 import RoundedBtn from "@/components/common/RoundedBtn"
+import { mapState } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: "SearchPage",
@@ -40,14 +44,36 @@ export default {
   },
   data:  function () {
     return {
-      category: ["인물", "동물", "식물", "풍경", "음식","건물", "패션", "캐릭터","낙서", "3D", "흑백","기타"]
+      category: [],
+      textInput: "",
     }
   },
   methods: {
     inputEnter: function () {
-      // 검색 결과로 이동하기
+      if (this.textInput) {
+        this.$router.push({ name: 'SearchKeyword', params: { keyword: this.textInput } })
+      }
+    },
+    clickCategory: function (item) {
+      this.$router.push({ name: 'SearchCategory', params: { category: item } })
     },
   },
+  computed: {
+    ...mapState([
+      'host',
+    ])
+  },
+  mounted () {
+    axios.get(`${this.host}/category`)
+    .then(res => {
+      for (const item of res.data) {
+        this.category.push(item.categoryName)
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 }
 </script>
 

@@ -58,16 +58,19 @@ export default {
   },
   methods: {
     getFeedImages: function () {
-      // feedImages에 이미지 집어넣기, 현재 팔로우 구현되지 않아 내 게시물만 넣어놨습니다
-      axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.feedPage, size: this.size } })
-      .then(res => {
-        this.feedImages = this.feedImages.concat(res.data)
+      axios ({
+        method: 'get',
+        url: `${this.host}/postings/${this.userInfo.userId}/feed`,
+        params: { page: this.feedPage, size: this.size },
+        headers: { token: localStorage.getItem('jwtToken') }
       })
-      .catch(err => {
-        console.log(err)
-      })
+        .then(res => {
+          this.feedImages = this.feedImages.concat(res.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
-
     getPopularImages: function () {
       // popularImages에 이미지 집어넣기
       axios.get(`${this.host}/postings/popular/`, { params: { page: this.popularPage, size: this.size } })

@@ -1,4 +1,3 @@
-
 -- 기존 DB 삭제 
 drop database if exists qwertdb;
 create database qwertdb;

@@ -6,7 +6,11 @@
           <span class="curation-delete__btn" @click="clickDelete">DELETE</span>
           <span class="curation-change__btn">SAVE</span>
         </div>
-        <CurationInfo/>
+        <CurationInfo
+          :curationTitle="curationTitle"
+          :curationContent="curationContent"
+          @change="changeInfo"
+        />
         <div class="new-thumbnail__div">
           <div>큐레이션 썸네일</div>
           <div class="d-flex new-thumbnail_last">
@@ -73,7 +77,9 @@ export default {
       negativeBtn: '',
       },
     curationImages: [],
-    color: "흰 색"
+    color: "흰 색",
+    curationTitle: "",
+    curationContent: ""
     }
   },
   methods: {

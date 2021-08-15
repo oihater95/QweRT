@@ -1,7 +1,11 @@
 <template>
   <v-form>
     <v-container>
-      <CurationInfo @change="changeInfo"/>
+      <CurationInfo
+        :curationTitle="curationTitle"
+        :curationContent="curationContent"
+        @change="changeInfo"
+      />
       <div class="new-thumbnail__div">
         <div>선택사항: 큐레이션 썸네일</div>
         <div>큐레이션 썸네일을 업로드하지 않으면 큐레이션에 제일 먼저 담긴 세 작품이 썸네일로 보입니다.</div>
@@ -77,6 +81,8 @@ export default {
       errorActivated: false,
       title: "",
       description: "",
+      curationTitle: "",
+      curationContent: "",
       color: "",
       deleteFlag: false,
       imageFile: null,
@@ -163,7 +169,7 @@ export default {
       } else {
         this.errorActivated = true
       }
-    },
+  },
     changeInfo: function (title, description) {
       // 둘 다 내용이 있다면
       if (title && description) {

@@ -49,18 +49,29 @@ export default {
       ],
     }
   },
+  props: {
+      curationTitle: {
+        type: String
+      },
+      curationContent: {
+        type: String
+      },
+  },
   methods: {
     // title과 description이 바뀔 때마다 알려준다.
     changeHappen: function() {
       this.$emit('change', this.title, this.description)
       console.log("change")
     },
-
   },
   watch: {
     title: 'changeHappen',
     description: 'changeHappen',
-  }
+  },
+  mounted () {
+    this.title = this.curationTitle
+    this.description = this.curationContent
+  } 
 }
 </script>
 
