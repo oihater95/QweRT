@@ -40,6 +40,7 @@
         max-height="600">
 
           <template v-for="(comment, idx) in comments">
+            <!-- comment-id => scroll Top에 사용, commentId => 댓글 수정에 사용 -->
             <v-list-item-content
             :class="`comment-id__${idx}`"
             :key="idx">
@@ -47,7 +48,36 @@
                 <a class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</a>
               </v-list-item-subtitle>
               <div>
-                <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.content }}</p>
+                <div class="ps-3 ms-5">
+                  <div class="content-line d-none" :class="`commentId-editModeOn__${comment.commentId}`">
+                    <div>
+                      <textarea class="mt-3 editing-frame" maxlength="50" v-model="comment.content"></textarea>
+                    </div>
+                    <div>
+                      <v-btn @click="editCommentSubmit(comment)" plain>
+                        Edit
+                      </v-btn>
+                      <v-btn @click="cancelEditComment(comment)" plain color="error">
+                        Cancel
+                      </v-btn>
+                    </div>
+                  </div>
+                  <div class="content-line my-4 d-flex" :class="`commentId-editModeOff__${comment.commentId}`">
+                    <span class="me-5 mt-2 mb-1 pe-3 comment-content">{{ comment.content }}</span>
+                    <div v-if="checkCommentAuthority(comment)" class=" ms-5 d-inline">
+                      <v-btn icon @click="[getCommentId(comment), editComment(comment)]">
+                        <v-icon>
+                          mdi-pencil
+                        </v-icon>
+                      </v-btn>
+                      <v-btn icon @click="[getCommentId(comment), deleteComment()]">
+                        <v-icon>
+                          mdi-close
+                        </v-icon>
+                      </v-btn>
+                    </div>
+                  </div>
+                </div>
                 <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.createDate) }}</p>
                 <v-divider></v-divider>
               </div>
@@ -79,7 +109,21 @@
                 <a class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</a>
               </v-list-item-subtitle>
               <div>
-                <p class="mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.content }}</p>
+                <div class="row ps-3">
+                  <p class="col-10 mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.content }}</p>
+                  <div v-if="checkCommentAuthority(comment)" class="col-1 ms-5">
+                    <v-btn icon>
+                      <v-icon>
+                        mdi-pencil
+                      </v-icon>
+                    </v-btn>
+                    <v-btn icon>
+                      <v-icon>
+                        mdi-close
+                      </v-icon>
+                    </v-btn>
+                  </div>
+                </div>
                 <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.createDate) }}</p>
                 <v-divider></v-divider>
               </div>
@@ -105,6 +149,8 @@
           <v-text-field
           class="d-inline"
           cols="10"
+          counter="50"
+          maxlength="50"
           v-model="commentForm.commentContent"
           :label="CommentFormLabel"
           :rules="rules"
@@ -115,6 +161,7 @@
         <v-col id="comment-create__btn"
         class="me-1">
           <v-btn 
+          class="me-3"
           icon
           @click="CommentUpload"
           >
@@ -244,6 +291,8 @@ export default {
         userId: 0,
         docentFlag: false
       },
+      commentId: 0,
+      editCommentId: 0,
       commentFormToggle: false,
       rules: [
         value => !!value || 'Required.',
@@ -429,7 +478,82 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    // 댓글 본인 확인
+    checkCommentAuthority: function(comment) {
+      if(this.userInfo.userId === comment.user.userId) {
+        return true 
+      } else {
+        return false
+      }
+    },
+    // 댓글 Id 가져오기
+    getCommentId: function(comment) {
+      this.commentId = comment.commentId
+    },
+
+    deleteComment: function() {
+      // 상위 컴포넌트와 겹쳐서 모달 컴포넌트가 제대로 동작하지 않음
+      if(confirm('삭제하시겠습니까?')) {
+        axios ({
+          method: 'delete',
+          url: `${this.host}/comments/${this.commentId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {  
+            console.log(res)
+            this.getComments()
+            this.getDocents()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+
+    editComment: function(comment) {
+      this.editCommentId = comment.commentId
+      const editModeOn = document.querySelector(`.commentId-editModeOn__${this.editCommentId}`)
+      const editModeOff = document.querySelector(`.commentId-editModeOff__${this.editCommentId}`)
+      editModeOn.classList.remove('d-none')
+      editModeOn.classList.add('d-flex')
+      editModeOff.classList.remove('d-flex')
+      editModeOff.classList.add('d-none')
+    },
+
+    cancelEditComment: function(comment) {
+      const editModeOn = document.querySelector(`.commentId-editModeOn__${comment.commentId}`)
+      const editModeOff = document.querySelector(`.commentId-editModeOff__${comment.commentId}`)
+      editModeOn.classList.remove('d-flex')
+      editModeOn.classList.add('d-none')
+      editModeOff.classList.remove('d-none')
+      editModeOff.classList.add('d-flex')
+    },
+
+    editCommentSubmit: function(comment) {
+      const editContent = comment.content
+      console.log('editContent', editContent)
+      axios ({
+        method: 'put',
+        url: `${this.host}/comments/${this.editCommentId}`,
+        data: {content: editContent},
+        headers: { token: localStorage.getItem('jwtToken') }
+      })
+        .then(res => {  
+          console.log(res)
+          const editModeOn = document.querySelector(`.commentId-editModeOn__${this.editCommentId}`)
+          const editModeOff = document.querySelector(`.commentId-editModeOff__${this.editCommentId}`)
+          editModeOn.classList.remove('d-flex')
+          editModeOn.classList.add('d-none')
+          editModeOff.classList.remove('d-none')
+          editModeOff.classList.add('d-flex')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      
     }
+
 
   },
 

@@ -69,8 +69,17 @@
 
 #comment-create__content {
   max-width: 800px;
+  padding-right: 10px;
 }
 
 #comment-create__btn {
   padding: 0;
+}
+
+.content-line{
+  justify-content: space-between;
+}
+
+.editing-frame{
+  width: 700px;
 }
