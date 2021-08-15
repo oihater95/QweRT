@@ -14,10 +14,15 @@
   font-weight: bolder;
   font-size: large;
   text-decoration: none;
+  color: black;
+  cursor: pointer;
   &:link {
     color: black;
   }
   &:visited {
+    color: black;
+  }
+  &:active {
     color: black;
   }
   &:hover {
@@ -81,5 +86,8 @@
 }
 
 .editing-frame{
-  width: 700px;
+  width: 600px;
+  height: 30px;
+  border: solid 2px lightgray;
+  border-radius: 5px;
 }

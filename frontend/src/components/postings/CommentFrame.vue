@@ -45,7 +45,7 @@
             :class="`comment-id__${idx}`"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
-                <a class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</a>
+                <p @click="userProfile(comment)" class="comment-nickname mb-0">{{ comment.user.nickname }}</p>
               </v-list-item-subtitle>
               <div>
                 <div class="ps-3 ms-5">
@@ -106,22 +106,37 @@
             :class="`docent-id__${idx}`"
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3">
-                <a class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</a>
+                <p @click="userProfile(comment)" class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</p>
               </v-list-item-subtitle>
               <div>
-                <div class="row ps-3">
-                  <p class="col-10 mx-5 mt-2 mb-1 px-3 comment-content">{{ comment.content }}</p>
-                  <div v-if="checkCommentAuthority(comment)" class="col-1 ms-5">
-                    <v-btn icon>
-                      <v-icon>
-                        mdi-pencil
-                      </v-icon>
-                    </v-btn>
-                    <v-btn icon>
-                      <v-icon>
-                        mdi-close
-                      </v-icon>
-                    </v-btn>
+                <div class="ps-3 ms-5">
+                  <div class="content-line d-none" :class="`docentId-editModeOn__${comment.commentId}`">
+                    <div>
+                      <textarea class="mt-3 editing-frame" maxlength="50" v-model="comment.content"></textarea>
+                    </div>
+                    <div>
+                      <v-btn @click="editCommentSubmit(comment)" plain>
+                        Edit
+                      </v-btn>
+                      <v-btn @click="cancelEditComment(comment)" plain color="error">
+                        Cancel
+                      </v-btn>
+                    </div>
+                  </div>
+                  <div class="content-line my-4 d-flex" :class="`docentId-editModeOff__${comment.commentId}`">
+                    <span class="me-5 mt-2 mb-1 pe-3 comment-content">{{ comment.content }}</span>
+                    <div v-if="checkCommentAuthority(comment)" class=" ms-5 d-inline">
+                      <v-btn icon @click="[getCommentId(comment), editComment(comment)]">
+                        <v-icon>
+                          mdi-pencil
+                        </v-icon>
+                      </v-btn>
+                      <v-btn icon @click="[getCommentId(comment), deleteComment()]">
+                        <v-icon>
+                          mdi-close
+                        </v-icon>
+                      </v-btn>
+                    </div>
                   </div>
                 </div>
                 <p class="mx-5 px-3 update-time">{{ displayTimeAt(comment.createDate) }}</p>
@@ -194,89 +209,6 @@ export default {
   data: function() {
     return {
       tab: 1,
-      dummyComments: [
-        {
-          comment_id : 1,
-          comment_content : '잘그리셨네요',
-          create_date : new Date(2021, 6, 20, 20, 24, 0),  // 2021-07-20-20:24:00, 월은 0부터
-          update_date : new Date(2021, 6, 20, 20, 24, 0),
-          user_id : 1,
-          nickname : 'OiHater',
-          docent_flag: 0
-        },
-        {
-          comment_id : 2,
-          comment_content : '전체적으로 붉은 계열의 색감을 사용하여 나타낸 따뜻한 느낌을 주었습니다. 특히 태양은 거친 텍스처로 표현해 강렬하고 뜨거운 느낌입니다. 근데 이 댓글 엄청 길게 쓰면 어떻게 될까요??? 카드 끝에서 줄바꿈을 알아서 해주는군요! 근데 왜 카드 앞부분에서는 안해주지...',
-          create_date : new Date(2021, 6, 28, 10, 0, 0),
-          update_date : new Date(2021, 6, 28, 18, 0, 0),
-          user_id : 1,
-          nickname : 'OiHater',
-          docent_flag: 1
-        },
-        {
-          comment_id : 3,
-          comment_content : '야호!',
-          create_date : new Date(2020, 6, 26, 15, 40, 0),
-          update_date : new Date(2020, 6, 26, 15, 40, 0),
-          user_id : 2,
-          nickname : 'moon',
-          docent_flag: 0
-        },
-        {
-          comment_id : 4,
-          comment_content : '이얏호!',
-          create_date : new Date(2021, 3, 27, 15, 40, 0),
-          update_date : new Date(2021, 3, 27, 15, 40, 0),
-          user_id : 3,
-          nickname : 'kim',
-          docent_flag: 0
-        },
-        {
-          comment_id : 5,
-          comment_content : '댓글',
-          create_date : new Date(2021, 6, 20, 15, 40, 0),
-          update_date : new Date(2021, 6, 28, 18, 40, 0),
-          user_id : 3,
-          nickname : 'kim',
-          docent_flag: 0
-        },
-        {
-          comment_id : 6,
-          comment_content : '댓글22',
-          create_date : new Date(2021, 6, 26, 15, 40, 0),
-          update_date : new Date(2021, 6, 26, 21, 40, 0),
-          user_id : 4,
-          nickname : 'userrr',
-          docent_flag: 0
-        },
-        {
-          comment_id : 7,
-          comment_content : '댓글333',
-          create_date : new Date(2019, 6, 26, 15, 40, 0),
-          update_date : new Date(2019, 6, 26, 21, 40, 0),
-          user_id : 4,
-          nickname : 'userrr',
-          docent_flag: 0
-        },
-        {
-          comment_id : 8,
-          comment_content : '댓글4444',
-          create_date : new Date(2021, 1, 26, 15, 40, 0),
-          update_date : new Date(2021, 1, 26, 21, 40, 0),
-          user_id : 4,
-          nickname : 'userrr',
-          docent_flag: 0
-        },
-        {
-          comment_id : 9,
-          comment_content : '댓글55555',
-          create_date : new Date(2021, 6, 6, 15, 40, 0),
-          update_date : new Date(2021, 6, 6, 21, 40, 0),
-          user_id : 4,
-          nickname : 'userrr',
-          docent_flag: 0
-        },
-      ],
       commentForm: {
         commentContent : null,
       },
@@ -431,7 +363,6 @@ export default {
       // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
       axios.get(`${this.host}/comments/${this.$route.params.postingId}/`, { params: { page: this.commentPage, size: this.size } })
       .then(res => {
-        console.log(res.data)
         if(this.comments.length < this.commentCnt && this.comments.length % this.size === 0) {
           this.comments = this.comments.concat(res.data)
         } else if (this.comments.length < this.commentCnt && this.comments.length % this.size !== 0){
@@ -451,7 +382,6 @@ export default {
       // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
       axios.get(`${this.host}/comments/${this.$route.params.postingId}/docent/`, { params: { page: this.docentPage, size: this.size } })
       .then(res => {
-        console.log(res.data)
         if(this.docents.length < this.docentCnt && this.docents.length % this.size === 0) {
           this.docents = this.docents.concat(res.data)
         } else if (this.docents.length < this.docentCnt && this.docents.length % this.size !== 0){
@@ -460,6 +390,26 @@ export default {
         } else if (this.docentPage === 0 && this.docentCnt === 0 && this.docents.length === 0){
           this.docents = this.docents.concat(res.data)
         }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
+    getCommentsAll: function() {
+      axios.get(`${this.host}/comments/${this.$route.params.postingId}/`, { params: { page: 0, size: this.commentCnt } })
+      .then(res => {
+        this.comments = this.comments.concat(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
+    getDocentsAll: function() {
+      axios.get(`${this.host}/comments/${this.$route.params.postingId}/docent/`, { params: { page: 0, size: this.docentCnt } })
+      .then(res => {
+        this.docents = this.docents.concat(res.data)
       })
       .catch(err => {
         console.log(err)
@@ -502,8 +452,13 @@ export default {
         })
           .then(res => {  
             console.log(res)
-            this.getComments()
-            this.getDocents()
+            if(this.tab===1) {
+              this.comments = []
+              this.getCommentsAll()
+            } else {
+              this.docents = []
+              this.getDocentsAll()
+            }
           })
           .catch(err => {
             console.log(err)
@@ -513,21 +468,41 @@ export default {
 
     editComment: function(comment) {
       this.editCommentId = comment.commentId
-      const editModeOn = document.querySelector(`.commentId-editModeOn__${this.editCommentId}`)
-      const editModeOff = document.querySelector(`.commentId-editModeOff__${this.editCommentId}`)
-      editModeOn.classList.remove('d-none')
-      editModeOn.classList.add('d-flex')
-      editModeOff.classList.remove('d-flex')
-      editModeOff.classList.add('d-none')
+      if(this.tab === 1) {
+        const editModeOn = document.querySelector(`.commentId-editModeOn__${this.editCommentId}`)
+        const editModeOff = document.querySelector(`.commentId-editModeOff__${this.editCommentId}`)
+        editModeOn.classList.remove('d-none')
+        editModeOn.classList.add('d-flex')
+        editModeOff.classList.remove('d-flex')
+        editModeOff.classList.add('d-none')
+      } else {
+        const editModeOnDocent = document.querySelector(`.docentId-editModeOn__${this.editCommentId}`)
+        const editModeOffDocent = document.querySelector(`.docentId-editModeOff__${this.editCommentId}`)
+        editModeOnDocent.classList.remove('d-none')
+        editModeOnDocent.classList.add('d-flex')
+        editModeOffDocent.classList.remove('d-flex')
+        editModeOffDocent.classList.add('d-none')
+      }
+
+      
     },
 
     cancelEditComment: function(comment) {
-      const editModeOn = document.querySelector(`.commentId-editModeOn__${comment.commentId}`)
-      const editModeOff = document.querySelector(`.commentId-editModeOff__${comment.commentId}`)
-      editModeOn.classList.remove('d-flex')
-      editModeOn.classList.add('d-none')
-      editModeOff.classList.remove('d-none')
-      editModeOff.classList.add('d-flex')
+      if(this.tab === 1) {
+        const editModeOn = document.querySelector(`.commentId-editModeOn__${comment.commentId}`)
+        const editModeOff = document.querySelector(`.commentId-editModeOff__${comment.commentId}`)
+        editModeOn.classList.remove('d-flex')
+        editModeOn.classList.add('d-none')
+        editModeOff.classList.remove('d-none')
+        editModeOff.classList.add('d-flex')
+      } else {
+        const editModeOnDocent = document.querySelector(`.docentId-editModeOn__${comment.commentId}`)
+        const editModeOffDocent = document.querySelector(`.docentId-editModeOff__${comment.commentId}`)
+        editModeOnDocent.classList.remove('d-flex')
+        editModeOnDocent.classList.add('d-none')
+        editModeOffDocent.classList.remove('d-none')
+        editModeOffDocent.classList.add('d-flex')        
+      }
     },
 
     editCommentSubmit: function(comment) {
@@ -541,19 +516,30 @@ export default {
       })
         .then(res => {  
           console.log(res)
-          const editModeOn = document.querySelector(`.commentId-editModeOn__${this.editCommentId}`)
-          const editModeOff = document.querySelector(`.commentId-editModeOff__${this.editCommentId}`)
-          editModeOn.classList.remove('d-flex')
-          editModeOn.classList.add('d-none')
-          editModeOff.classList.remove('d-none')
-          editModeOff.classList.add('d-flex')
+          if(this.tab === 1) {
+            const editModeOn = document.querySelector(`.commentId-editModeOn__${this.editCommentId}`)
+            const editModeOff = document.querySelector(`.commentId-editModeOff__${this.editCommentId}`)
+            editModeOn.classList.remove('d-flex')
+            editModeOn.classList.add('d-none')
+            editModeOff.classList.remove('d-none')
+            editModeOff.classList.add('d-flex')
+          } else {
+            const editModeOnDocent = document.querySelector(`.docentId-editModeOn__${this.editCommentId}`)
+            const editModeOffDocent = document.querySelector(`.docentId-editModeOff__${this.editCommentId}`)
+            editModeOnDocent.classList.remove('d-flex')
+            editModeOnDocent.classList.add('d-none')
+            editModeOffDocent.classList.remove('d-none')
+            editModeOffDocent.classList.add('d-flex')
+          }
         })
         .catch(err => {
           console.log(err)
         })
-      
-    }
+    },
 
+    userProfile(comment) {
+      this.$router.push({ name: 'Profile', params: {userId: comment.user.userId} })
+    }
 
   },
 
@@ -579,7 +565,6 @@ export default {
       this.getCnt()
     }
   }
-
 }
 
 </script>
