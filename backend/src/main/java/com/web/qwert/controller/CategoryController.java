@@ -16,7 +16,7 @@ import com.web.qwert.service.CategoryService;
 @CrossOrigin
 @RestController
 @RequestMapping("/category")
-public class CatecoryController {
+public class CategoryController {
 	
 	@Autowired
 	private CategoryService categoryService;
@@ -24,7 +24,7 @@ public class CatecoryController {
 	@GetMapping
 	public Object getCategoryList() {
 		
-		List<Category> list = categoryService.getCategory();
+		List<Category> list = categoryService.getAllCategory();
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	

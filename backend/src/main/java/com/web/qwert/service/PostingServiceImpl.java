@@ -149,7 +149,20 @@ public class PostingServiceImpl implements PostingService {
 		postingDao.save(posting);
 	}
 
+	@Override
+	public List<Posting> searchNewByCategory(Category category, int page, int size) {
 
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+		return postingDao.findByCategory(category, pageable);
 
+	}
+	
+	@Override
+	public List<Posting> searchPopularByCategory(Category category, int page, int size) {
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by("likeCnt").descending());
+		return postingDao.findByCategory(category, pageable);
+
+	}
 
 }

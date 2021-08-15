@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 
+import com.web.qwert.model.category.Category;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.posting.PostingDto;
 import com.web.qwert.model.posting.UpdateRequest;
@@ -29,4 +30,8 @@ public interface PostingService {
 	public void removePosting(Posting posting);
 	
 	public void updatePosting(Posting posting, UpdateRequest request);
+	
+	public List<Posting> searchNewByCategory(Category category, int page, int size);
+	
+	public List<Posting> searchPopularByCategory(Category category, int page, int size);
 }
