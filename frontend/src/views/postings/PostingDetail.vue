@@ -51,7 +51,7 @@
       >{{ selectedCategory }}</v-sheet>
     </v-card-title>
     <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
-    <v-card-subtitle class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
+    <v-card-subtitle @click="userProfile" class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
   </v-card>
   <div id="posting-btns">
     <div id="posting-icon__forUser">
@@ -294,6 +294,10 @@ export default {
         alert('작성자 본인만 가능합니다')
       }
     },
+
+    userProfile() {
+      this.$router.push({ name: 'Profile', params: {userId: this.postingUserId} })
+    }
 
   },
 
