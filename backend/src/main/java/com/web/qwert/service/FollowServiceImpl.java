@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.web.qwert.dao.FollowDao;
+import com.web.qwert.dao.UserDao;
 import com.web.qwert.model.comment.Comment;
 import com.web.qwert.model.comment.CommentDto;
 import com.web.qwert.model.follow.Follow;
@@ -24,19 +25,28 @@ public class FollowServiceImpl implements FollowService {
 
 	@Autowired
 	FollowDao followDao;
-
+	
+	@Autowired
+	UserDao userDao;
+	
 	@Override
 	public void updateFollow(User fromUser, User toUser) {
 
 		Optional<Follow> followOpt = followDao.findByFromUserAndToUser(fromUser, toUser);
 		if (followOpt.isPresent()) { // 이미 팔로우 했다면
 			followDao.delete(followOpt.get()); // 팔로우 취소
-
+		
+			toUser.setPopularity(toUser.getPopularity() - 1); // 인기도 감소
+			userDao.save(toUser);
+			
 		} else { // 안했다면 팔로우 하기
 			Follow follow = new Follow();
 			follow.setFromUser(fromUser);
 			follow.setToUser(toUser);
 			followDao.save(follow);
+			
+			toUser.setPopularity(toUser.getPopularity() + 1); // 인기도 증가
+			userDao.save(toUser);
 		}
 
 	}
