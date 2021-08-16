@@ -15,21 +15,21 @@
           :class="['tabs', {'tab-onView' : tabOnView === 1}]"
           @click="tabOnView=1"
         >
-          <h3>게시물</h3>
+          <h3>My Drawings</h3>
         </v-col>
         <v-col
           :cols="tabOnView === 2 ? 4 : 3"
           :class="['tabs', {'tab-onView' : tabOnView === 2}]"
           @click="tabOnView=2"
         >
-          <h3>좋아하는 게시물</h3>
+          <h3>My Favorite Drawings</h3>
         </v-col>
         <v-col
           :cols="tabOnView === 3 ? 4 : 3"
           :class="['tabs', {'tab-onView' : tabOnView === 3}]"
           @click="tabOnView=3"
         >
-          <h3>큐레이션</h3>
+          <h3>My Curations</h3>
         </v-col>
       </v-row>
       <!-- 내 게시물 -->
