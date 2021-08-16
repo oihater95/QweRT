@@ -1,6 +1,6 @@
 <template>
     <!-- 한 행에 3개씩 -->
-  <v-col cols=4>
+  <v-col class="col-12 col-sm-6 col-lg-4">
     <!-- elevation: 테두리 -->
     <v-card
       elevation=0

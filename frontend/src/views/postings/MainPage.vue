@@ -53,7 +53,7 @@ export default {
       feedPage: 0,
       popularPage: 0,
       newPage: 0,
-      size: 9,
+      size: 12,
     }
   },
   methods: {
@@ -65,6 +65,7 @@ export default {
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
+          console.log(res.data)
           this.feedImages = this.feedImages.concat(res.data)
         })
         .catch(err => {
