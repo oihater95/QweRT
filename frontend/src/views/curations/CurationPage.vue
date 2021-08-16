@@ -69,7 +69,7 @@ export default {
           .then(res => {
             const arr = res.data
              // 마지막이라는 뜻
-            if (arr.length < 6) {
+            if (arr.length < this.size) {
               this.myEnd = true
             }
             this.myCurationImages = this.myCurationImages.concat(arr)
@@ -85,7 +85,7 @@ export default {
         .then(res => {
           const arr = res.data
           // 마지막이라는 뜻
-          if (arr.length < 6) {
+          if (arr.length < this.size) {
             this.newEnd = true
           }
           this.newCurationImages = this.newCurationImages.concat(arr)

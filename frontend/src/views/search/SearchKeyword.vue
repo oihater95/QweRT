@@ -12,7 +12,7 @@
     <!-- 작품 인기순 -->
     <v-row v-if="first_tab===1&&second_tab===1">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in popularImages" 
         :key="1-idx"
         :image="image"
       />
@@ -20,7 +20,7 @@
     <!-- 작품 최신순 -->
     <v-row v-if="first_tab===1&&second_tab===2">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in newImages" 
         :key="2-idx"
         :image="image"
       />
@@ -28,7 +28,7 @@
     <!-- 아티스트 인기순 -->
     <v-row v-if="first_tab===2&&second_tab===1">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in popularArtists" 
         :key="2-idx"
         :image="image"
       />
@@ -36,7 +36,7 @@
     <!-- 아티스트 최신순 -->
     <v-row v-if="first_tab===2&&second_tab===2">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in newArtists" 
         :key="2-idx"
         :image="image"
       />
@@ -47,6 +47,8 @@
 <script>
 import "@/css/search/SearchKeyword.scss"
 import MainImage from "@/components/postings/MainImage"
+import axios from "axios"
+import { mapState } from 'vuex'
 
 export default {
   name: "SearchKeyword",
@@ -56,15 +58,77 @@ export default {
   data:  function () {
     return {
       first_tab: 1,
-      second_tab: 2,
-      results: [],
-      keyword: this.$route.params.keyword
+      second_tab: 1,
+      keyword: this.$route.params.keyword,
+      
+      popularImages: [],
+      newImages: [],
+      popularArtists: [],
+      newArtists: [],
+      
+      popularImageEnd: false,
+      newImageEnd: false,
+      popularArtistEnd: false,
+      newArtistEnd: false,
+
+      popularImagePage: 0,
+      newImagePage: 0,
+      popularArtistPage: 0,
+      newArtistPage: 0,
+      
+      size: 9
     }
   },
   methods: {
     getResults: function () {
-      // results 이미지 집어넣기
+      this.getPopularImages()
+      this.getNewImages()
     },
+      // axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.popularArtistPage, size: this.size } })
+      //   .then(res => {
+      //     this.popularArtists = res.data
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //   })
+      // axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.newArtistPage, size: this.size } })
+      //   .then(res => {
+      //     this.newArtists = res.data
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //   })
+    getPopularImages: function () {
+      if (!this.popularImageEnd) {
+        axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.popularImagePage, size: this.size } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.popularImageEnd = true
+          }
+          this.popularImages = this.popularImages.concat(arr)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    getNewImages: function () {
+      if (!this.newImageEnd) {
+       axios.get(`${this.host}/search/new/posting/${this.keyword}`, { params: { page: this.newImagePage, size: this.size } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.newImageEnd = true
+          }
+          this.newImages = this.newImages.concat(arr)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    },
+
     clickImage: function (e) {
       this.first_tab=1
       e.target.style.color="skyblue"
@@ -85,10 +149,28 @@ export default {
       e.target.style.color="skyblue"
       e.target.nextSibling.style.color="black"
     },
+
+
+    checkScroll: function () {
+      const {scrollTop, clientHeight, scrollHeight} = document.documentElement
+      if (scrollHeight-scrollTop < clientHeight+150) {
+        if (this.first_tab === 1 && this.second_tab === 1) {
+          this.popularImagePage += 1
+          this.getPopularImages()
+          } else if (this.first_tab === 1 && this.second_tab === 2) {
+          this.newImagePage += 1
+          this.getNewImages()
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapState(['host'])
   },
     // 검색 결과 받아오기
-  created() {
+  mounted() {
     this.getResults()
+    window.addEventListener('scroll', this.checkScroll);
   }, 
 }
 </script>

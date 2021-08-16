@@ -8,14 +8,14 @@
     <!-- 인기순 -->
     <v-row v-if="tab===1">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in popularResults" 
         :key="1-idx"
         :image="image"
       />
     </v-row>
     <v-row v-if="tab===2">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in newResults" 
         :key="2-idx"
         :image="image"
       />
@@ -26,6 +26,8 @@
 <script>
 import "@/css/search/SearchCategory.scss"
 import MainImage from "@/components/postings/MainImage"
+import axios from'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: "SearchCategory",
@@ -35,13 +37,42 @@ export default {
   data:  function () {
     return {
       tab: 1,
-      results: [],
-      item: this.$route.params.category
+      popularResults: [],
+      newResults: [],
+      item: this.$route.params.category,
+      id : 0,
+      popularPage: 0,
+      newPage: 0,
+      size: 9
     }
   },
   methods: {
-    getResults: function () {
-      // results 이미지 집어넣기
+    getPopularResults: function () {
+      axios.get(`${this.host}/category`)
+        .then(res => {
+          for (let item of res.data) {
+            if ( this.item === item.categoryName) {
+              this.id = item.categoryId
+              axios.get(`${this.host}/search/popular/category/${this.id}`, { params: { page: this.popularPage, size: this.size } })
+              .then(res => {
+                this.popularResults = res.data
+                axios.get(`${this.host}/search/new/category/${this.id}`, { params: { page: this.newPage, size: this.size } })
+                  .then(res => {
+                    this.newResults = res.data
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+              })
+              .catch(err => {
+                console.log(err)
+              })
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     clickPopular: function (e) {
       this.tab= 1
@@ -53,11 +84,13 @@ export default {
       e.target.style.color="skyblue"
       e.target.nextSibling.style.color="black"
     },
-    // 검색 결과 받아오기
-    created() {
-      this.getResults()
-    }, 
-  }
+  },
+  computed: {
+    ...mapState(['host'])
+  },
+  mounted() {
+    this.getPopularResults()
+  },
 }
 </script>
 
