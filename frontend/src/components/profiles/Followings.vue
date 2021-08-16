@@ -68,7 +68,7 @@
       </v-col>
       <!-- 팔로우/언팔로우 버튼 -->
       <v-col
-        v-if="isLogon"
+        v-if="isLogon && following.user.userId !== userInfo.userId"
         cols="2"
         class="follow-button"
       >
@@ -133,6 +133,7 @@ export default {
   computed: {
     ...mapState([
       'isLogon',
+      'userInfo',
     ])
   },
   // 처음 로드되는 상황이라면 첫 페이지를 불러오기 위해서
