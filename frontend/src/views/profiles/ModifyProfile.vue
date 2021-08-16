@@ -67,6 +67,9 @@
               되돌리기
             </v-btn>
           </v-col>
+          <v-col class="alert">
+            <span>* 꼭 [저장]까지 클릭해야 완료됩니다.</span>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
