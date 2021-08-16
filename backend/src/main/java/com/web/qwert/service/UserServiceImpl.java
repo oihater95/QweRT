@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> searchUserByNickname(String nickname, int page, int size) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
-		return userDao.findByNicknameContaining(nickname, pageable);
+		return userDao.findByNicknameContainingIgnoreCase(nickname, pageable);
 	}
 
 }
