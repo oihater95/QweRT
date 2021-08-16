@@ -27,18 +27,18 @@
     </v-row>
     <!-- 아티스트 인기순 -->
     <v-row v-if="first_tab===2&&second_tab===1">
-      <MainImage
-        v-for="(image, idx) in popularArtists" 
-        :key="2-idx"
-        :image="image"
+      <ArtistImage
+        v-for="(artist, idx) in popularArtists" 
+        :key="3-idx"
+        :artist="artist"
       />
     </v-row>
     <!-- 아티스트 최신순 -->
     <v-row v-if="first_tab===2&&second_tab===2">
-      <MainImage
-        v-for="(image, idx) in newArtists" 
-        :key="2-idx"
-        :image="image"
+      <ArtistImage
+        v-for="(artist, idx) in newArtists" 
+        :key="4-idx"
+        :artist="artist"
       />
     </v-row>
   </div>
@@ -47,13 +47,15 @@
 <script>
 import "@/css/search/SearchKeyword.scss"
 import MainImage from "@/components/postings/MainImage"
+import ArtistImage from "@/components/search/ArtistImage"
 import axios from "axios"
 import { mapState } from 'vuex'
 
 export default {
   name: "SearchKeyword",
   components: {
-    MainImage
+    MainImage,
+    ArtistImage
   },
   data:  function () {
     return {
@@ -76,31 +78,20 @@ export default {
       popularArtistPage: 0,
       newArtistPage: 0,
       
-      size: 9
+      imageSize: 9,
+      artistSize: 16
     }
   },
   methods: {
     getResults: function () {
       this.getPopularImages()
       this.getNewImages()
+      this.getPopularArtists()
+      this.getNewArtists()
     },
-      // axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.popularArtistPage, size: this.size } })
-      //   .then(res => {
-      //     this.popularArtists = res.data
-      //   })
-      //   .catch(err => {
-      //     console.log(err)
-      //   })
-      // axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.newArtistPage, size: this.size } })
-      //   .then(res => {
-      //     this.newArtists = res.data
-      //   })
-      //   .catch(err => {
-      //     console.log(err)
-      //   })
     getPopularImages: function () {
       if (!this.popularImageEnd) {
-        axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.popularImagePage, size: this.size } })
+        axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.popularImagePage, size: this.imageSize } })
         .then(res => {
           const arr = res.data
           if (arr.length < this.size) {
@@ -115,7 +106,7 @@ export default {
     },
     getNewImages: function () {
       if (!this.newImageEnd) {
-       axios.get(`${this.host}/search/new/posting/${this.keyword}`, { params: { page: this.newImagePage, size: this.size } })
+       axios.get(`${this.host}/search/new/posting/${this.keyword}`, { params: { page: this.newImagePage, size: this.imageSize } })
         .then(res => {
           const arr = res.data
           if (arr.length < this.size) {
@@ -128,7 +119,37 @@ export default {
         })
       }
     },
-
+    getPopularArtists: function () {
+      if (!this.popularArtistEnd) {
+        axios.get(`${this.host}/search/popular/artist/${this.keyword}`, { params: { page: this.popularArtistPage, size: this.artistSize } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.popularArtistEnd = true
+          }
+          this.popularArtists = this.popularArtists.concat(arr)
+          console.log(this.popularArtists)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    getNewArtists: function () {
+      if (!this.newArtistEnd) {
+       axios.get(`${this.host}/search/new/artist/${this.keyword}`, { params: { page: this.newArtistPage, size: this.artistSize } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.newArtistEnd = true
+          }
+          this.newArtists = this.newArtists.concat(arr)
+        })
+        .catch(err => {
+          console.log(err)
+        }) 
+      }
+    },
     clickImage: function (e) {
       this.first_tab=1
       e.target.style.color="skyblue"
