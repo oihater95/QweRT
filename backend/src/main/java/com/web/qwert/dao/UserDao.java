@@ -25,5 +25,5 @@ public interface UserDao extends JpaRepository<User, Integer> {
     
     Optional<User> findUserByNickname(String nickname);
     
-    List<User> findByNicknameContaining(String nickname, Pageable pageable);
+    List<User> findByNicknameContainingIgnoreCase(String nickname, Pageable pageable);
 }
