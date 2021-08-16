@@ -27,7 +27,7 @@ import com.web.qwert.model.curation.CurationRequest;
 import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
-import com.web.qwert.service.CurationServiceImpl;
+import com.web.qwert.service.CurationService;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.PostingService;
 import com.web.qwert.service.UserService;
@@ -49,7 +49,7 @@ public class CurationController {
 	UserService userService;
 
 	@Autowired
-	CurationServiceImpl curationService;
+	CurationService curationService;
 
 	@PostMapping("{userId}")
 	@ApiOperation(value = "큐레이션 생성")
@@ -196,7 +196,11 @@ public class CurationController {
 		if(!curationOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 큐레이션
 		
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("color", curationOpt.get().getColor());
+		Curation curation = curationOpt.get();
+		resultMap.put("color", curation.getColor());
+		resultMap.put("title", curation.getTitle());
+		resultMap.put("content", curation.getContent());
+		resultMap.put("thumbnail", curation.getThumbnailImg());
 		resultMap.put("postings", curationService.getCuratedPostings(curationOpt.get(), 0, 100));
 		return new ResponseEntity<>(resultMap,HttpStatus.OK);
 	}

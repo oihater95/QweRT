@@ -23,7 +23,7 @@
       <div class="curation-image__div" @click="clickCurationDiv">
 
         <span class="curation-title__span"># {{curation.title}}</span>
-        <span v-if="tab===2" class="curation-user__span">by {{curation.user_name}}</span>
+        <span v-if="tab===2" class="curation-user__span">by {{curation.user.nickname}}</span>
         <p>{{curation.content}}</p>
         <img v-if="curation.thumbnail"
           :src="curation.thumbnail"
@@ -39,8 +39,8 @@
             :key="idx"
           >
             <img
-              :src="image"
-              alt="curatioon_images">
+              :src="url+image"
+              alt="curation_images">
           </v-col>
         </v-row>
       </div>
@@ -62,14 +62,19 @@ export default {
     tab: {
       type: Number
     },
-  
   },
+  data:  function () {
+    return {
+      url : "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/"
+    }
+  },
+  
   methods: {
     clickCurationDiv: function () {
-      this.$router.push({ name: 'CurationDetail' })
+      this.$router.push({ name: 'CurationDetail' , params: { id: this.curation.curationId}})
     },
     clickChangeCuration: function () {
-      this.$router.push({ name: 'ChangeCuration', params: { id: this.curation.id} })
+      this.$router.push({ name: 'ChangeCuration', params: { id: this.curation.curationId} })
     },
   },
 }

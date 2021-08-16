@@ -16,4 +16,6 @@ public interface CommentDao extends JpaRepository<Comment, Integer>{
 	List<Comment> findByPostingAndDocentFlag(Posting posting, boolean docentFlag, Pageable pageable);
 	
 	int countByPostingAndDocentFlag(Posting posting, boolean docentFlag);
+	
+	int countByPosting(Posting posting);
 }

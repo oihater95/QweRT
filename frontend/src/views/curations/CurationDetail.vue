@@ -4,15 +4,16 @@
             <ImageMain
             v-for="(image, idx) in curationImages"
             :key="1-idx"
-            :imageUrl="image.image_url"
+            :imageUrl="url+image.postingImg"
             :dataKey="idx"
+            :postingId="image.postingId"
             />
         </div>
         <div class="curate-thumbnails">
             <ImageThumbnail
             v-for="(image, idx) in curationImages"
             :key="2-idx"
-            :imageUrl="image.image_url"
+            :imageUrl="url+image.postingImg"
             :dataKey="idx"
             />
         </div>
@@ -26,7 +27,7 @@
                 v-for="(image, idx) in curationImages"
                 :key="3-idx"
                 :title="image.title"
-                :description="image.description"
+                :description="image.content"
                 :dataKey="idx"
                 />
             </div>
@@ -38,8 +39,8 @@
 import ImageMain from '@/components/curations/ImageMain'
 import ImageThumbnail from '@/components/curations/ImageThumbnail'
 import ImageArticle from '@/components/curations/ImageArticle'
-
-// import '@/css/curations/CurationDetail.scss'
+import { mapState } from 'vuex'
+import axios from "axios"
 
 export default {
     name: "CurationPage",
@@ -51,52 +52,8 @@ export default {
     data:  function () {
         return {
             page: 0,
-            // curationImages: []
-            curationImages: [
-                // 변수 확인하고 바꾸기
-                {
-                    title: "lorem1",
-                    id: 1,
-                    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit1 Lorem ipsum dolor sit, amet consectetur adipisicing elit1" ,
-                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample1.jpg",
-                },
-                {
-                    title: "lorem2",
-                    id: 2,
-                    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit2",
-                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample2.jpg",
-                },
-                {
-                    title: "lorem3",
-                    id: 3,
-                    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit3",
-                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample3.jpg",
-                },
-                {
-                    title: "lorem4",
-                    id: 4,
-                    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit4" ,
-                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample4.jpg",
-                },
-                {
-                    title: "lorem5",
-                    id: 5,
-                    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit5" ,
-                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample5.jpg",
-                },
-                {
-                    title: "lorem6",
-                    id: 6,
-                    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit6" ,
-                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample6.jpg",
-                },
-                {
-                    title: "lorem7",
-                    id: 7,
-                    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit6" ,
-                    image_url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/sample7.jpg",
-                },
-            ]
+            url: "https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/",
+            curationImages: []
         }
     },
     methods: {
@@ -124,12 +81,30 @@ export default {
             Array.from(document.querySelectorAll(`[data-key="${this.page}"]`))
                 .forEach( el => {
                     el.setAttribute('data-active', true);
-                    console.log(el)
             });
         }
 
     },
-    mounted() {
+    computed: {
+      ...mapState([ 'host'])
+    },
+    created() {
+        axios.get(`${this.host}/curations/detail/${this.$route.params.id}`)
+            .then(res => {
+                console.log(res)
+                this.curationImages = res.data.postings
+                if (res.data.color) {
+                    const vMain = document.querySelector(".v-main")
+                    const curateThumbnails = document.querySelector(".curate-thumbnails")
+                    vMain.style.backgroundColor = '#' + res.data.color
+                    curateThumbnails.style.backgroundColor = '#' + res.data.color
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    },
+    updated() {
         // 버튼 혹은 썸네일을 통해서 동작한다.
         const prevButton = document.querySelector('#prev');
         const nextButton = document.querySelector('#next');
@@ -147,13 +122,17 @@ export default {
             this.send('PREV');
         });
 
-        // 아후
+        // 이후
         nextButton.addEventListener('click', () => {
             this.send('NEXT');
         });
         // 첫 이미지 보여주기
         this.send(0);
-    }, 
+    },
+    destroyed () {
+        const vMain = document.querySelector(".v-main")
+        vMain.style.backgroundColor = ''
+    }
 }
 </script>
 

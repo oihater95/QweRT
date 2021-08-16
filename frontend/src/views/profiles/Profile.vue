@@ -70,12 +70,26 @@
             class="pa-0"
           >
             <h5>
-              <span class="follow">
+              <span
+                class="follow"
+                @click="openFollowerList"
+              >
                 팔로워 {{ followerCnt }}
               </span> |
-              <span class="follow">
+              <span
+                class="follow"
+                @click="openFollowingList"
+              >
                 팔로잉 {{ followingCnt }}
               </span> |
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-bind="attrs" v-on="on">
+                    <v-icon small>fas fa-paint-brush</v-icon> {{ postingCnt }}
+                  </span>
+                </template>
+                <span>업로드한 게시물 개수</span>
+              </v-tooltip> |
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                   <span v-bind="attrs" v-on="on">
@@ -94,6 +108,13 @@
               </v-tooltip>
             </h5>
           </v-col>
+          <!-- 팔로워/팔로잉 목록 모달 창 -->
+          <FollowListModal
+            v-if="followListModalOn"
+            class="d-none"
+            :tab="followListTab"
+            @followList-off="resetFollowListModal"
+          />
         </v-row>
       </v-col>
       <!-- 팔로우 버튼 -->
@@ -103,7 +124,7 @@
           color="#AEA660"
           width="100"
           class="white--text"
-          @click="follow"
+          @click="followToggle"
         >
           팔로우
         </v-btn>
@@ -112,7 +133,7 @@
           color="#857B1A"
           width="100"
           outlined
-          @click="follow"
+          @click="followToggle"
         >
           언팔로우
         </v-btn>
@@ -152,7 +173,7 @@
           interval="4000"
         >
           <v-carousel-item
-            v-for="(drawing, i) in drawings"
+            v-for="(masterpiece, i) in masterpieces"
             :key="i"
           >
             <v-row
@@ -161,7 +182,7 @@
               class="profile-masterpiece"
             >
               <v-col>
-                <img :src="drawing.src">
+                <img :src="`https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/${masterpiece.postingImg}`">
               </v-col>
             </v-row>
           </v-carousel-item>
@@ -193,6 +214,7 @@
 </template>
 
 <script>
+import FollowListModal from '@/components/profiles/FollowListModal'
 import ProfileShowMore from '@/components/profiles/ProfileShowMore'
 import '@/css/profiles/Profile.scss'
 import { mapState } from 'vuex'
@@ -201,6 +223,7 @@ import axios from 'axios'
 export default {
   name: 'Profile',
   components: {
+    FollowListModal,
     ProfileShowMore,
   },
   data: function () {
@@ -210,21 +233,63 @@ export default {
       introduction: '',
       followerCnt: null,
       followingCnt: null,
+      postingCnt: null,
       likedCnt: null,
       curatedCnt: null,
+      followListTab: null,
+      followListModalOn: true,
       followState: false,
       masterpieces: [],
       // 예시로 넣어본 그림 url
-      drawings: [
-        {src: 'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',},
-        {src: 'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',},
-        {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
-      ],
+      // drawings: [
+      //   {src: 'https://i.ytimg.com/vi/yGqlkavU-lE/maxresdefault.jpg',},
+      //   {src: 'http://www.pipo.co.kr/shopimages/pipouhwa/mobile/8/131668_represent?1506069524',},
+      //   {src: 'https://artlecture.com/data/uploads/2018/8/20180818/d90ea23dc92b277105aa7c7750323cdd_thumb_770.jpg',},
+      // ],
       hovered: false,
       showMore: false,
     }
   },
   methods: {
+    // 프로필 페이지를 구성하는데 필요한 정보를 불러오는 함수
+    loadProfile: function () {
+      // 유저 정보 불러오기
+      axios({
+        method: 'get',
+        url: `${this.host}/profile/${this.$route.params.userId}/`,
+      })
+        .then(res => {
+          console.log(res)
+          this.nickname = res.data.nickname
+          this.profileImageSrc = res.data.profileImg
+          this.introduction = res.data.introduction
+          this.followerCnt = res.data.followerCnt
+          this.followingCnt = res.data.followingCnt
+          this.postingCnt = res.data.postingCnt
+          this.likedCnt = res.data.likedCnt
+          this.curatedCnt = res.data.curatedCnt
+          this.masterpieces = res.data.masterpieces
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      // 로그인 상태라면 로그인한 유저가 현재 프로필의 유저를 팔로우하고 있는지 알아보기
+      if (this.isLogon && this.userInfo.userId !== this.$route.params.userId) {
+        axios({
+          method: 'get',
+          url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {
+            console.log(res)
+            this.followState = true
+          })
+          .catch(err => {
+            console.log(err)
+            this.followState = false
+          })
+      }
+    },
     // 캐러셀에 마우스를 올려놓은 상태임을 알리는 함수
     hoverOn: function () {
       this.hovered = true
@@ -233,37 +298,66 @@ export default {
     hoverOff: function () {
       this.hovered = false
     },
-    // 임시로 작성한 팔로우 함수 (현재는 버튼이 바뀌는 것만 구현한 상태)
-    follow: function () {
-      this.followState = !this.followState
+    // 팔로워 목록 모달 창을 여는 함수
+    openFollowerList: function () {
+      this.followListTab = 1
+      const btn = document.querySelector('#followListModalBtn')
+      btn.click()
+    },
+    // 팔로잉 목록 모달 창을 여는 함수
+    openFollowingList: function () {
+      this.followListTab = 2
+      const btn = document.querySelector('#followListModalBtn')
+      btn.click()
+    },
+    // 팔로워/팔로잉 목록 모달 창을 초기화하는 함수
+    resetFollowListModal: function () {
+      return new Promise((resolve) => {
+        resolve()
+        this.followListModalOn = false
+      })
+        .then(() => {
+          this.followListModalOn = true
+        })
+    },
+    // 팔로우 토글 함수
+    followToggle: function () {
+      axios({
+        method: 'put',
+        url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
+        headers: { token: localStorage.getItem('jwtToken') }
+      })
+        .then(res => {
+          console.log(res)
+          if (this.followState) {
+            this.followState = false
+            this.followerCnt -= 1
+          } else {
+            this.followState = true
+            this.followerCnt += 1
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
   },
   computed: {
     ...mapState([
       'host',
+      'isLogon',
       'userInfo',
     ])
   },
-  // 페이지가 로드될 때 유저 정보 불러오기
+  watch: {
+    // 라우터 파라미터가 변하면 (다른 유저의 프로필로 이동하면) 다시 프로필 정보 받아오기
+    $route: function () {
+      this.loadProfile()
+    }
+  },
+  // 프로필 페이지가 처음 로드될 때 프로필 정보 받아오기
   created: function () {
-    axios({
-      method: 'get',
-      url: `${this.host}/profile/${this.$route.params.userId}/`,
-    })
-      .then(res => {
-        console.log(res)
-        this.nickname = res.data.nickname
-        this.profileImageSrc = res.data.profileImg
-        this.introduction = res.data.introduction
-        this.followerCnt = res.data.followerCnt
-        this.followingCnt = res.data.followingCnt
-        this.likedCnt = res.data.likedCnt
-        this.curatedCnt = res.data.curatedCnt
-        this.masterpieces = res.data.masterpieces
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    this.loadProfile()
   },
 }
 </script>

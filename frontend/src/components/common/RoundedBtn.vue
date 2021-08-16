@@ -1,6 +1,6 @@
 <template>
   <v-col cols=3>
-    <button class="rounded-btn">{{item}}</button>
+    <button class="rounded-btn" @click="clickBtn">{{item}}</button>
   </v-col>
 </template>
 
@@ -12,7 +12,12 @@ export default {
   props: {
     item: {
       type: String
-    }
+    },
+  },
+  methods:  {
+    clickBtn: function () {
+      this.$emit("clickCategory", this.item)
+    },
   },
 }
 </script>

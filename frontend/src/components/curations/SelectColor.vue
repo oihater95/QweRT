@@ -46,7 +46,6 @@ export default {
       setColor: function(color){
         // 화면 표시용
         this.colorName = ntc.name(color)[1]
-        // ??
         document.documentElement.style.setProperty('--color', color)
         this.$emit('changeColor', this.color)
       },

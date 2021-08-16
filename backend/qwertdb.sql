@@ -1,4 +1,3 @@
-
 -- 기존 DB 삭제 
 drop database if exists qwertdb;
 create database qwertdb;
@@ -17,6 +16,7 @@ CREATE TABLE `user` (
   `introduction` varchar(1000),
   `profile_img` varchar(256),
   `create_date` datetime DEFAULT current_timestamp(),
+  `popularity` int,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_idx_unique_email` (`email`)
 );
@@ -152,5 +152,42 @@ ALTER TABLE curation_has_posting
 
 ALTER TABLE curation_has_posting
     ADD CONSTRAINT FK_curation_has_posting_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
+
+
+-- 8. 팔로우 테이블 생성
+DROP TABLE IF EXISTS follow;
+
+CREATE TABLE follow
+(
+    `follow_id`     INT    NOT NULL    AUTO_INCREMENT, 
+    `from_user_id`  INT    NOT NULL, 
+    `to_user_id`    INT    NOT NULL, 
+    CONSTRAINT PK_follow PRIMARY KEY (follow_id)
+);
+
+ALTER TABLE follow
+    ADD CONSTRAINT FK_follow_from_user FOREIGN KEY (from_user_id) REFERENCES user (user_id);
+
+ALTER TABLE follow
+    ADD CONSTRAINT FK_follow_to_user FOREIGN KEY (to_user_id) REFERENCES user (user_id);
+
+
+-- 9. 피드 테이블 생성
+DROP TABLE IF EXISTS feed;
+
+CREATE TABLE feed
+(
+    `feed_id`      INT         NOT NULL    AUTO_INCREMENT, 
+    `create_date`  DATETIME    DEFAULT current_timestamp(), 
+    `user_id`      INT         NOT NULL, 
+    `posting_id`    INT         NOT NULL, 
+    CONSTRAINT PK_feed PRIMARY KEY (feed_id)
+);
+
+ALTER TABLE feed
+    ADD CONSTRAINT FK_feed_user FOREIGN KEY (user_id) REFERENCES user (user_id);
+
+ALTER TABLE feed
+    ADD CONSTRAINT FK_feed_posting FOREIGN KEY (posting_id) REFERENCES posting (posting_id);
 
 use qwertdb;

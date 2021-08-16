@@ -27,64 +27,64 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/like")
 public class LikeController {
-	
+
 	@Autowired
 	JwtService jwtService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	PostingService postingService;
-	
+
 	@Autowired
 	LikeService likeService;
-	
-	
+
 	@GetMapping("{postingId}/{userId}")
 	@ApiOperation("좋아요 여부 확인")
-	public Object likeCheck (@PathVariable int postingId, @PathVariable int userId, @RequestHeader String token) {
+	public Object likeCheck(@PathVariable int postingId, @PathVariable int userId, @RequestHeader String token) {
 		Optional<User> userOpt = userService.getUser(userId);
 		Optional<Posting> postingOpt = postingService.getPosting(postingId);
+
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
+		if (!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시글
 		
-		   if(!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
-		   if(!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시글
-		   try {
-			   if(userId == jwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면 
-				   
-				   Optional<Like> likeOpt = likeService.getLike(userOpt.get(), postingOpt.get());
-				   if(!likeOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 좋아요 안함
-				   return new ResponseEntity<>(HttpStatus.OK); // 좋아요 함
-				   
-			   } else { // 인증 실패
-				   return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-			   }
-		   } catch (Exception e) { // 유효하지 않은 토큰
-			   e.printStackTrace();
-			   return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		   }
+		try {
+			if (userId == jwtService.getUserId(token)) { // 요청한 유저와 토큰 발급한 유저가 같다면
+				Optional<Like> likeOpt = likeService.getLike(userOpt.get(), postingOpt.get());
+				
+				if (!likeOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 좋아요 안함
+				return new ResponseEntity<>(HttpStatus.OK); // 좋아요 함
+
+			} else { // 인증 실패
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+		} catch (Exception e) { // 유효하지 않은 토큰
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 	}
-	
+
 	@PutMapping("{postingId}/{userId}")
 	@ApiOperation("좋아요 토글")
-	public Object likeToggle (@PathVariable int postingId, @PathVariable int userId, @RequestHeader String token) {
+	public Object likeToggle(@PathVariable int postingId, @PathVariable int userId, @RequestHeader String token) {		
 		Optional<User> userOpt = userService.getUser(userId);
 		Optional<Posting> postingOpt = postingService.getPosting(postingId);
 		
-		   if(!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
-		   if(!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시글
-		   try {
-			   if(userId == jwtService.getUserId(token)) { //요청한 유저와 토큰 발급한 유저가 같다면 
-				   
-				   likeService.updateLike(userOpt.get(), postingOpt.get());
-				   return new ResponseEntity<>(HttpStatus.OK);
-				   
-			   } else { // 인증 실패
-				   return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-			   }
-		   } catch (Exception e) { // 유효하지 않은 토큰
-			   e.printStackTrace();
-			   return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		   }
+		if (!userOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 비회원
+		if (!postingOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 게시글
+		
+		try {
+			if (userId == jwtService.getUserId(token)) { // 요청한 유저와 토큰 발급한 유저가 같다면
+				likeService.updateLike(userOpt.get(), postingOpt.get());
+				return new ResponseEntity<>(HttpStatus.OK);
+
+			} else { // 인증 실패
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+		} catch (Exception e) { // 유효하지 않은 토큰
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 	}
 }

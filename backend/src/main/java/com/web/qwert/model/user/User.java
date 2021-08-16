@@ -11,11 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.qwert.model.Feed.Feed;
 import com.web.qwert.model.comment.Comment;
 import com.web.qwert.model.curation.Curation;
+import com.web.qwert.model.follow.Follow;
 import com.web.qwert.model.like.Like;
 import com.web.qwert.model.posting.Posting;
 
@@ -78,5 +81,21 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Curation> curations;
+    
+    @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Follow> followings;
+    
+    @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Follow> follower; 
+    
+    private int popularity;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Feed> feeds;
+
+
     
 }

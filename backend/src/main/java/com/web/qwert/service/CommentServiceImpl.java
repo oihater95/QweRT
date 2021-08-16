@@ -99,4 +99,9 @@ public class CommentServiceImpl implements CommentService {
 		}
 		return results;
 	}
+
+	@Override
+	public int getTotalCnt(Posting posting) {
+		return commentDao.countByPosting(posting);
+	}
 }

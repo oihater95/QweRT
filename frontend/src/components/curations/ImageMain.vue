@@ -1,6 +1,6 @@
 <template>
     <div class="curate-big-image" :data-key="dataKey">
-        <img :src="imageUrl" alt="picture">
+        <img :src="imageUrl" alt="picture" @click="clickImage">
     </div>
 </template>
 
@@ -14,8 +14,16 @@ export default {
       },
       dataKey: {
           type: Number
+      },
+      postingId: {
+          type: Number
       }
     },
+    methods: {
+      clickImage: function () {
+        this.$router.push({name: 'PostingDetail', params: { postingId: this.postingId}})
+      } 
+    }
 }
 </script>
 
@@ -33,6 +41,7 @@ export default {
   width: 100%;
   height: 100%;
   display: block;
+  cursor: pointer;
 }
 
 .curate-big-image {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="search-keyword__result">검색어 (호랑이) 검색 결과</div>
+    <div class="search-keyword__result">{{keyword}} 검색 결과</div>
     <div class="d-flex justify-center search-keyword__select">
       <span @click="clickImage">작품</span>
       <span @click="clickArtist">아티스트</span>
@@ -12,7 +12,7 @@
     <!-- 작품 인기순 -->
     <v-row v-if="first_tab===1&&second_tab===1">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in popularImages" 
         :key="1-idx"
         :image="image"
       />
@@ -20,25 +20,25 @@
     <!-- 작품 최신순 -->
     <v-row v-if="first_tab===1&&second_tab===2">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in newImages" 
         :key="2-idx"
         :image="image"
       />
     </v-row>
     <!-- 아티스트 인기순 -->
     <v-row v-if="first_tab===2&&second_tab===1">
-      <MainImage
-        v-for="(image, idx) in results" 
-        :key="2-idx"
-        :image="image"
+      <ArtistImage
+        v-for="(artist, idx) in popularArtists" 
+        :key="3-idx"
+        :artist="artist"
       />
     </v-row>
     <!-- 아티스트 최신순 -->
     <v-row v-if="first_tab===2&&second_tab===2">
-      <MainImage
-        v-for="(image, idx) in results" 
-        :key="2-idx"
-        :image="image"
+      <ArtistImage
+        v-for="(artist, idx) in newArtists" 
+        :key="4-idx"
+        :artist="artist"
       />
     </v-row>
   </div>
@@ -47,72 +47,108 @@
 <script>
 import "@/css/search/SearchKeyword.scss"
 import MainImage from "@/components/postings/MainImage"
+import ArtistImage from "@/components/search/ArtistImage"
+import axios from "axios"
+import { mapState } from 'vuex'
 
 export default {
   name: "SearchKeyword",
   components: {
-    MainImage
+    MainImage,
+    ArtistImage
   },
   data:  function () {
     return {
       first_tab: 1,
-      second_tab: 2,
-      // results: []
-      results: [
-        {
-        posting_image: "http://weekly.chosun.com/up_fd/wc_news/2116/bimg_org/2116_74_01.jpg",
-        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
-        nickname: "호랑이1", 
-        title: "고흐의 해바라기",
-        comment_cnt: "11",
-        like_state: "true",
-        liked_cnt: "1",
-        curated_cnt: "1",
-        create_date: "1111처음",
-        update_date: "11111수정",
-        },
-        {
-        posting_image: "https://i.pinimg.com/474x/d6/8a/c4/d68ac49173eff89c2c6f4ecb81389ba4.jpg",
-        profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035724_001_20210727102309284.jpg?type=w647",
-        nickname: "닉네임2",
-        title: "고흐의 자화상",
-        comment_cnt: "2",
-        like_state: "1",
-        liked_cnt: "2",
-        curated_cnt: "22",
-        create_date: "2222처음",
-        update_date: "2222수정",
-        },
-        {
-        posting_image: "https://www.sciencetimes.co.kr/wp-content/uploads/2017/12/%EA%B3%A0%ED%9D%902.jpg",
-        profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035728_001_20210727122509659.jpg?type=w647",
-        nickname: "닉네임3",
-        title: "작품1",
-        comment_cnt: "3",
-        like_state: "",
-        liked_cnt: "3",
-        curated_cnt: "3",
-        create_date: "33333처음",
-        update_date: "33333수정",
-        },
-        {
-        posting_image: "https://images.chosun.com/resizer/sSQl4eaMeNGMJUZzTvTiGpYX7T4=/464x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/XKDKYF6W3XNBOFWOXQRPUI4UQQ.jpg",
-        profile_image: "https://im-media.voltron.voanews.com/Drupal/01live-211/styles/892x501/s3/2019-08/C479B173-9839-43CA-B441-0735785B95C3.png?itok=rshkbR3A",
-        nickname: "호랑이4",
-        title: "고흐1",
-        comment_cnt: "4",
-        like_state: "4",
-        liked_cnt: "1",
-        curated_cnt: "4",
-        create_date: "4444처음",
-        update_date: "",
-        },
-      ]
+      second_tab: 1,
+      keyword: this.$route.params.keyword,
+      
+      popularImages: [],
+      newImages: [],
+      popularArtists: [],
+      newArtists: [],
+      
+      popularImageEnd: false,
+      newImageEnd: false,
+      popularArtistEnd: false,
+      newArtistEnd: false,
+
+      popularImagePage: 0,
+      newImagePage: 0,
+      popularArtistPage: 0,
+      newArtistPage: 0,
+      
+      imageSize: 9,
+      artistSize: 16
     }
   },
   methods: {
     getResults: function () {
-      // results 이미지 집어넣기
+      this.getPopularImages()
+      this.getNewImages()
+      this.getPopularArtists()
+      this.getNewArtists()
+    },
+    getPopularImages: function () {
+      if (!this.popularImageEnd) {
+        axios.get(`${this.host}/search/popular/posting/${this.keyword}`, { params: { page: this.popularImagePage, size: this.imageSize } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.popularImageEnd = true
+          }
+          this.popularImages = this.popularImages.concat(arr)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    getNewImages: function () {
+      if (!this.newImageEnd) {
+       axios.get(`${this.host}/search/new/posting/${this.keyword}`, { params: { page: this.newImagePage, size: this.imageSize } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.newImageEnd = true
+          }
+          this.newImages = this.newImages.concat(arr)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    getPopularArtists: function () {
+      if (!this.popularArtistEnd) {
+        axios.get(`${this.host}/search/popular/artist/${this.keyword}`, { params: { page: this.popularArtistPage, size: this.artistSize } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.popularArtistEnd = true
+          }
+          this.popularArtists = this.popularArtists.concat(arr)
+          console.log(this.popularArtists)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    getNewArtists: function () {
+      if (!this.newArtistEnd) {
+       axios.get(`${this.host}/search/new/artist/${this.keyword}`, { params: { page: this.newArtistPage, size: this.artistSize } })
+        .then(res => {
+          const arr = res.data
+          if (arr.length < this.size) {
+            this.newArtistEnd = true
+          }
+          this.newArtists = this.newArtists.concat(arr)
+        })
+        .catch(err => {
+          console.log(err)
+        }) 
+      }
     },
     clickImage: function (e) {
       this.first_tab=1
@@ -134,10 +170,28 @@ export default {
       e.target.style.color="skyblue"
       e.target.nextSibling.style.color="black"
     },
+
+
+    checkScroll: function () {
+      const {scrollTop, clientHeight, scrollHeight} = document.documentElement
+      if (scrollHeight-scrollTop < clientHeight+150) {
+        if (this.first_tab === 1 && this.second_tab === 1) {
+          this.popularImagePage += 1
+          this.getPopularImages()
+          } else if (this.first_tab === 1 && this.second_tab === 2) {
+          this.newImagePage += 1
+          this.getNewImages()
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapState(['host'])
   },
     // 검색 결과 받아오기
-  created() {
+  mounted() {
     this.getResults()
+    window.addEventListener('scroll', this.checkScroll);
   }, 
 }
 </script>

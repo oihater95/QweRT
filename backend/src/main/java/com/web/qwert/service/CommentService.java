@@ -22,5 +22,7 @@ public interface CommentService {
 	List<CommentDto> getComments(Posting posting, int page, int size);
 
 	List<CommentDto> getDocentComments(Posting posting, int page, int size);
+	
+	int getTotalCnt (Posting posting);
 
 }

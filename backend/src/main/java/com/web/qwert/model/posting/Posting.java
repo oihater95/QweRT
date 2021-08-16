@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.web.qwert.model.Feed.Feed;
 import com.web.qwert.model.category.Category;
 import com.web.qwert.model.comment.Comment;
 import com.web.qwert.model.curation.CurationHasPosting;
@@ -75,4 +76,8 @@ public class Posting {
     @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<CurationHasPosting> curationHasPostings;
+    
+    @OneToMany(mappedBy = "posting", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Feed> Feeds;
 }

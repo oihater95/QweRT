@@ -14,10 +14,15 @@
   font-weight: bolder;
   font-size: large;
   text-decoration: none;
+  color: black;
+  cursor: pointer;
   &:link {
     color: black;
   }
   &:visited {
+    color: black;
+  }
+  &:active {
     color: black;
   }
   &:hover {
@@ -69,8 +74,20 @@
 
 #comment-create__content {
   max-width: 800px;
+  padding-right: 10px;
 }
 
 #comment-create__btn {
   padding: 0;
+}
+
+.content-line{
+  justify-content: space-between;
+}
+
+.editing-frame{
+  width: 600px;
+  height: 30px;
+  border: solid 2px lightgray;
+  border-radius: 5px;
 }

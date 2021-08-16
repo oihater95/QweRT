@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col><DragDrop :imgSrc="imgSrc" :imageFile="imageFile" :deleteFlag="deleteFlag"/></v-col>
+      <v-col><DragDrop :imgSrc="imgSrc" :imageFile="imageFile"/></v-col>
       <v-col>
         <div class="container">
           <v-card class="my-5 posting-title">
@@ -96,7 +96,7 @@ export default {
     DragDrop,
     RoundedBtn,
   },
-  data() {
+  data: function() {
     return {
       rules: {
         required: value => !!value || 'Required.',
@@ -120,7 +120,6 @@ export default {
       },
       page: 0,
       size: 1,
-      deleteFlag: false,
     }
   },
   props: {
@@ -265,15 +264,8 @@ export default {
       this.$store.dispatch('clearImageInfo')
       this.imageFile = ''
       this.imgSrc = ''
-      this.deleteFlag = true
-      this.checkState()
     },
 
-    checkState() {
-      if(this.imageInfo.image === '') {
-        this.deleteFlag = false
-      }
-    },
 
     // 그리기에서 넘어왔을 때 뒤로가기
     backToDrawing() {

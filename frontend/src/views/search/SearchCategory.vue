@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="search-category__result">카테고리 (인물) 검색 결과</div>
+    <div class="search-category__result">카테고리 {{item}} 검색 결과</div>
     <div class="d-flex flex-row-reverse search-category__tab">
       <span @click="clickNew">최신순</span>
       <span @click="clickPopular">인기순</span>
@@ -8,14 +8,14 @@
     <!-- 인기순 -->
     <v-row v-if="tab===1">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in popularResults" 
         :key="1-idx"
         :image="image"
       />
     </v-row>
     <v-row v-if="tab===2">
       <MainImage
-        v-for="(image, idx) in results" 
+        v-for="(image, idx) in newResults" 
         :key="2-idx"
         :image="image"
       />
@@ -26,6 +26,8 @@
 <script>
 import "@/css/search/SearchCategory.scss"
 import MainImage from "@/components/postings/MainImage"
+import axios from'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: "SearchCategory",
@@ -35,62 +37,42 @@ export default {
   data:  function () {
     return {
       tab: 1,
-      // results: []
-      results: [
-        {
-        posting_image: "http://weekly.chosun.com/up_fd/wc_news/2116/bimg_org/2116_74_01.jpg",
-        profile_image: "http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg",
-        nickname: "호랑이1", 
-        title: "고흐의 해바라기",
-        comment_cnt: "11",
-        like_state: "true",
-        liked_cnt: "1",
-        curated_cnt: "1",
-        create_date: "1111처음",
-        update_date: "11111수정",
-        },
-        {
-        posting_image: "https://i.pinimg.com/474x/d6/8a/c4/d68ac49173eff89c2c6f4ecb81389ba4.jpg",
-        profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035724_001_20210727102309284.jpg?type=w647",
-        nickname: "닉네임2",
-        title: "고흐의 자화상",
-        comment_cnt: "2",
-        like_state: "1",
-        liked_cnt: "2",
-        curated_cnt: "22",
-        create_date: "2222처음",
-        update_date: "2222수정",
-        },
-        {
-        posting_image: "https://www.sciencetimes.co.kr/wp-content/uploads/2017/12/%EA%B3%A0%ED%9D%902.jpg",
-        profile_image: "https://imgnews.pstatic.net/image/293/2021/07/27/0000035728_001_20210727122509659.jpg?type=w647",
-        nickname: "닉네임3",
-        title: "작품1",
-        comment_cnt: "3",
-        like_state: "",
-        liked_cnt: "3",
-        curated_cnt: "3",
-        create_date: "33333처음",
-        update_date: "33333수정",
-        },
-        {
-        posting_image: "https://images.chosun.com/resizer/sSQl4eaMeNGMJUZzTvTiGpYX7T4=/464x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/XKDKYF6W3XNBOFWOXQRPUI4UQQ.jpg",
-        profile_image: "https://im-media.voltron.voanews.com/Drupal/01live-211/styles/892x501/s3/2019-08/C479B173-9839-43CA-B441-0735785B95C3.png?itok=rshkbR3A",
-        nickname: "호랑이4",
-        title: "고흐1",
-        comment_cnt: "4",
-        like_state: "4",
-        liked_cnt: "1",
-        curated_cnt: "4",
-        create_date: "4444처음",
-        update_date: "",
-        },
-      ]
+      popularResults: [],
+      newResults: [],
+      item: this.$route.params.category,
+      id : 0,
+      popularPage: 0,
+      newPage: 0,
+      size: 9
     }
   },
   methods: {
-    getResults: function () {
-      // results 이미지 집어넣기
+    getPopularResults: function () {
+      axios.get(`${this.host}/category`)
+        .then(res => {
+          for (let item of res.data) {
+            if ( this.item === item.categoryName) {
+              this.id = item.categoryId
+              axios.get(`${this.host}/search/popular/category/${this.id}`, { params: { page: this.popularPage, size: this.size } })
+              .then(res => {
+                this.popularResults = res.data
+                axios.get(`${this.host}/search/new/category/${this.id}`, { params: { page: this.newPage, size: this.size } })
+                  .then(res => {
+                    this.newResults = res.data
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+              })
+              .catch(err => {
+                console.log(err)
+              })
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     clickPopular: function (e) {
       this.tab= 1
@@ -102,11 +84,13 @@ export default {
       e.target.style.color="skyblue"
       e.target.nextSibling.style.color="black"
     },
-    // 검색 결과 받아오기
-    created() {
-      this.getResults()
-    }, 
-  }
+  },
+  computed: {
+    ...mapState(['host'])
+  },
+  mounted() {
+    this.getPopularResults()
+  },
 }
 </script>
 
