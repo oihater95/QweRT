@@ -17,6 +17,7 @@ CREATE TABLE `user` (
   `introduction` varchar(1000),
   `profile_img` varchar(256),
   `create_date` datetime DEFAULT current_timestamp(),
+  `popularity` int,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_idx_unique_email` (`email`)
 );
