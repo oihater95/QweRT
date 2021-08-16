@@ -343,6 +343,19 @@ export default {
       'host',
     ])
   },
+  watch: {
+    // '비밀번호'와 '비밀번호 확인'이 일치하여 경고가 없는 상태에서 '비밀번호'를 바꾸면 일치하지 않는다는 경고가 뜨지 않는 문제 해결
+    // '비밀번호'를 바꿨을 때 '비밀번호 확인'에서도 즉각 반응하여 경고를 나타낼 수 있도록 하는 일종의 꼼수
+    'credentials.password': function () {
+      return new Promise((resolve) => {
+        resolve()
+        this.credentials.passwordConfirmation = (this.credentials.passwordConfirmation + ' ')
+      })
+        .then(() => {
+          this.credentials.passwordConfirmation = this.credentials.passwordConfirmation.slice(0, this.credentials.passwordConfirmation.length-1)
+        })
+    },
+  },
 }
 </script>
 
