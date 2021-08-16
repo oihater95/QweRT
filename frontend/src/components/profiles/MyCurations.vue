@@ -13,6 +13,7 @@
         no-gutters
         class="box"
         :style="`border: 2px solid #${content.color};`"
+        @click="$router.push({ name: 'CurationDetail', params: {id: content.curationId} })"
       >
         <!-- 제목 및 설명 -->
         <v-col class="text">
