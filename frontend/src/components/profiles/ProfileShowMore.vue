@@ -15,21 +15,21 @@
           :class="['tabs', {'tab-onView' : tabOnView === 1}]"
           @click="tabOnView=1"
         >
-          <h3>게시물</h3>
+          <h3>My Drawings</h3>
         </v-col>
         <v-col
           :cols="tabOnView === 2 ? 4 : 3"
           :class="['tabs', {'tab-onView' : tabOnView === 2}]"
           @click="tabOnView=2"
         >
-          <h3>좋아하는 게시물</h3>
+          <h3>My Favorite Drawings</h3>
         </v-col>
         <v-col
           :cols="tabOnView === 3 ? 4 : 3"
           :class="['tabs', {'tab-onView' : tabOnView === 3}]"
           @click="tabOnView=3"
         >
-          <h3>큐레이션</h3>
+          <h3>My Curations</h3>
         </v-col>
       </v-row>
       <!-- 내 게시물 -->
@@ -51,7 +51,7 @@
         v-if="tabOnView === 3"
         class="content"
         :tab="tab3"
-        @scroll.native="loadContent"
+        @next-page-tab3="loadNextPage(tab3)"
       />
     </v-col>
   </v-row>
@@ -86,36 +86,13 @@ export default {
         contents: [],
       },
       tab3: {     // 내 큐레이션
-        size: 9,
-        page: 200,
-        contents: [199, 200],
+        size: 6,
+        page: 0,
+        contents: [],
       },
-      scrollDelay: false,
     }
   },
   methods: {
-    // 인피니티스크롤 시험용으로 만든 함수. 이후에 삭제 예정
-    loadContent: function () {
-      const content = document.querySelector('.profile-showMore div.content')
-      console.log('window:', window.scrollY, window.innerHeight, document.body.offsetHeight)
-      console.log('content:', content.scrollTop, content.offsetHeight, content.scrollHeight)
-      if ((content.scrollTop + content.offsetHeight) >= content.scrollHeight && !this.scrollDelay) {
-        this.scrollDelay = true
-        if (this.tabOnView === 1) {
-          this.tab1.page += 1
-          this.tab1.contents.push(this.tab1.page)
-        } else if (this.tabOnView === 2) {
-          this.tab2.page += 1
-          this.tab2.contents.push(this.tab2.page)
-        } else {
-          this.tab3.page += 1
-          this.tab3.contents.push(this.tab3.page)
-        }
-        setTimeout(() => {
-          this.scrollDelay = false
-        }, 500)
-      }
-    },
     // 다음 페이지를 불러오는 함수 (한 페이지마다 size만큼씩)
     loadNextPage: function (tab) {
       let path
@@ -123,6 +100,8 @@ export default {
         path = `postings/${this.$route.params.userId}`
       } else if (tab === this.tab2) {
         path = `postings/${this.$route.params.userId}/like`
+      } else {
+        path = `curations/${this.$route.params.userId}`
       }
       axios({
         method: 'get',
