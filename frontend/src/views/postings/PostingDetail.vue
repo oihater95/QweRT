@@ -53,10 +53,14 @@
     <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
     <v-card-subtitle @click="userProfile" class="subtitle-2 posting-nickname">
       <img 
+      v-if="userPostingProfileImg()"
       :src="userPostingProfileImg()" 
-      alt="user-profile__img" 
       class="profile-img" @click="userProfile">
-      <p class="d-inline user-profile__nickname">{{ postingUserNickname }}</p>
+      <img 
+      v-else
+      src="@/assets/images/profile_image_default.png" 
+      class="profile-img" @click="userProfile">
+      <p class="d-inline user-profile__nickname" @click="userProfile">{{ postingUserNickname }}</p>
     </v-card-subtitle>
   </v-card>
   <div id="posting-btns">
@@ -378,6 +382,7 @@ export default {
     },
 
     getPostingProfileImg() {
+      this.getDetails()
       axios ({
           method: 'get',
           url: `${this.host}/profile/${this.postingUserId}/`,
@@ -393,7 +398,7 @@ export default {
     userPostingProfileImg(){
       this.getPostingProfileImg()
       if(this.profileImg === '') {
-        return "@/assets/images/profile_image_default.png"
+        return false
       } else {
         return this.profileImg
       }
@@ -429,6 +434,7 @@ export default {
   created() {
     this.getDetails()
     this.getLikeState()
+    this.getPostingProfileImg()
   },
   
 }
