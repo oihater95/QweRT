@@ -45,22 +45,25 @@
       </span>
       <v-sheet
       class="rounded-lg transition-swing category-box"
-      color="#DCD8D7"
+      color="#EDD8C3"
       height="30"
       width="50"
       >{{ selectedCategory }}</v-sheet>
     </v-card-title>
     <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
-    <v-card-subtitle class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
+    <v-card-subtitle @click="userProfile" class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
   </v-card>
   <div id="posting-btns">
     <div id="posting-icon__forUser">
         <v-btn
-          class="mx-2 icon-button"
+          class="mx-2 icon-button like-btn"
           fab
           small
           icon>
-          <v-icon id="posting-like__btn">
+          <v-icon id="posting-like__btn" v-if="checkLikeState" @click="clickLike">
+            mdi-heart
+          </v-icon>
+          <v-icon id="posting-unlike__btn" v-else @click="clickLike">
             mdi-heart-outline
           </v-icon>
         </v-btn>
@@ -113,6 +116,7 @@
     class="d-none"
     :msg="modalMsg"
     @checkDeletePosting-ok-sign="deletePosting"
+    @checkLogin-ok-sign="goToLogin"
   />
 </div>
 
@@ -162,6 +166,7 @@ export default {
       category: ['동물', '사물', '풍경', '인물', '건물', '식물', '캐릭터', '기타'],
       selectedCategory: '',
       editPostingFlag: false,
+      likeState: false,
     }
   },
 
@@ -192,27 +197,31 @@ export default {
         })
     },
     addCuration: function() {
-      axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.page, size: this.size } })
-        .then(res => {
-          const curations = res.data
-          this.modalMsg.text = curations
-          if (this.modalMsg.text.length === 0) {
-            this.modalMsg.title = '만든 큐레이션이 없습니다. 큐레이션을 만들어주세요.'
-          } else {
-            this.modalMsg.title = '그림을 넣을 큐레이션을 선택하세요'
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
-      this.modalMsg.name='addCuration'
-      this.modalMsg.triggerBtn = ''
-      this.modalMsg.positiveBtn = '돌아가기'
-      this.modalMsg.negativeBtn = '추가하기'
-
-      const modalBtn = document.querySelector('#modalBtn')
-      modalBtn.click()
+      if(this.isLogon === true) {
+        axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.page, size: this.size } })
+          .then(res => {
+            const curations = res.data
+            this.modalMsg.text = curations
+            if (this.modalMsg.text.length === 0) {
+              this.modalMsg.title = '만든 큐레이션이 없습니다. 큐레이션을 만들어주세요.'
+            } else {
+              this.modalMsg.title = '그림을 넣을 큐레이션을 선택하세요'
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+  
+        this.modalMsg.name='addCuration'
+        this.modalMsg.triggerBtn = ''
+        this.modalMsg.positiveBtn = '돌아가기'
+        this.modalMsg.negativeBtn = '추가하기'
+  
+        const modalBtn = document.querySelector('#modalBtn')
+        modalBtn.click()
+      } else {
+        this.checkLogin()
+      }
     },
     noSign: function (array) {
       for (const id of array) {
@@ -223,11 +232,12 @@ export default {
         })
           .then(res => {
             console.log(res)
+            this.getDetails()
           })
           .catch(err => {
             console.log(err)
           })
-      }
+      } 
     },
 
     editPosting: function() {
@@ -295,6 +305,72 @@ export default {
       }
     },
 
+    userProfile() {
+      this.$router.push({ name: 'Profile', params: {userId: this.postingUserId} })
+    },
+
+    // 로그인한 사용자가 좋아요 눌렀을 경우 200, 아닐 경우 404코드
+    getLikeState: function(){
+      if(this.isLogon === true) {
+        axios ({
+          method: 'get',
+          url: `${this.host}/like/${this.$route.params.postingId}/${this.userInfo.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {  
+            console.log(res)
+            this.likeState = true
+          })
+          .catch(err => {
+            if (err.response.status === 404) {
+              this.likeState = false
+            } else {
+              console.log(err)
+            }
+          })
+      } else {
+        this.likeState = false
+      }
+    },
+
+    checkLogin: function() {
+      this.modalMsg = {
+        name: 'checkLogin',
+        triggerBtn: '',
+        title: '로그인 필요',
+        text: '해당 기능은 로그인이 필요한 기능입니다.<br/>로그인 하시겠습니까?',
+        positiveBtn: '로그인 하러 가기',
+        negativeBtn: '취소',
+      }
+      const modalBtn = document.querySelector('#modalBtn')
+      modalBtn.click()
+    },
+
+    goToLogin: function() {
+      this.$router.push({ name: 'Login' })
+    },
+
+    clickLike: function() { 
+      if (this.isLogon === true) {
+        axios ({
+          method: 'put',
+          url: `${this.host}/like/${this.$route.params.postingId}/${this.userInfo.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {  
+            console.log(res)
+            this.getLikeState()
+            this.getDetails()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        this.checkLogin()
+      }
+    },
+
+
   },
 
   computed: {
@@ -302,6 +378,13 @@ export default {
     checkPostingAuthority() {
       if(this.userInfo.userId === this.postingUserId) {
         return true 
+      } else {
+        return false
+      }
+    },
+    checkLikeState() {
+      if(this.likeState === true) {
+        return true
       } else {
         return false
       }
@@ -315,6 +398,8 @@ export default {
 
   created() {
     this.getDetails()
+    this.getLikeState()
+    this.getAvailableBtn()
   },
   
 }

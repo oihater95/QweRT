@@ -45,15 +45,19 @@
         <Followers
           v-if="tabOnView === 1"
           class="follow-list"
-          :test="test1"
-          @next-page-tab1="loadContent(test1)"
+          :followers="followers"
+          @next-page-tab1="getFollowers"
+          @other-profile="goToOtherProfile"
+          @follow-toggle="followToggle"
         />
         <!-- 팔로잉 목록 -->
         <Followings
           v-if="tabOnView === 2"
           class="follow-list"
-          :test="test2"
-          @next-page-tab2="loadContent(test2)"
+          :followings="followings"
+          @next-page-tab2="getFollowings"
+          @other-profile="goToOtherProfile"
+          @follow-toggle="followToggle"
         />
       </v-card>
     </v-dialog>
@@ -64,6 +68,8 @@
 import Followers from '@/components/profiles/Followers'
 import Followings from '@/components/profiles/Followings'
 import '@/css/profiles/FollowListModal.scss'
+import { mapState } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: 'FollowListModal',
@@ -90,32 +96,126 @@ export default {
         page: 0,
         list: [],
       },
-      test1: {
-        size: 6,
-        page: 0,
-        list: [],
-      },
-      test2: {
-        size: 6,
-        page: 0,
-        list: [],
-      },
-      numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     }
   },
   methods: {
+    // 팔로워 목록을 불러와 저장하는 함수
     getFollowers: function () {
-
+      const profileId = this.$route.params.userId
+      if (this.isLogon) {
+        // 로그인 시
+        axios({
+          method: 'get',
+          url: `${this.host}/follow/to/${this.userInfo.userId}/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {
+            console.log(res)
+            this.followers.page ++
+            this.followers.list = this.followers.list.concat(res.data)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        // 비로그인 시
+        axios({
+          method: 'get',
+          url: `${this.host}/follow/to/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
+        })
+          .then(res => {
+            console.log(res)
+            this.followers.page ++
+            this.followers.list = this.followers.list.concat(res.data)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
-    // 임시 함수
-    loadContent: function (test) {
-      test.page ++
-      test.list = test.list.concat(this.numbers.map(li => 10 * test.page + li))
+    // 팔로잉 목록을 불러와 저장하는 함수
+    getFollowings: function () {
+      const profileId = this.$route.params.userId
+      if (this.isLogon) {
+        // 로그인 시
+        axios({
+          method: 'get',
+          url: `${this.host}/follow/from/${this.userInfo.userId}/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {
+            console.log(res)
+            this.followings.page ++
+            this.followings.list = this.followings.list.concat(res.data)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        // 비로그인 시
+        axios({
+          method: 'get',
+          url: `${this.host}/follow/from/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
+        })
+          .then(res => {
+            console.log(res)
+            this.followings.page ++
+            this.followings.list = this.followings.list.concat(res.data)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
+    // 다른 유저의 프로필로 이동하는 함수
+    goToOtherProfile: function (userId) {
+      this.dialog = false
+      this.$emit('followList-off')
+      this.$router.push({ name: 'Profile', params: {userId: userId} })
+    },
+    // 팔로우 토글 함수
+    followToggle: function (target) {
+      if (target.follower) {
+        // 팔로워 목록의 유저를 토글한 경우
+        axios({
+          method: 'put',
+          url: `${this.host}/follow/${this.userInfo.userId}/${target.follower.user.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {
+            console.log(res)
+            this.followers.list[target.i].followFlag = !this.followers.list[target.i].followFlag
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        // 팔로잉 목록의 유저를 토글한 경우
+        axios({
+          method: 'put',
+          url: `${this.host}/follow/${this.userInfo.userId}/${target.following.user.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {
+            console.log(res)
+            this.followings.list[target.i].followFlag = !this.followings.list[target.i].followFlag
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+  },
+  computed: {
+    ...mapState([
+      'isLogon',
+      'userInfo',
+      'host',
+    ])
   },
   // 모달 창이 처음 열렸을 때 팔로워 목록을 연 것인지 팔로잉 목록을 연 것인지 확인
   updated: function () {
-    if (this.test1.list.length === 0 && this.test2.list.length === 0) {
+    if (this.followers.list.length === 0 && this.followings.list.length === 0) {
       this.tabOnView = this.tab
     }
   }

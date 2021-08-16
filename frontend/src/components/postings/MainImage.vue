@@ -1,6 +1,6 @@
 <template>
     <!-- 한 행에 3개씩 -->
-  <v-col cols=4>
+  <v-col class="col-12 col-sm-6 col-lg-4">
     <!-- elevation: 테두리 -->
     <v-card
       elevation=0
@@ -22,9 +22,8 @@
           <h3>{{ this.nickname }}</h3>
           <h4>{{image.title}}</h4>
           <span>
-            <v-icon v-if="image.like_state">fas fa-heart</v-icon>
-            <v-icon v-else>far fa-heart</v-icon>
-            {{this.likeCnt}}
+            <v-icon>fas fa-heart</v-icon>
+            {{this.image.likeCnt}}
           </span>
         </div>
       </div>
@@ -78,7 +77,8 @@ export default {
       .catch(err => {
         console.log(err)
       })
-    }
+    },
+
 
   },
   computed: {
@@ -91,9 +91,11 @@ export default {
       }
       return this.profileImg
     },
+
     ...mapState([
         'host',
-        'userInfo'
+        'userInfo',
+        'isLogon'
       ])
   },
 

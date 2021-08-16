@@ -44,8 +44,6 @@
   }
 }
 
-
-
 #posting-btns {
   display: flex;
   justify-content: space-between;
@@ -61,6 +59,15 @@
 }
 
 #posting-like__btn {
+  background: linear-gradient(to right, #cb2d3e, #ef473a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 2px;
+  margin-right: 1px;
+}
+
+#posting-unlike__btn {
   background: linear-gradient(to right, #cb2d3e, #ef473a);
   -webkit-background-clip: text;
   background-clip: text;
@@ -135,4 +142,21 @@
 .category-selector{
   width: 100px;
   margin-top: 20px;
+}
+
+.posting-nickname {
+  text-decoration: none;
+  cursor: pointer;
+  &:link {
+    color: black;
+  }
+  &:visited {
+    color: black;
+  }
+  &:active {
+    color: black;
+  }
+  &:hover {
+    color: skyblue;
+  }
 }
