@@ -360,9 +360,9 @@ export default {
         undoListCnt = this.history.undoList.length
         // 이전 캔버스 이미지
         if (undoListCnt == 0) {
-          this.vueCanvas.clearRect(0, 0, 800, 600);
+          this.vueCanvas.clearRect(0, 0, 1600, 1200);
           this.vueCanvas.fillStyle = 'white'
-          this.vueCanvas.fillRect(0, 0, 800, 600)
+          this.vueCanvas.fillRect(0, 0, 1600, 1200)
           this.vueCanvas.fillStyle = this.currentColor
           document.getElementById("undoBtn").disabled = true
           document.getElementById("uploadBtn").disabled = true
@@ -375,9 +375,9 @@ export default {
           }
         }
       } else {
-        this.vueCanvas.clearRect(0, 0, 800, 600);
+        this.vueCanvas.clearRect(0, 0, 1600, 1200);
         this.vueCanvas.fillStyle = 'white'
-        this.vueCanvas.fillRect(0, 0, 800, 600)
+        this.vueCanvas.fillRect(0, 0, 1600, 1200)
         this.vueCanvas.fillStyle = this.currentColor
         document.getElementById("undoBtn").disabled = true
         document.getElementById("uploadBtn").disabled = true

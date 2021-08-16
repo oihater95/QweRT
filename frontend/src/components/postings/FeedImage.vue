@@ -18,8 +18,15 @@
           v-if="getProfileImg"
           :src="getProfileImg"
           alt="profile_image"
+          @click="goUserProfile"
         >
-        <h3 class="nickname ml-2">{{ this.nickname }}</h3>
+        <img 
+          v-else 
+          src="@/assets/images/profile_image_default.png" 
+          alt="default-profile__image"
+          @click="goUserProfile"
+        >
+        <h3 @click="goUserProfile" class="nickname ml-2">{{ this.nickname }}</h3>
       </div>
       <h4 class="ml-1">{{image.title}}</h4>
       <v-icon 
@@ -90,7 +97,11 @@ export default {
       .catch(err => {
         console.log(err)
       })
-    }
+    },
+
+    goUserProfile: function() {
+      this.$router.push({ name: 'Profile', params: {userId: this.userId} })
+    },
 
   },
   computed: {
