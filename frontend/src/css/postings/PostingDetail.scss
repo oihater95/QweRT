@@ -19,8 +19,12 @@
     color: #7a7d7c;
   }
   .posting-nickname {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     text-align: end;
     padding-top: 0;
+    padding-bottom: 5px;
   }
   .posting-edit__check {
     text-align: end;
@@ -159,4 +163,16 @@
   &:hover {
     color: skyblue;
   }
+}
+
+.profile-img{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.user-profile__nickname{
+  margin-top: 12px;
+  margin-left: 5px;
 }
