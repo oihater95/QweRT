@@ -339,7 +339,7 @@ export default {
         triggerBtn: '',
         title: '로그인 필요',
         text: '해당 기능은 로그인이 필요한 기능입니다.<br/>로그인 하시겠습니까?',
-        positiveBtn: '확인',
+        positiveBtn: '로그인 하러 가기',
         negativeBtn: '취소',
       }
       const modalBtn = document.querySelector('#modalBtn')
