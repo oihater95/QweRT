@@ -10,6 +10,7 @@
     <img 
     id="DetailImage"
     class="col-12"
+    style="object-fit: contain;"
     :src="postingImg">
     </v-card>
   </div>

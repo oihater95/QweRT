@@ -47,7 +47,7 @@ public class PostingServiceImpl implements PostingService {
 	CurationService curationService;
 	
 	@Autowired
-	FeedServiceImpl feedService;
+	FeedService feedService;
 	
 	@Override
 	public void createPosting(UploadRequest request) {

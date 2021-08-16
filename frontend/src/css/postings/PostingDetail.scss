@@ -44,8 +44,6 @@
   }
 }
 
-
-
 #posting-btns {
   display: flex;
   justify-content: space-between;
@@ -135,4 +133,21 @@
 .category-selector{
   width: 100px;
   margin-top: 20px;
+}
+
+.posting-nickname {
+  text-decoration: none;
+  cursor: pointer;
+  &:link {
+    color: black;
+  }
+  &:visited {
+    color: black;
+  }
+  &:active {
+    color: black;
+  }
+  &:hover {
+    color: skyblue;
+  }
 }

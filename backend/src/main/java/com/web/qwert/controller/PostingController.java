@@ -26,7 +26,7 @@ import com.web.qwert.model.posting.UpdateRequest;
 import com.web.qwert.model.posting.UploadRequest;
 import com.web.qwert.model.user.ChangeInfoRequest;
 import com.web.qwert.model.user.User;
-import com.web.qwert.service.FeedServiceImpl;
+import com.web.qwert.service.FeedService;
 import com.web.qwert.service.JwtService;
 import com.web.qwert.service.PostingService;
 import com.web.qwert.service.UserService;
@@ -48,7 +48,7 @@ public class PostingController {
 	UserService userService;
 	
 	@Autowired
-	FeedServiceImpl feedService;
+	FeedService feedService;
 	
 	@PostMapping
 	@ApiOperation(value = "게시물 업로드")
