@@ -34,4 +34,8 @@ public interface PostingService {
 	public List<Posting> searchNewByCategory(Category category, int page, int size);
 	
 	public List<Posting> searchPopularByCategory(Category category, int page, int size);
+	
+	public List<Posting> searchNewByTerm(String term, int page, int size);
+	
+	public List<Posting> searchPopularByTerm(String term, int page, int size);
 }

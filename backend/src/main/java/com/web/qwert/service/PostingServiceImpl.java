@@ -164,5 +164,22 @@ public class PostingServiceImpl implements PostingService {
 		return postingDao.findByCategory(category, pageable);
 
 	}
+	
+	@Override
+	public List<Posting> searchNewByTerm(String term, int page, int size) {
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
+		return postingDao.findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(term, term, pageable);
+
+	}
+	
+	@Override
+	public List<Posting> searchPopularByTerm(String term, int page, int size) {
+
+		Pageable pageable = PageRequest.of(page, size, Sort.by("likeCnt").descending());
+		return postingDao.findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(term, term, pageable);
+
+	}
+
 
 }
