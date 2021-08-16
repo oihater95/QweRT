@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.web.qwert.dao.CurationDao;
 import com.web.qwert.dao.FollowDao;
 import com.web.qwert.dao.LikeDao;
 import com.web.qwert.dao.PostingDao;
@@ -109,34 +106,63 @@ public class UserServiceImpl implements UserService {
 	   
 	   return masterpieces; // 대표작 배열 리턴
 	}
-
+	
+	// 프로필 정보 조회
 	@Override
 	public ProfileDto getProfile(User user) {
 		
+		// 회원 정보
 		ProfileDto profileDto = new ProfileDto();
 		BeanUtils.copyProperties(user, profileDto);
 		
-		profileDto.setLikedCnt(likeDao.countByUploaderId(user.getUserId()));
-		profileDto.setPostingCnt(postingDao.countByUser(user));
+		profileDto.setLikedCnt(likeDao.countByUploaderId(user.getUserId())); // 좋아요 받은 수
+		profileDto.setPostingCnt(postingDao.countByUser(user)); // 게시글 수
 		
+		// 대표작 저장
 		List<Posting> currentMps = postingDao.findPostingByUserAndMasterpieceFlag(user, true);
 		Posting[] masterpieces = new Posting[currentMps.size()];
 		for (int i = 0; i < currentMps.size(); i++) {
 			masterpieces[i] = currentMps.get(i);
 		}
-		profileDto.setMasterpieces(masterpieces);
+		profileDto.setMasterpieces(masterpieces); 
 		
-		profileDto.setCuratedCnt(curationService.getTotalCuratedCnt(user));
-		profileDto.setFollowerCnt(followDao.countByToUser(user));
-		profileDto.setFollowingCnt(followDao.countByFromUser(user));
+		profileDto.setCuratedCnt(curationService.getTotalCuratedCnt(user)); // 큐레이팅 된 수
+		profileDto.setFollowerCnt(followDao.countByToUser(user)); // 팔로워 수
+		profileDto.setFollowingCnt(followDao.countByFromUser(user)); // 팔로잉 수
 		
 		return profileDto;
 	}
-
+	
+	// 닉네임으로 최신 아티스트 검색
 	@Override
-	public List<User> searchUserByNickname(String nickname, int page, int size) {
+	public List<ProfileDto> searchNewUserByNickname(String nickname, int page, int size) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
-		return userDao.findByNicknameContainingIgnoreCase(nickname, pageable);
+		List<User> users = userDao.findByNicknameContainingIgnoreCase(nickname, pageable);
+		List<ProfileDto> profiles = new ArrayList<ProfileDto>();
+		
+		// 프로필 정보 저장
+		for(User user : users) {
+			ProfileDto profile = new ProfileDto();
+			profile = getProfile(user);
+			profiles.add(profile);
+		}
+		return profiles; 
+	}
+	
+	// 닉네임으로 인기 아티스트 검색
+	@Override
+	public List<ProfileDto> searchPopularUserByNickname(String nickname, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by("popularity").descending());
+		List<User> users =  userDao.findByNicknameContainingIgnoreCase(nickname, pageable);
+		List<ProfileDto> profiles = new ArrayList<ProfileDto>();
+		
+		// 프로필 정보 저장
+		for(User user : users) {
+			ProfileDto profile = new ProfileDto();
+			profile = getProfile(user);
+			profiles.add(profile);
+		}
+		return profiles; 
 	}
 
 }
