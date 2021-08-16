@@ -52,6 +52,7 @@
                 @click="userProfile(comment)">
                 <img 
                 v-else
+                class="profile-img__comment"
                 src="@/assets/images/profile_image_default.png"
                 @click="userProfile(comment)"
                 >
@@ -127,6 +128,7 @@
                 @click="userProfile(comment)">
                 <img 
                 v-else
+                class="profile-img__comment" 
                 src="@/assets/images/profile_image_default.png"
                 @click="userProfile(comment)"
                 >
