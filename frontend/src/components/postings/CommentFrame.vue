@@ -46,9 +46,15 @@
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3 d-flex align-items-center">
                 <img 
+                v-if="comment.user.profileImg"
                 :src="comment.user.profileImg"  
                 class="profile-img__comment" 
                 @click="userProfile(comment)">
+                <img 
+                v-else
+                src="@/assets/images/profile_image_default.png"
+                @click="userProfile(comment)"
+                >
                 <p 
                   @click="userProfile(comment)" 
                   class="comment-nickname mb-0 mt-1 ms-1 d-inline">
@@ -115,9 +121,15 @@
             :key="idx">
               <v-list-item-subtitle class="mx-5 px-3 d-flex align-items-center">
                 <img 
+                v-if="comment.user.profileImg"
                 :src="comment.user.profileImg"  
                 class="profile-img__comment" 
                 @click="userProfile(comment)">
+                <img 
+                v-else
+                src="@/assets/images/profile_image_default.png"
+                @click="userProfile(comment)"
+                >
                 <p 
                   @click="userProfile(comment)" 
                   class="comment-nickname mb-0 mt-1 ms-1 d-inline">
