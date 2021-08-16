@@ -299,7 +299,7 @@ export default {
       this.modalMsg.name='showTos'
       this.modalMsg.triggerBtn = ''
       this.modalMsg.title = 'QweRT 이용약관'
-      this.modalMsg.text = '<<이용약관입니다.>>'
+      this.modalMsg.text = '1. 그림을 도용하면 안 돼요. 자신이 그린 그림만 공유해주세요.<br/>2. 불건전한 내용의 그림은 자제해주세요. 모두가 이용하는 공간입니다.<br/>3. "그림"만 공유해주세요. "그림" 외의 사진은 되도록 삼가주세요.'
       this.modalMsg.positiveBtn = ''
       this.modalMsg.negativeBtn = '닫기'
       const modalBtn = document.querySelector('#modalBtn')
