@@ -18,5 +18,7 @@ public interface PostingDao extends JpaRepository<Posting, Integer> {
 	
 	List<Posting> findByCategory(Category category, Pageable pageable);
 	
+	List<Posting> findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(String content, String title, Pageable pageable);
+	
 	int countByUser(User user);
 }
