@@ -23,10 +23,12 @@
         <v-img
           v-if="follower.user.profileImg"
           :src="follower.user.profileImg"
+          @click="$emit('other-profile', follower.user.userId)"
         ></v-img>
         <v-img
           v-else
           src="@/assets/images/profile_image_default.png"
+          @click="$emit('other-profile', follower.user.userId)"
         ></v-img>
       </v-col>
       <v-col
@@ -37,10 +39,12 @@
         <v-img
           v-if="follower.profileImg"
           :src="follower.profileImg"
+          @click="$emit('other-profile', follower.userId)"
         ></v-img>
         <v-img
           v-else
           src="@/assets/images/profile_image_default.png"
+          @click="$emit('other-profile', follower.userId)"
         ></v-img>
       </v-col>
       <!-- 닉네임 -->
@@ -49,14 +53,18 @@
         cols="7"
         class="nickname"
       >
-        <h2>{{ follower.user.nickname }}</h2>
+        <h2 @click="$emit('other-profile', follower.user.userId)">
+          {{ follower.user.nickname }}
+        </h2>
       </v-col>
       <v-col
         v-else
         cols="7"
         class="nickname"
       >
-        <h2>{{ follower.nickname }}</h2>
+        <h2 @click="$emit('other-profile', follower.userId)">
+          {{ follower.nickname }}
+        </h2>
       </v-col>
       <!-- 팔로우/언팔로우 버튼 -->
       <v-col

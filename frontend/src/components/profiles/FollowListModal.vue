@@ -47,6 +47,7 @@
           class="follow-list"
           :followers="followers"
           @next-page-tab1="getFollowers"
+          @other-profile="goToOtherProfile"
           @follow-toggle="followToggle"
         />
         <!-- 팔로잉 목록 -->
@@ -55,6 +56,7 @@
           class="follow-list"
           :followings="followings"
           @next-page-tab2="getFollowings"
+          @other-profile="goToOtherProfile"
           @follow-toggle="followToggle"
         />
       </v-card>
@@ -97,9 +99,11 @@ export default {
     }
   },
   methods: {
+    // 팔로워 목록을 불러와 저장하는 함수
     getFollowers: function () {
       const profileId = this.$route.params.userId
       if (this.isLogon) {
+        // 로그인 시
         axios({
           method: 'get',
           url: `${this.host}/follow/to/${this.userInfo.userId}/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
@@ -114,6 +118,7 @@ export default {
             console.log(err)
           })
       } else {
+        // 비로그인 시
         axios({
           method: 'get',
           url: `${this.host}/follow/to/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
@@ -128,9 +133,11 @@ export default {
           })
       }
     },
+    // 팔로잉 목록을 불러와 저장하는 함수
     getFollowings: function () {
       const profileId = this.$route.params.userId
       if (this.isLogon) {
+        // 로그인 시
         axios({
           method: 'get',
           url: `${this.host}/follow/from/${this.userInfo.userId}/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
@@ -145,6 +152,7 @@ export default {
             console.log(err)
           })
       } else {
+        // 비로그인 시
         axios({
           method: 'get',
           url: `${this.host}/follow/from/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
@@ -159,8 +167,16 @@ export default {
           })
       }
     },
+    // 다른 유저의 프로필로 이동하는 함수
+    goToOtherProfile: function (userId) {
+      this.dialog = false
+      this.$emit('followList-off')
+      this.$router.push({ name: 'Profile', params: {userId: userId} })
+    },
+    // 팔로우 토글 함수
     followToggle: function (target) {
       if (target.follower) {
+        // 팔로워 목록의 유저를 토글한 경우
         axios({
           method: 'put',
           url: `${this.host}/follow/${this.userInfo.userId}/${target.follower.user.userId}`,
@@ -174,6 +190,7 @@ export default {
             console.log(err)
           })
       } else {
+        // 팔로잉 목록의 유저를 토글한 경우
         axios({
           method: 'put',
           url: `${this.host}/follow/${this.userInfo.userId}/${target.following.user.userId}`,

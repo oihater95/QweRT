@@ -251,6 +251,45 @@ export default {
     }
   },
   methods: {
+    // 프로필 페이지를 구성하는데 필요한 정보를 불러오는 함수
+    loadProfile: function () {
+      // 유저 정보 불러오기
+      axios({
+        method: 'get',
+        url: `${this.host}/profile/${this.$route.params.userId}/`,
+      })
+        .then(res => {
+          console.log(res)
+          this.nickname = res.data.nickname
+          this.profileImageSrc = res.data.profileImg
+          this.introduction = res.data.introduction
+          this.followerCnt = res.data.followerCnt
+          this.followingCnt = res.data.followingCnt
+          this.postingCnt = res.data.postingCnt
+          this.likedCnt = res.data.likedCnt
+          this.curatedCnt = res.data.curatedCnt
+          this.masterpieces = res.data.masterpieces
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      // 로그인 상태라면 로그인한 유저가 현재 프로필의 유저를 팔로우하고 있는지 알아보기
+      if (this.isLogon && this.userInfo.userId !== this.$route.params.userId) {
+        axios({
+          method: 'get',
+          url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
+        })
+          .then(res => {
+            console.log(res)
+            this.followState = true
+          })
+          .catch(err => {
+            console.log(err)
+            this.followState = false
+          })
+      }
+    },
     // 캐러셀에 마우스를 올려놓은 상태임을 알리는 함수
     hoverOn: function () {
       this.hovered = true
@@ -310,43 +349,15 @@ export default {
       'userInfo',
     ])
   },
-  created: function () {
-    // 페이지가 로드될 때 유저 정보 불러오기
-    axios({
-      method: 'get',
-      url: `${this.host}/profile/${this.$route.params.userId}/`,
-    })
-      .then(res => {
-        console.log(res)
-        this.nickname = res.data.nickname
-        this.profileImageSrc = res.data.profileImg
-        this.introduction = res.data.introduction
-        this.followerCnt = res.data.followerCnt
-        this.followingCnt = res.data.followingCnt
-        this.postingCnt = res.data.postingCnt
-        this.likedCnt = res.data.likedCnt
-        this.curatedCnt = res.data.curatedCnt
-        this.masterpieces = res.data.masterpieces
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    // 로그인 상태라면 로그인한 유저가 현재 프로필의 유저를 팔로우하고 있는지 알아보기
-    if (this.isLogon && this.userInfo.userId !== this.$route.params.userId) {
-      axios({
-        method: 'get',
-        url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
-        headers: { token: localStorage.getItem('jwtToken') }
-      })
-        .then(res => {
-          console.log(res)
-          this.followState = true
-        })
-        .catch(err => {
-          console.log(err)
-          this.followState = false
-        })
+  watch: {
+    // 라우터 파라미터가 변하면 (다른 유저의 프로필로 이동하면) 다시 프로필 정보 받아오기
+    $route: function () {
+      this.loadProfile()
     }
+  },
+  // 프로필 페이지가 처음 로드될 때 프로필 정보 받아오기
+  created: function () {
+    this.loadProfile()
   },
 }
 </script>
