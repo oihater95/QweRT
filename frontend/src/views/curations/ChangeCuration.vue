@@ -3,8 +3,16 @@
     <v-form>
       <v-container>
         <div class="d-flex flex-row-reverse">
-          <span class="curation-delete__btn" @click="clickDelete">삭제하기</span>
-          <span class="curation-change__btn" @click="changeCuration">저장하기</span>
+          <v-btn plain color="error" class="curation-delete__btn" @click="clickDelete">
+            <p class="curation-delete__font">
+              삭제하기
+            </p>
+          </v-btn>
+          <v-btn plain class="curation-change__btn" @click="changeCuration">
+            <p class="curation-change__font">
+              저장하기
+            </p>
+          </v-btn>
         </div>
         <CurationInfo
           :curationTitle="curationTitle"

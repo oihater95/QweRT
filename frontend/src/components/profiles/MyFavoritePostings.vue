@@ -12,6 +12,7 @@
       <v-img
         :src="`https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/${content.postingImg}`"
         contain
+        @click="$router.push({ name: 'PostingDetail', params: {postingId: content.postingId} })"
       ></v-img>
     </v-col>
   </v-row>

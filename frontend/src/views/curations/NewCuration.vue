@@ -50,7 +50,11 @@
           </div>
         </div>
         <div v-if="errorActivated" class="curation-error-message">제목과 설명은 필수입니다.</div>
-        <button class="curation-make__btn" @click.prevent="clickCreate">CREATE</button>
+        <div>
+          <v-btn plain color="error" class="curation-make__btn col-4" @click.prevent="clickCreate">
+            <p class="create-font">CREATE</p>
+          </v-btn>
+        </div>
       </div>
     </v-container>
   </v-form>
