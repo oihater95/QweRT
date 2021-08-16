@@ -196,7 +196,11 @@ public class CurationController {
 		if(!curationOpt.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 없는 큐레이션
 		
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("color", curationOpt.get().getColor());
+		Curation curation = curationOpt.get();
+		resultMap.put("color", curation.getColor());
+		resultMap.put("title", curation.getTitle());
+		resultMap.put("content", curation.getContent());
+		resultMap.put("thumbnail", curation.getThumbnailImg());
 		resultMap.put("postings", curationService.getCuratedPostings(curationOpt.get(), 0, 100));
 		return new ResponseEntity<>(resultMap,HttpStatus.OK);
 	}
