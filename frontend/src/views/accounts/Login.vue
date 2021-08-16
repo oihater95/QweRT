@@ -26,6 +26,7 @@
                         v-model="credentials.email"
                         :rules="[rules.required, rules.emailForm]"
                         label="이메일"
+                        @keyup.enter="login"
                       ></v-text-field>
                     </v-col>
                   </v-row>
@@ -45,6 +46,7 @@
                         label="비밀번호"
                         counter
                         @click:append="showPW = !showPW"
+                        @keyup.enter="login"
                       ></v-text-field>
                     </v-col>
                   </v-row>
