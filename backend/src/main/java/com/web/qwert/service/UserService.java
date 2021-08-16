@@ -25,5 +25,7 @@ public interface UserService {
 	
 	public ProfileDto getProfile(User user);
 	
-	public List<User> searchUserByNickname(String nickname, int page, int size);
+	public List<ProfileDto> searchNewUserByNickname(String nickname, int page, int size);
+	
+	public List<ProfileDto> searchPopularUserByNickname(String nickname, int page, int size);
 }

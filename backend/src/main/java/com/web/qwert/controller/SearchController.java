@@ -61,12 +61,20 @@ public class SearchController {
 	}
 	
 
-	// 아티스트 검색
-	@GetMapping("artist/{term}")
-	@ApiOperation(value = "아티스트 검색")
-	public Object newPostings(@PathVariable String term, @RequestParam int page, @RequestParam int size) {
+	// 아티스트 최신순 검색
+	@GetMapping("new/artist/{term}")
+	@ApiOperation(value = "아티스트 최신순 검색")
+	public Object searchNewArtist(@PathVariable String term, @RequestParam int page, @RequestParam int size) {
 
-		return new ResponseEntity<>(userService.searchUserByNickname(term, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(userService.searchNewUserByNickname(term, page, size), HttpStatus.OK);
+	}	
+	
+	// 아티스트 인기순 검색
+	@GetMapping("popular/artist/{term}")
+	@ApiOperation(value = "아티스트 인기순 검색")
+	public Object searchPopularArtist(@PathVariable String term, @RequestParam int page, @RequestParam int size) {
+
+		return new ResponseEntity<>(userService.searchPopularUserByNickname(term, page, size), HttpStatus.OK);
 	}	
 	
 	// 검색어로 최신순 게시글 검색

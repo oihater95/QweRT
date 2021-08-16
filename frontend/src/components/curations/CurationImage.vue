@@ -23,7 +23,7 @@
       <div class="curation-image__div" @click="clickCurationDiv">
 
         <span class="curation-title__span"># {{curation.title}}</span>
-        <span v-if="tab===2" class="curation-user__span">by {{curation.user_name}}</span>
+        <span v-if="tab===2" class="curation-user__span">by {{curation.user.nickname}}</span>
         <p>{{curation.content}}</p>
         <img v-if="curation.thumbnail"
           :src="curation.thumbnail"
