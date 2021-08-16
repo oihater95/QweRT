@@ -47,12 +47,14 @@
       <v-col
         v-if="isLogon"
         cols="7"
+        class="nickname"
       >
         <h2>{{ following.user.nickname }}</h2>
       </v-col>
       <v-col
         v-else
         cols="7"
+        class="nickname"
       >
         <h2>{{ following.nickname }}</h2>
       </v-col>
@@ -60,11 +62,13 @@
       <v-col
         v-if="isLogon"
         cols="2"
+        class="follow-button"
       >
         <v-btn
           v-if="!following.followFlag"
           small
           depressed
+          color="#F5DA81"
           @click="$emit('follow-toggle', {following, i})"
         >
           팔로우
@@ -73,6 +77,7 @@
           v-else
           small
           outlined
+          color="#FFBF00"
           @click="$emit('follow-toggle', {following, i})"
         >
           언팔로우
@@ -115,9 +120,6 @@ export default {
           this.scrollDelay = false
         }, 200)
       }
-    },
-    followToggle: function () {
-
     },
   },
   computed: {

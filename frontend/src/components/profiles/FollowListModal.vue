@@ -45,8 +45,9 @@
         <Followers
           v-if="tabOnView === 1"
           class="follow-list"
-          :test="test1"
+          :followers="followers"
           @next-page-tab1="getFollowers"
+          @follow-toggle="followToggle"
         />
         <!-- 팔로잉 목록 -->
         <Followings
@@ -93,17 +94,6 @@ export default {
         page: 0,
         list: [],
       },
-      test1: {
-        size: 6,
-        page: 0,
-        list: [],
-      },
-      test2: {
-        size: 6,
-        page: 0,
-        list: [],
-      },
-      numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     }
   },
   methods: {
@@ -117,6 +107,7 @@ export default {
         })
           .then(res => {
             console.log(res)
+            this.followers.page ++
             this.followers.list = this.followers.list.concat(res.data)
           })
           .catch(err => {
@@ -129,6 +120,7 @@ export default {
         })
           .then(res => {
             console.log(res)
+            this.followers.page ++
             this.followers.list = this.followers.list.concat(res.data)
           })
           .catch(err => {
@@ -141,11 +133,12 @@ export default {
       if (this.isLogon) {
         axios({
           method: 'get',
-          url: `${this.host}/follow/from/${this.userInfo.userId}/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
+          url: `${this.host}/follow/from/${this.userInfo.userId}/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {
             console.log(res)
+            this.followings.page ++
             this.followings.list = this.followings.list.concat(res.data)
           })
           .catch(err => {
@@ -154,10 +147,11 @@ export default {
       } else {
         axios({
           method: 'get',
-          url: `${this.host}/follow/from/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
+          url: `${this.host}/follow/from/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
         })
           .then(res => {
             console.log(res)
+            this.followings.page ++
             this.followings.list = this.followings.list.concat(res.data)
           })
           .catch(err => {
@@ -166,23 +160,33 @@ export default {
       }
     },
     followToggle: function (target) {
-      axios({
-        method: 'put',
-        url: `${this.host}/follow/${this.userInfo.userId}/${target.following.user.userId}`,
-        headers: { token: localStorage.getItem('jwtToken') }
-      })
-        .then(res => {
-          console.log(res)
-          this.followings.list[target.i].followFlag = !this.followings.list[target.i].followFlag
+      if (target.follower) {
+        axios({
+          method: 'put',
+          url: `${this.host}/follow/${this.userInfo.userId}/${target.follower.user.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
         })
-        .catch(err => {
-          console.log(err)
+          .then(res => {
+            console.log(res)
+            this.followers.list[target.i].followFlag = !this.followers.list[target.i].followFlag
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        axios({
+          method: 'put',
+          url: `${this.host}/follow/${this.userInfo.userId}/${target.following.user.userId}`,
+          headers: { token: localStorage.getItem('jwtToken') }
         })
-    },
-    // 임시 함수
-    loadContent: function (test) {
-      test.page ++
-      test.list = test.list.concat(this.numbers.map(li => 10 * test.page + li))
+          .then(res => {
+            console.log(res)
+            this.followings.list[target.i].followFlag = !this.followings.list[target.i].followFlag
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
   },
   computed: {
@@ -194,7 +198,7 @@ export default {
   },
   // 모달 창이 처음 열렸을 때 팔로워 목록을 연 것인지 팔로잉 목록을 연 것인지 확인
   updated: function () {
-    if (this.test1.list.length === 0 && this.test2.list.length === 0) {
+    if (this.followers.list.length === 0 && this.followings.list.length === 0) {
       this.tabOnView = this.tab
     }
   }

@@ -9,13 +9,19 @@
         box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
         &:hover {
           cursor: pointer;
-          box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
         }
       }
     }
-    h2 {
-      &:hover {
-        cursor: pointer;
+    .nickname {
+      h2 {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .follow-button {
+      .v-btn {
+        width: 60px;
       }
     }
   }
