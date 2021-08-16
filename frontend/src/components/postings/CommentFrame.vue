@@ -44,8 +44,16 @@
             <v-list-item-content
             :class="`comment-id__${idx}`"
             :key="idx">
-              <v-list-item-subtitle class="mx-5 px-3">
-                <p @click="userProfile(comment)" class="comment-nickname mb-0">{{ comment.user.nickname }}</p>
+              <v-list-item-subtitle class="mx-5 px-3 d-flex align-items-center">
+                <img 
+                :src="comment.user.profileImg"  
+                class="profile-img__comment" 
+                @click="userProfile(comment)">
+                <p 
+                  @click="userProfile(comment)" 
+                  class="comment-nickname mb-0 mt-1 ms-1 d-inline">
+                  {{ comment.user.nickname }}
+                </p>
               </v-list-item-subtitle>
               <div>
                 <div class="ps-3 ms-5">
@@ -63,7 +71,7 @@
                     </div>
                   </div>
                   <div class="content-line my-4 d-flex" :class="`commentId-editModeOff__${comment.commentId}`">
-                    <span class="me-5 mt-2 mb-1 pe-3 comment-content">{{ comment.content }}</span>
+                    <span class="ms-2 me-5 mt-2 mb-1 pe-3 comment-content">{{ comment.content }}</span>
                     <div v-if="checkCommentAuthority(comment)" class=" ms-5 d-inline">
                       <v-btn icon @click="[getCommentId(comment), editComment(comment)]">
                         <v-icon>
@@ -105,8 +113,16 @@
             <v-list-item-content 
             :class="`docent-id__${idx}`"
             :key="idx">
-              <v-list-item-subtitle class="mx-5 px-3">
-                <p @click="userProfile(comment)" class="comment-nickname mb-0" href="#">{{ comment.user.nickname }}</p>
+              <v-list-item-subtitle class="mx-5 px-3 d-flex align-items-center">
+                <img 
+                :src="comment.user.profileImg"  
+                class="profile-img__comment" 
+                @click="userProfile(comment)">
+                <p 
+                  @click="userProfile(comment)" 
+                  class="comment-nickname mb-0 mt-1 ms-1 d-inline">
+                  {{ comment.user.nickname }}
+                </p>
               </v-list-item-subtitle>
               <div>
                 <div class="ps-3 ms-5">
@@ -124,7 +140,7 @@
                     </div>
                   </div>
                   <div class="content-line my-4 d-flex" :class="`docentId-editModeOff__${comment.commentId}`">
-                    <span class="me-5 mt-2 mb-1 pe-3 comment-content">{{ comment.content }}</span>
+                    <span class="me-5 ms-2 mt-2 mb-1 pe-3 comment-content">{{ comment.content }}</span>
                     <div v-if="checkCommentAuthority(comment)" class=" ms-5 d-inline">
                       <v-btn icon @click="[getCommentId(comment), editComment(comment)]">
                         <v-icon>
@@ -209,6 +225,7 @@ export default {
   data: function() {
     return {
       tab: 1,
+      profileImg: '',
       commentForm: {
         commentContent : null,
       },
@@ -539,7 +556,7 @@ export default {
 
     userProfile(comment) {
       this.$router.push({ name: 'Profile', params: {userId: comment.user.userId} })
-    }
+    },
 
   },
 
