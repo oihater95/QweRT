@@ -2,6 +2,8 @@ package com.web.qwert.model.curation;
 
 import java.util.List;
 
+import com.web.qwert.model.user.UserDto;
+
 import lombok.Data;
 
 @Data
@@ -18,4 +20,6 @@ public class CurationDto {
     private String color; // 큐레이션 색
     
     private List<String> images; // 썸네일 없는 경우 최대 3개의 게시글 미리보기
+    
+    private UserDto user; // 큐레이터 정보
 }

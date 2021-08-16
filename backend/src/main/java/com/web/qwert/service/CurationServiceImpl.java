@@ -19,6 +19,7 @@ import com.web.qwert.model.curation.CurationHasPosting;
 import com.web.qwert.model.curation.CurationRequest;
 import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.User;
+import com.web.qwert.model.user.UserDto;
 
 @Service
 public class CurationServiceImpl implements CurationService {
@@ -118,9 +119,16 @@ public class CurationServiceImpl implements CurationService {
 
 		// 응답용 큐레이션 겍체 리스트 생성
 		for (Curation curation : curations) {
+			
+			// 큐레이션 정보 저장
 			CurationDto curationDto = new CurationDto();
 			BeanUtils.copyProperties(curation, curationDto);
-			curationDto.setThumbnail(curation.getThumbnailImg());
+			
+			// 큐레이터 정보 저장
+			UserDto curator = new UserDto();
+			BeanUtils.copyProperties(curation.getUser(), curator);
+			curationDto.setUser(curator);
+			
 			// 썸네일이 없는 큐레이션은 미리보기 게시글 최대 3개 추가한다.
 			if (curation.getThumbnailImg() == null) {
 
@@ -131,8 +139,11 @@ public class CurationServiceImpl implements CurationService {
 				}
 				curationDto.setImages(images);
 			}
+			else { // 썸네일 저장
+				curationDto.setThumbnail(curation.getThumbnailImg());
+			}
+			
 			curationDtos.add(curationDto);
-
 		}
 		return curationDtos;
 	}
@@ -147,9 +158,10 @@ public class CurationServiceImpl implements CurationService {
 
 		// 응답용 큐레이션 겍체 리스트 생성
 		for (Curation curation : curations) {
+			// 큐레이션 정보 저장
 			CurationDto curationDto = new CurationDto();
-			BeanUtils.copyProperties(curation, curationDto);
-			curationDto.setThumbnail(curation.getThumbnailImg());
+			BeanUtils.copyProperties(curation, curationDto);		
+			
 			// 썸네일이 없는 큐레이션은 미리보기 게시글 최대 3개 추가한다.
 			if (curation.getThumbnailImg() == null) {
 
@@ -160,8 +172,11 @@ public class CurationServiceImpl implements CurationService {
 				}
 				curationDto.setImages(images);
 			}
+			else { // 썸네일 저장
+				curationDto.setThumbnail(curation.getThumbnailImg());
+			}
+			
 			curationDtos.add(curationDto);
-
 		}
 		return curationDtos;
 	}
