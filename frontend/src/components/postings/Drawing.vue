@@ -16,13 +16,20 @@
           id="controls-range" 
           min="1" 
           max="64"
-          value="12.0"
+          :value="lineWidth"
           step="1"
           @input="handleRangeChange">
-          {{ this.canvasLineWidth }}px
+          {{ this.lineWidth }}px
         </div>
         <div class="controls__btns">
           <v-row v-if="this.filling===false">
+            <v-select
+            class="select-brush me-1"
+            :items="brushTools"
+            :label="selectedBrush"
+            v-model="selectedBrush"
+            dense
+            solo></v-select>
           <button 
             id="StrokeBtn" 
             @click="handleStrokeClick" 
@@ -113,8 +120,6 @@ export default {
     return{
       x: 0,
       y: 0,
-      last_x: 0,
-      last_y: 0,
       painting: false,
       vueCanvas: null,
       canvasLineWidth: null,
@@ -128,13 +133,23 @@ export default {
         redoList: [],
       },
       isInput: false,
+      // 브러쉬 툴
+      brushTools: ['NormalPen', 'Shaded', 'Fur', 'Circle'],
+      selectedBrush: 'NormalPen',
+      // shaded & fur
+      prevMouseX: null, 
+      prevMouseY: null,
+      points: null, 
+      count: null,
+      lineWidth: 12,
+
     }
   },
   methods: {
     // mousedown
     startPainting: function() {
       this.painting = true
-      
+
     },
     // mouseup & mouseleave
     stopPainting: function() {
@@ -151,21 +166,98 @@ export default {
 
     // 마우스 움직이는 내내 발생
     onMouseMove: function(e) {
-      this.x = e.offsetX
-      this.y = e.offsetY
+      this.x = e.offsetX*2
+      this.y = e.offsetY*2
       
-      if(!this.painting) {
-        // mouseup painting false
-        // mousemove => 펜 위치 움직임
-        // beginpath는 클릭 전까지 마우스가 캔버스 위에 있으면 따라다님
-        this.vueCanvas.beginPath()
-        // 펜 위치 설정
-        this.vueCanvas.moveTo(e.offsetX, e.offsetY)
-      } else {
-        // 마우스 시작 위치에서 펜 위치까지 선 긋기
-        // mousedown painting true
-        this.vueCanvas.lineTo(e.offsetX, e.offsetY)
-        this.vueCanvas.stroke()
+      if(this.selectedBrush === 'Shaded') {
+        this.points.push( [ e.offsetX*2, e.offsetY*2 ] )
+        for (var i = 0; i < this.points.length; i++) {
+          var dx = this.points[i][0] - this.points[this.count][0]
+          var dy = this.points[i][1] - this.points[this.count][1]
+          var d = dx * dx + dy * dy;
+          if (d < 1500) {
+            this.vueCanvas.strokeStyle = this.currentColor
+            if(!this.painting) {
+              this.vueCanvas.beginPath()
+              this.vueCanvas.moveTo( this.points[this.count][0], this.points[this.count][1])
+            } else {
+              this.vueCanvas.lineTo( this.points[i][0], this.points[i][1])
+              this.vueCanvas.stroke()
+            }
+          }
+        }
+        this.prevMouseX = e.offsetX*2
+        this.prevMouseY = e.offsetY*2
+        this.count++
+      } else if (this.selectedBrush === 'NormalPen') {
+        if(!this.painting) {
+          // mouseup painting false
+          // mousemove => 펜 위치 움직임
+          // beginpath는 클릭 전까지 마우스가 캔버스 위에 있으면 따라다님
+          this.vueCanvas.beginPath()
+          // 펜 위치 설정
+          this.vueCanvas.moveTo(e.offsetX*2, e.offsetY*2)
+        } else {
+          // 마우스 시작 위치에서 펜 위치까지 선 긋기
+          // mousedown painting true
+          this.vueCanvas.lineTo(e.offsetX*2, e.offsetY*2)
+          this.vueCanvas.stroke()
+        }
+
+      } else if (this.selectedBrush === 'Fur') {
+        this.points.push( [ e.offsetX*2, e.offsetY*2 ] )
+        this.vueCanvas.lineWidth = 1.0
+        this.lineWidth = 1.0
+        this.vueCanvas.strokeStyle = this.currentColor
+        if(!this.painting) {
+          this.vueCanvas.beginPath()
+          this.vueCanvas.moveTo(this.prevMouseX, this.prevMouseY)
+        } else {
+          this.vueCanvas.lineTo(e.offsetX*2, e.offsetY*2)
+          this.vueCanvas.stroke()
+        }
+
+        for (var fi = 0; fi < this.points.length; fi++){
+          var fx = this.points[fi][0] - this.points[this.count][0]
+          var fy = this.points[fi][1] - this.points[this.count][1]
+          var fd = fx * fx + fy * fy
+
+          if (fd < 4000 && Math.random() > fd / 2000){
+            if(!this.painting) {
+              this.vueCanvas.beginPath()
+              this.vueCanvas.moveTo( e.offsetX*2 + (fx * 0.7), e.offsetY*2 + (fy * 0.7))
+            } else {
+              this.vueCanvas.lineTo( e.offsetX*2 - (fx * 0.7), e.offsetY*2 - (fy * 0.7))
+              this.vueCanvas.stroke()
+            }
+          }
+        }
+        this.prevMouseX = e.offsetX*2
+        this.prevMouseY = e.offsetY*2
+        this.count++
+
+      } else if (this.selectedBrush === 'Circle') {
+        this.vueCanvas.lineWidth = 1.0
+        this.lineWidth = 1.0
+        this.vueCanvas.strokeStyle = this.currentColor
+        var cdx = e.offsetX*2 - this.prevMouseX
+        var cdy = e.offsetY*2 - this.prevMouseY
+        var cd = Math.sqrt(cdx * cdx + cdy * cdy) * 2
+        var ccx = Math.floor(e.offsetX*2 / 100) * 100 + 50
+        var ccy = Math.floor(e.offsetY*2 / 100) * 100 + 50
+        var csteps = Math.floor( Math.random() * 10 );
+        var cstep_delta = cd / csteps;
+
+        for (var ci = 0; ci < csteps; ci++) {
+          if(!this.painting) {
+            this.vueCanvas.beginPath()
+          } else {
+            this.vueCanvas.arc( ccx, ccy, (csteps - ci) * cstep_delta, 0, Math.PI*2, true)
+            this.vueCanvas.stroke()
+          }
+        }
+        this.prevMouseX = e.offsetX*2
+        this.prevMouseY = e.offsetY*2
       }
     },
     // 주어진 색상 선택
@@ -213,6 +305,7 @@ export default {
     handleRangeChange: function(e) {
       const strokeSize = e.target.value
       this.vueCanvas.lineWidth = strokeSize
+      this.lineWidth = strokeSize
       this.canvasLineWidth = strokeSize
     },
 
@@ -326,35 +419,32 @@ export default {
 
   },
   mounted() {
-  const canvas = document.getElementById("drawing-canvas")
-  const ctx = canvas.getContext("2d")
-  // var zctx = zoomed.getContext('2d')
-  // const dpr = window.devicePixelRatio
-  canvas.width = 800 
-  canvas.height = 600 
-  // ctx.scale(dpr, dpr)
-  ctx.lineCap = "round"
-  ctx.lineJoin = "round"
-  ctx.imageSmoothingEnabled = false;
-  // 배경화면 흰색
-  ctx.fillStyle = "white"
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
-  // default 색상 검정색
-  ctx.strokeStyle = "black" 
-  ctx.fillStyle = "black"
-  ctx.lineWidth = 12.0
-  ctx.filter = 'url(#remove-alpha)';
-  this.canvasLineWidth = ctx.lineWidth
-  this.vueCanvas = ctx
-  this.canvasFrame = canvas
+    const canvas = document.getElementById("drawing-canvas")
+    const ctx = canvas.getContext("2d")
+    canvas.width = 1600 
+    canvas.height = 1200
+    ctx.lineCap = "round"
+    ctx.lineJoin = "round"
+    ctx.imageSmoothingEnabled = false;
+    // 배경화면 흰색
+    ctx.fillStyle = "white"
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // default 색상 검정색
+    ctx.strokeStyle = "black" 
+    ctx.fillStyle = "black"
+    ctx.lineWidth = 12.0
+    ctx.filter = 'url(#remove-alpha)';
+    this.canvasLineWidth = ctx.lineWidth
+    this.vueCanvas = ctx
+    this.canvasFrame = canvas
 
-  if (this.$route.params.imgSrc) {
-    let img = new Image()
-      img.src = this.$route.params.imgSrc
-      img.onload = () => {
-        this.vueCanvas.drawImage(img, 0, 0)
+    if (this.$route.params.imgSrc) {
+      let img = new Image()
+        img.src = this.$route.params.imgSrc
+        img.onload = () => {
+          this.vueCanvas.drawImage(img, 0, 0)
+      }
     }
-  }
   },
 
   watch: {
@@ -364,6 +454,24 @@ export default {
         this.maintainCurrent(this.vueCanvas.fillStyle)
       }
     },
+
+    selectedBrush: function() {
+      if (this.selectedBrush === 'NormalPen') {
+        this.vueCanvas.lineWidth = 12.0
+        this.lineWidth = 12.0
+      } else if (this.selectedBrush === 'Shaded') {
+        this.vueCanvas.lineWidth = 1.0
+        this.lineWidth = 1.0
+        this.vueCanvas.globalCompositeOperation = 'source-over'
+        this.points = new Array()
+        this.count = 0
+      } else if (this.selectedBrush === 'Fur') {
+        this.points = new Array()
+        this.count = 0
+      } else if (this.selectedBrush === 'Circle') {
+        this.vueCanvas.globalCompositeOperation = 'source-over'
+      } 
+    }
   }
 }
 </script>
