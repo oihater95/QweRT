@@ -101,6 +101,11 @@
       },
       clickNegativeBtn: function () {
         this.dialog = false
+        if (this.msg.negativeBtn === "지금 만들기") {
+          this.$router.push({name: 'NewCuration'})
+          return
+        }
+
         if (this.msg.name === 'addCuration') {
           const checkboxes = document.querySelectorAll(".checkbox")
           for (const checkbox of checkboxes) {
