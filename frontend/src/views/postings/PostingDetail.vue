@@ -215,8 +215,12 @@ export default {
             this.modalMsg.text = curations
             if (this.modalMsg.text.length === 0) {
               this.modalMsg.title = '만든 큐레이션이 없습니다. 큐레이션을 만들어주세요.'
+              this.modalMsg.positiveBtn = '돌아가기'
+              this.modalMsg.negativeBtn = '지금 만들기'
             } else {
               this.modalMsg.title = '그림을 넣을 큐레이션을 선택하세요'
+              this.modalMsg.positiveBtn = '돌아가기'
+              this.modalMsg.negativeBtn = '추가하기'
             }
           })
           .catch(err => {
@@ -225,8 +229,6 @@ export default {
   
         this.modalMsg.name='addCuration'
         this.modalMsg.triggerBtn = ''
-        this.modalMsg.positiveBtn = '돌아가기'
-        this.modalMsg.negativeBtn = '추가하기'
   
         const modalBtn = document.querySelector('#modalBtn')
         modalBtn.click()

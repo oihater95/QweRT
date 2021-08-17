@@ -111,6 +111,8 @@
           }
           this.$emit(`${this.msg.name}-no-sign`, this.checkArray)
           this.checkArray = []
+        } else if (this.msg.negativeBtn === "지금 만들기") {
+          this.$router.push({name: 'NewCuration'})
         } else {
           this.$emit(`${this.msg.name}-no-sign`)
         }
