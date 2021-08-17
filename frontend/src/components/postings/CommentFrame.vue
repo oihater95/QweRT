@@ -325,10 +325,10 @@ export default {
     // 현재시간과 비교하여 몇분, 몇시간, 며칠 전인지 출력
     displayTimeAt: function(createDate) {  
       const timeNow = new Date() 
-      console.log(createDate)
-      console.log(1)
-      console.log(timeNow)
-      const milliSeconds = timeNow - Date.parse(createDate)
+      // console.log(createDate)
+      // console.log(timeNow)
+      const milliSeconds = timeNow - Date.parse(createDate) - 9 * 60 * 60 * 1000
+      console.log(milliSeconds)
       const seconds = milliSeconds / 1000
       if (seconds < 60) return `방금 전`
       const minutes = seconds / 60
@@ -397,6 +397,7 @@ export default {
       // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
       axios.get(`${this.host}/comments/${this.$route.params.postingId}/`, { params: { page: this.commentPage, size: this.size } })
       .then(res => {
+        console.log(res)
         if(this.comments.length < this.commentCnt && this.comments.length % this.size === 0) {
           this.comments = this.comments.concat(res.data)
         } else if (this.comments.length < this.commentCnt && this.comments.length % this.size !== 0){
