@@ -148,7 +148,7 @@ export default {
     login: function () {
       axios ({
         method: 'post',
-        url: `${this.host}/accounts/login/`,
+        url: `${this.hostUrl}/accounts/login/`,
         data: this.credentials
       })
         .then(res => {  
@@ -202,7 +202,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'host',
+      'hostUrl',
     ])
   },
   // cookie에 저장된 이메일이 있다면 자동으로 불러오기

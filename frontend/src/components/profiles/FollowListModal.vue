@@ -106,7 +106,7 @@ export default {
         // 로그인 시
         axios({
           method: 'get',
-          url: `${this.host}/follow/to/${this.userInfo.userId}/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
+          url: `${this.hostUrl}/follow/to/${this.userInfo.userId}/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {
@@ -121,7 +121,7 @@ export default {
         // 비로그인 시
         axios({
           method: 'get',
-          url: `${this.host}/follow/to/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
+          url: `${this.hostUrl}/follow/to/${profileId}?page=${this.followers.page}&size=${this.followers.size}`,
         })
           .then(res => {
             console.log(res)
@@ -140,7 +140,7 @@ export default {
         // 로그인 시
         axios({
           method: 'get',
-          url: `${this.host}/follow/from/${this.userInfo.userId}/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
+          url: `${this.hostUrl}/follow/from/${this.userInfo.userId}/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {
@@ -155,7 +155,7 @@ export default {
         // 비로그인 시
         axios({
           method: 'get',
-          url: `${this.host}/follow/from/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
+          url: `${this.hostUrl}/follow/from/${profileId}?page=${this.followings.page}&size=${this.followings.size}`,
         })
           .then(res => {
             console.log(res)
@@ -179,7 +179,7 @@ export default {
         // 팔로워 목록의 유저를 토글한 경우
         axios({
           method: 'put',
-          url: `${this.host}/follow/${this.userInfo.userId}/${target.follower.user.userId}`,
+          url: `${this.hostUrl}/follow/${this.userInfo.userId}/${target.follower.user.userId}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {
@@ -193,7 +193,7 @@ export default {
         // 팔로잉 목록의 유저를 토글한 경우
         axios({
           method: 'put',
-          url: `${this.host}/follow/${this.userInfo.userId}/${target.following.user.userId}`,
+          url: `${this.hostUrl}/follow/${this.userInfo.userId}/${target.following.user.userId}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {
@@ -210,7 +210,7 @@ export default {
     ...mapState([
       'isLogon',
       'userInfo',
-      'host',
+      'hostUrl',
     ])
   },
   // 모달 창이 처음 열렸을 때 팔로워 목록을 연 것인지 팔로잉 목록을 연 것인지 확인

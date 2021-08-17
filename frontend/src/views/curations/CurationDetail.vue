@@ -86,10 +86,10 @@ export default {
 
     },
     computed: {
-      ...mapState([ 'host'])
+      ...mapState([ 'hostUrl'])
     },
     created() {
-        axios.get(`${this.host}/curations/detail/${this.$route.params.id}`)
+        axios.get(`${this.hostUrl}/curations/detail/${this.$route.params.id}`)
             .then(res => {
                 console.log(res)
                 this.curationImages = res.data.postings

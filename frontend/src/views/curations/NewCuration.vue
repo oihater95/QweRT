@@ -133,7 +133,7 @@ export default {
           console.log(fileImageSrc)
           axios ({
             method: 'POST',
-            url: `${this.host}/curations/${this.userInfo.userId}`,
+            url: `${this.hostUrl}/curations/${this.userInfo.userId}`,
             headers: { token: localStorage.getItem('jwtToken') },
             data: {
               title: this.title,
@@ -153,7 +153,7 @@ export default {
         } else {
           axios ({
             method: 'POST',
-            url: `${this.host}/curations/${this.userInfo.userId}`,
+            url: `${this.hostUrl}/curations/${this.userInfo.userId}`,
             headers: { token: localStorage.getItem('jwtToken') },
             data: {
               title: this.title,
@@ -236,7 +236,7 @@ export default {
 
   },
   computed: {
-    ...mapState(['host', 'imageInfo', 'userInfo'])
+    ...mapState(['hostUrl', 'imageInfo', 'userInfo'])
   },
 }
 </script>

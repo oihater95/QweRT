@@ -150,7 +150,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['host', 'imageInfo']),
+    ...mapState(['hostUrl', 'imageInfo']),
   },
   watch: {
     imageFile() {

@@ -185,7 +185,7 @@ export default {
     getDetails: function() {
       axios({
         method: 'get',
-        url: `${this.host}/postings/detail/${this.$route.params.postingId}/`,
+        url: `${this.hostUrl}/postings/detail/${this.$route.params.postingId}/`,
         })
         .then(res => {
           this.postingId = res.data.postingId
@@ -209,7 +209,7 @@ export default {
     },
     addCuration: function() {
       if(this.isLogon === true) {
-        axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.page, size: this.size } })
+        axios.get(`${this.hostUrl}/curations/${this.userInfo.userId}`, { params: { page: this.page, size: this.size } })
           .then(res => {
             const curations = res.data
             this.modalMsg.text = curations
@@ -241,7 +241,7 @@ export default {
         axios ({
           method: 'POST',
           headers: { token: localStorage.getItem('jwtToken') },
-          url: `${this.host}/curations/${id}/${this.$route.params.postingId}/`,
+          url: `${this.hostUrl}/curations/${id}/${this.$route.params.postingId}/`,
         })
           .then(res => {
             console.log(res)
@@ -265,7 +265,7 @@ export default {
       if (this.userInfo.userId === this.postingUserId) {
         axios ({
           method: 'put',
-          url: `${this.host}/postings/${this.postingId}`,
+          url: `${this.hostUrl}/postings/${this.postingId}`,
           data: {
             categoryId: this.category.indexOf(this.selectedCategory) + 1,
             postingTitle: this.postingTitle,
@@ -303,7 +303,7 @@ export default {
       if (this.userInfo.userId === this.postingUserId) {
         axios ({
           method: 'delete',
-          url: `${this.host}/postings/${this.postingId}`,
+          url: `${this.hostUrl}/postings/${this.postingId}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {  
@@ -327,7 +327,7 @@ export default {
       if(this.isLogon === true) {
         axios ({
           method: 'get',
-          url: `${this.host}/like/${this.$route.params.postingId}/${this.userInfo.userId}`,
+          url: `${this.hostUrl}/like/${this.$route.params.postingId}/${this.userInfo.userId}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {  
@@ -367,7 +367,7 @@ export default {
       if (this.isLogon === true) {
         axios ({
           method: 'put',
-          url: `${this.host}/like/${this.$route.params.postingId}/${this.userInfo.userId}`,
+          url: `${this.hostUrl}/like/${this.$route.params.postingId}/${this.userInfo.userId}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {  
@@ -387,7 +387,7 @@ export default {
       this.getDetails()
       axios ({
           method: 'get',
-          url: `${this.host}/profile/${this.postingUserId}/`,
+          url: `${this.hostUrl}/profile/${this.postingUserId}/`,
         })
           .then(res => {  
             this.profileImg = res.data.profileImg
@@ -427,7 +427,7 @@ export default {
     },
 
       ...mapState([
-        'host',
+        'hostUrl',
         'userInfo',
         'isLogon'
       ])

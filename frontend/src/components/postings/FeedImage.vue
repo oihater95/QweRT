@@ -75,7 +75,7 @@ export default {
       this.$router.push({name: 'PostingDetail', params: {postingId: this.image.postingId}})
     },
     getDetail() {
-      axios.get(`${this.host}/postings/detail/${this.image.postingId}`)
+      axios.get(`${this.hostUrl}/postings/detail/${this.image.postingId}`)
       .then(res => {
         this.nickname = res.data.nickname
         this.userId = res.data.userId
@@ -90,7 +90,7 @@ export default {
     },
 
     getProfile(){
-      axios.get(`${this.host}/profile/${this.userId}`)
+      axios.get(`${this.hostUrl}/profile/${this.userId}`)
       .then(res => {
         this.profileImg = res.data.profileImg
       })
@@ -115,7 +115,7 @@ export default {
       return this.profileImg
     },
     ...mapState([
-      'host',
+      'hostUrl',
       'userInfo'
     ])
   },

@@ -83,7 +83,7 @@ export default {
         this.scrollDelay = true
         axios({
           method: 'get',
-          url: `${this.host}/postings/${this.$route.params.userId}?page=${this.page}&size=${this.size}`
+          url: `${this.hostUrl}/postings/${this.$route.params.userId}?page=${this.page}&size=${this.size}`
         })
           .then(res => {
             console.log(res)
@@ -106,7 +106,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'host',
+      'hostUrl',
     ])
   },
   // 모달 창이 처음 열렸을 때 한번 게시물 목록 첫 페이지를 불러온다
