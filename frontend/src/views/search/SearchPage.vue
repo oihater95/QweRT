@@ -4,7 +4,6 @@
         <div class="search-input__div d-flex">
           <v-icon 
             class="search-page__icon"
-            @click.native="clickSearch"
           >
             fas fa-search
           </v-icon>
@@ -51,7 +50,7 @@ export default {
   methods: {
     inputEnter: function () {
       if (this.textInput) {
-        this.$router.push({ name: 'SearchKeyword', params: { keyword: this.textInput } })
+        this.$router.push({ name: 'SearchKeyword', params: { keyword: this.textInput }, query: { t: new Date().getTime() }})
       }
     },
     clickCategory: function (item) {

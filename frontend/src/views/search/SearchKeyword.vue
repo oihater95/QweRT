@@ -1,5 +1,20 @@
 <template>
   <div>
+    <div class="d-flex justify-center">
+        <div class="search-input__div d-flex">
+          <v-icon 
+            class="search-page__icon"
+          >
+            fas fa-search
+          </v-icon>
+          <v-text-field
+            placeholder="검색"
+            v-model="textInput"
+            @keyup.enter="inputEnter"
+          >
+          </v-text-field>
+        </div>
+    </div>
     <div class="search-keyword__result">{{keyword}} 검색 결과</div>
     <div class="d-flex justify-center search-keyword__select">
       <span @click="clickImage">작품</span>
@@ -65,6 +80,8 @@ export default {
   },
   data:  function () {
     return {
+      textInput: "",
+
       first_tab: 1,
       second_tab: 1,
       keyword: this.$route.params.keyword,
@@ -89,6 +106,26 @@ export default {
     }
   },
   methods: {
+    inputEnter: function () {
+      if (this.textInput !== this.keyword) {
+        this.keyword = this.textInput
+        // 초기화
+        this.popularImages = []
+        this.newImages = []
+        this.popularArtists = []
+        this.newArtists = []
+
+        this.popularImagePage = 0
+        this.newImagePage = 0
+        this.popularArtistPage = 0
+        this.newArtistPage = 0
+
+        this.popularImageEnd = false
+        this.newImageEnd = false
+        this.popularArtistEnd = false
+        this.newArtistEnd = false
+      }
+    },
     getResults: function () {
       this.getPopularImages()
       this.getNewImages()
@@ -193,6 +230,11 @@ export default {
   },
   computed: {
     ...mapState(['host'])
+  },
+  watch: {
+    keyword: function() {
+      this.getResults()
+    }
   },
     // 검색 결과 받아오기
   mounted() {
