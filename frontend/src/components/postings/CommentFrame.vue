@@ -324,14 +324,11 @@ export default {
 
     // 현재시간과 비교하여 몇분, 몇시간, 며칠 전인지 출력
     displayTimeAt: function(createDate) {  
-      // const timeNow = new Date()
-      const timeNow = new Date().toLocaleString('ko-KR', {
-        timeZone: 'Asia/Seoul'
-      });
+      const timeNow = new Date() 
       console.log(createDate)
       console.log(1)
       console.log(timeNow)
-      const milliSeconds = timeNow - Date.parse(createDate)
+      const milliSeconds = timeNow - Date.parse(createDate) - 60 * 60 * 9
       const seconds = milliSeconds / 1000
       if (seconds < 60) return `방금 전`
       const minutes = seconds / 60
