@@ -7,12 +7,13 @@
                 4. @dragleave : 항목이 드롭 영역을 떠날 때 감지 -->
             <v-card id="drop-card" class="col-12">
                 <div  v-if="imgSrc" class="upload-image">
-                    <img id="previewImg" :src="imgSrc" class="col-12">
+                    <img id="previewImg" :src="imgSrc" class="col-12" style="object-fit: contain;">
                 </div>
                 <div  v-else-if="imageInfo.image" class="upload-image">
                     <img id="previewImg" 
                         :src="imageInfo.image" 
                         class="col-12"
+                        style="object-fit: contain;"
                         @dragover.prevent="dragover = true"
                         @dragenter.prevent="dragover = true"
                         @dragleave.prevent="dragover = false"
@@ -24,6 +25,7 @@
                     <img id="previewImg" 
                         :src="imageFile" 
                         class="col-12"
+                        style="object-fit: contain;"
                         @dragover.prevent="dragover = true"
                         @dragenter.prevent="dragover = true"
                         @dragleave.prevent="dragover = false"
