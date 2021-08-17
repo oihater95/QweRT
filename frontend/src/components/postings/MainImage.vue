@@ -26,11 +26,11 @@
             alt="default-profile__image"
             @click="goUserProfile"
           >
-          <h3 @click="goUserProfile">{{ this.nickname }}</h3>
+          <h3 @click="goUserProfile">{{ getNickname }}</h3>
           <h4>{{image.title}}</h4>
           <span>
             <v-icon>fas fa-heart</v-icon>
-            {{this.image.likeCnt}}
+            {{image.likeCnt}}
           </span>
         </div>
       </div>
@@ -56,7 +56,6 @@ export default {
     return {
       nickname: '',
       userId: 0,
-      likeCnt: 0,
       profileImg: '',
     }
   },
@@ -69,7 +68,6 @@ export default {
       .then(res => {
         this.nickname = res.data.nickname
         this.userId = res.data.userId
-        this.likeCnt = res.data.likeCnt
       })
       .catch(err => {
         console.log(err)
@@ -97,10 +95,16 @@ export default {
       return 'https://qwert-bucket.s3.ap-northeast-2.amazonaws.com/' + this.image.postingImg
     },
     getProfileImg() {
+      this.getDetail()
       if (this.userId !== 0) {
         this.getProfile()
       }
       return this.profileImg
+    },
+
+    getNickname() {
+      this.getDetail()
+      return this.nickname
     },
 
     ...mapState([
@@ -110,9 +114,10 @@ export default {
       ])
   },
 
-  created() {
+  mounted() {
     this.getDetail()
   },
+
 }
 </script>
 
