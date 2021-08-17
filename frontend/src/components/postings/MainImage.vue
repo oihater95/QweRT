@@ -26,7 +26,7 @@
             alt="default-profile__image"
             @click="goUserProfile"
           >
-          <h3 @click="goUserProfile">{{ getNickname }}</h3>
+          <h3 @click="goUserProfile" style="cursor: pointer;">{{ getNickname }}</h3>
           <h4>{{image.title}}</h4>
           <span>
             <v-icon>fas fa-heart</v-icon>
