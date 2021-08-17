@@ -96,6 +96,7 @@ export default {
         page: 0,
         list: [],
       },
+      noFollow: false,
     }
   },
   methods: {
@@ -111,8 +112,14 @@ export default {
         })
           .then(res => {
             console.log(res)
-            this.followers.page ++
-            this.followers.list = this.followers.list.concat(res.data)
+            if (res.data.length !== 0) {
+              this.followers.page ++
+              this.followers.list = this.followers.list.concat(res.data)
+            } else {
+              if (this.followers.list.length === 0) {
+                this.noFollow = true
+              }
+            }
           })
           .catch(err => {
             console.log(err)
@@ -125,8 +132,14 @@ export default {
         })
           .then(res => {
             console.log(res)
-            this.followers.page ++
-            this.followers.list = this.followers.list.concat(res.data)
+            if (res.data.length !== 0) {
+              this.followers.page ++
+              this.followers.list = this.followers.list.concat(res.data)
+            } else {
+              if (this.followers.list.length === 0) {
+                this.noFollow = true
+              }
+            }
           })
           .catch(err => {
             console.log(err)
@@ -145,8 +158,14 @@ export default {
         })
           .then(res => {
             console.log(res)
-            this.followings.page ++
-            this.followings.list = this.followings.list.concat(res.data)
+            if (res.data.length !== 0) {
+              this.followings.page ++
+              this.followings.list = this.followings.list.concat(res.data)
+            } else {
+              if (this.followings.length === 0) {
+                this.noFollow = true
+              }
+            }
           })
           .catch(err => {
             console.log(err)
@@ -159,8 +178,14 @@ export default {
         })
           .then(res => {
             console.log(res)
-            this.followings.page ++
-            this.followings.list = this.followings.list.concat(res.data)
+            if (res.data.length !== 0) {
+              this.followings.page ++
+              this.followings.list = this.followings.list.concat(res.data)
+            } else {
+              if (this.followings.length === 0) {
+                this.noFollow = true
+              }
+            }
           })
           .catch(err => {
             console.log(err)
@@ -215,7 +240,7 @@ export default {
   },
   // 모달 창이 처음 열렸을 때 팔로워 목록을 연 것인지 팔로잉 목록을 연 것인지 확인
   updated: function () {
-    if (this.followers.list.length === 0 && this.followings.list.length === 0) {
+    if (this.followers.list.length === 0 && this.followings.list.length === 0 && !this.noFollow) {
       this.tabOnView = this.tab
     }
   }
