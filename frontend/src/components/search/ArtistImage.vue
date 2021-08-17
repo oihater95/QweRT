@@ -20,6 +20,7 @@
         >
         <div class="bottom-div d-flex flex-column align-center">
           <h3>{{ artist.nickname }}</h3>
+          <h4 v-if="tab===1">팔로워 수: {{ artist.followerCnt }}</h4>
         </div>
       </div>
     </v-card>
@@ -34,11 +35,9 @@ export default {
   props: {
     artist: {
       type: Object
-    }
-  },
-  data: function() {
-    return {
-        // 
+    },
+    tab: {
+      type: Number
     }
   },
   methods: {

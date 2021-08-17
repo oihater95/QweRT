@@ -70,9 +70,6 @@
                   <v-list-item @click.native="clickProfile">
                     <v-list-item-title class="tab">내 프로필</v-list-item-title>
                   </v-list-item>
-                  <v-list-item @click.native="clickNotify">
-                    <v-list-item-title class="tab">알림</v-list-item-title>
-                  </v-list-item>
                   <v-list-item @click.native="clickLogout">
                     <v-list-item-title class="tab">로그아웃</v-list-item-title>
                   </v-list-item>
@@ -127,9 +124,6 @@ export default {
     },
     clickSearch: function () {
       this.$router.push({ name: 'SearchPage' })
-    },
-    clickNotify: function () {
-      this.$router.push({ name: 'NotifyPage' })
     },
     clickNewCuration: function () {
       this.$router.push({ name: 'NewCuration' })
