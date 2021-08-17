@@ -109,6 +109,7 @@ export default {
       }
       this.tab= 2
       e.target.style.color="skyblue"
+      this.getPopularImages()
     },
     clickNew: function (e) {
       if (this.isLogon) {
@@ -119,6 +120,7 @@ export default {
       }
       this.tab= 3
       e.target.style.color="skyblue"
+      this.getNewImages()
     },
 
     // 스크롤이 끝에 닿을 때 쯤 추가 페이지 받아오기
@@ -153,16 +155,12 @@ export default {
     // 게시물 받아오기
     if (this.isLogon === true) {
       this.getFeedImages()
-      this.getPopularImages()
-      this.getNewImages()
       this.tab = 1
     } else {
       this.getPopularImages()
-      this.getNewImages()
       this.tab = 2
     }
     
-    // this.getPopularImages() => 인기 게시물 받아오기
     window.addEventListener('scroll', this.scrollLoadMore)
   },
 
