@@ -6,6 +6,10 @@
       <div @click="clickNew">최신</div>
     </div>
     <v-row v-if="tab===1">
+      <div v-if="feedImages.length===0" class="mainpage-notice__div">
+          <br><br><br><br><br><br><br><br><br><br><br><br>
+          <h2 class="mainpage-notice__content">다른 사용자를 팔로우하거나 새로운 게시글을 추가해보세요</h2>
+      </div>
       <FeedImage
         v-for="(image, idx) in feedImages" 
         :key="1-idx"
