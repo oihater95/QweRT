@@ -105,7 +105,7 @@ export default {
       }
       axios({
         method: 'get',
-        url: `${this.host}/${path}?page=${tab.page}&size=${tab.size}`,
+        url: `${this.hostUrl}/${path}?page=${tab.page}&size=${tab.size}`,
       })
         .then(res => {
           console.log(res)
@@ -121,7 +121,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'host',
+      'hostUrl',
     ])
   },
 }

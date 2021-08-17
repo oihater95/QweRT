@@ -375,7 +375,7 @@ export default {
 
       axios ({
         method: 'post',
-        url: `${this.host}/comments/${this.postingId}`,
+        url: `${this.hostUrl}/comments/${this.postingId}`,
         data: this.commentItem,
         headers: { token: localStorage.getItem('jwtToken') }
       })
@@ -403,7 +403,7 @@ export default {
     // 일반 댓글 불러오기
     getComments() {
       // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
-      axios.get(`${this.host}/comments/${this.$route.params.postingId}/`, { params: { page: this.commentPage, size: this.size } })
+      axios.get(`${this.hostUrl}/comments/${this.$route.params.postingId}/`, { params: { page: this.commentPage, size: this.size } })
       .then(res => {
         console.log(res)
         if(this.comments.length < this.commentCnt && this.comments.length % this.size === 0) {
@@ -423,7 +423,7 @@ export default {
     // 도슨트 댓글 불러오기
     getDocents: function() {
       // this.postingId로 받으면 부모 컴포넌트 PostingDetail에서 처리 전이라 0만 받게됨, 라우터 파라미터로 처리
-      axios.get(`${this.host}/comments/${this.$route.params.postingId}/docent/`, { params: { page: this.docentPage, size: this.size } })
+      axios.get(`${this.hostUrl}/comments/${this.$route.params.postingId}/docent/`, { params: { page: this.docentPage, size: this.size } })
       .then(res => {
         if(this.docents.length < this.docentCnt && this.docents.length % this.size === 0) {
           this.docents = this.docents.concat(res.data)
@@ -440,7 +440,7 @@ export default {
     },
 
     getCommentsAll: function() {
-      axios.get(`${this.host}/comments/${this.$route.params.postingId}/`, { params: { page: 0, size: this.commentCnt } })
+      axios.get(`${this.hostUrl}/comments/${this.$route.params.postingId}/`, { params: { page: 0, size: this.commentCnt } })
       .then(res => {
         this.comments = this.comments.concat(res.data)
       })
@@ -450,7 +450,7 @@ export default {
     },
 
     getDocentsAll: function() {
-      axios.get(`${this.host}/comments/${this.$route.params.postingId}/docent/`, { params: { page: 0, size: this.docentCnt } })
+      axios.get(`${this.hostUrl}/comments/${this.$route.params.postingId}/docent/`, { params: { page: 0, size: this.docentCnt } })
       .then(res => {
         this.docents = this.docents.concat(res.data)
       })
@@ -462,7 +462,7 @@ export default {
     getCnt: function() {
       axios({
         method: 'get',
-        url: `${this.host}/postings/detail/${this.$route.params.postingId}/`,
+        url: `${this.hostUrl}/postings/detail/${this.$route.params.postingId}/`,
         })
         .then(res => {
           this.commentCnt = res.data.commentCnt
@@ -490,7 +490,7 @@ export default {
       if(confirm('삭제하시겠습니까?')) {
         axios ({
           method: 'delete',
-          url: `${this.host}/comments/${this.commentId}`,
+          url: `${this.hostUrl}/comments/${this.commentId}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {  
@@ -553,7 +553,7 @@ export default {
       console.log('editContent', editContent)
       axios ({
         method: 'put',
-        url: `${this.host}/comments/${this.editCommentId}`,
+        url: `${this.hostUrl}/comments/${this.editCommentId}`,
         data: {content: editContent},
         headers: { token: localStorage.getItem('jwtToken') }
       })
@@ -594,7 +594,7 @@ export default {
 
   computed: {
     ...mapState([
-        'host',
+        'hostUrl',
         'userInfo',
         'isLogon'
       ])

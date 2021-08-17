@@ -65,7 +65,7 @@ export default {
     },
     getMyCuration: async function () {
       if (!this.myEnd) {
-        axios.get(`${this.host}/curations/${this.userInfo.userId}`, { params: { page: this.myPage, size: this.size }} )
+        axios.get(`${this.hostUrl}/curations/${this.userInfo.userId}`, { params: { page: this.myPage, size: this.size }} )
           .then(res => {
             const arr = res.data
              // 마지막이라는 뜻
@@ -81,7 +81,7 @@ export default {
     },
     getNewCuration: async function () {
       if (!this.newEnd) {
-      axios.get(`${this.host}/curations/new`, { params: { page: this.newPage, size: this.size }} )
+      axios.get(`${this.hostUrl}/curations/new`, { params: { page: this.newPage, size: this.size }} )
         .then(res => {
           const arr = res.data
           // 마지막이라는 뜻
@@ -109,7 +109,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['host', 'isLogon', 'userInfo']),
+    ...mapState(['hostUrl', 'isLogon', 'userInfo']),
   },
   created() {
     if (!this.isLogon) {

@@ -422,7 +422,7 @@ export default {
     nicknameCheck: function () {
       axios ({
         method: 'get',
-        url: `${this.host}/accounts/nicknamecheck/?nickname=${this.nickname}`
+        url: `${this.hostUrl}/accounts/nicknamecheck/?nickname=${this.nickname}`
       })
         .then(res => {
           console.log(res)
@@ -471,7 +471,7 @@ export default {
     changeUserInfo: function () {
       axios({
         method: 'put',
-        url: `${this.host}/accounts/${this.$route.params.userId}/info/`,
+        url: `${this.hostUrl}/accounts/${this.$route.params.userId}/info/`,
         data: {
           nickname: this.nickname,
           introduction: this.introduction,
@@ -540,7 +540,7 @@ export default {
     changePassword: function () {
       axios({
         method: 'put',
-        url: `${this.host}/accounts/${this.$route.params.userId}/pwd/`,
+        url: `${this.hostUrl}/accounts/${this.$route.params.userId}/pwd/`,
         data: {
           password: this.password,
           newPassword: this.newPassword
@@ -613,7 +613,7 @@ export default {
     deleteUser: function () {
       axios({
         method: 'delete',
-        url: `${this.host}/accounts/${this.$route.params.userId}/`,
+        url: `${this.hostUrl}/accounts/${this.$route.params.userId}/`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
@@ -670,7 +670,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'host',
+      'hostUrl',
       'userInfo',
     ])
   },
@@ -691,7 +691,7 @@ export default {
   created: function () {
     axios({
       method: 'get',
-      url: `${this.host}/profile/${this.$route.params.userId}/`,
+      url: `${this.hostUrl}/profile/${this.$route.params.userId}/`,
     })
       .then(res => {
         console.log(res)

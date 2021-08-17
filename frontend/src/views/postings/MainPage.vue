@@ -64,7 +64,7 @@ export default {
     getFeedImages: function () {
       axios ({
         method: 'get',
-        url: `${this.host}/postings/${this.userInfo.userId}/feed`,
+        url: `${this.hostUrl}/postings/${this.userInfo.userId}/feed`,
         params: { page: this.feedPage, size: this.size },
         headers: { token: localStorage.getItem('jwtToken') }
       })
@@ -78,7 +78,7 @@ export default {
     },
     getPopularImages: function () {
       // popularImages에 이미지 집어넣기
-      axios.get(`${this.host}/postings/popular/`, { params: { page: this.popularPage, size: this.size } })
+      axios.get(`${this.hostUrl}/postings/popular/`, { params: { page: this.popularPage, size: this.size } })
       .then(res => {
         this.popularImages = this.popularImages.concat(res.data)
       })
@@ -89,7 +89,7 @@ export default {
 
     getNewImages: function () {
       // newImages에 이미지 집어넣기
-      axios.get(`${this.host}/postings/new/`, { params: { page: this.newPage, size: this.size } })
+      axios.get(`${this.hostUrl}/postings/new/`, { params: { page: this.newPage, size: this.size } })
       .then(res => {
         this.newImages = this.newImages.concat(res.data)
       })
@@ -150,7 +150,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'host',
+      'hostUrl',
       'isLogon',
       'userInfo'
     ]),

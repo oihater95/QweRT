@@ -232,13 +232,13 @@ export default {
   
             axios ({
               method: 'post',
-              url: `${this.host}/postings`,
+              url: `${this.hostUrl}/postings`,
               data: this.postingData,
               headers: { token: localStorage.getItem('jwtToken') }
             })
               .then(res => {  
                 console.log(res)
-                axios.get(`${this.host}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
+                axios.get(`${this.hostUrl}/postings/${this.userInfo.userId}/`, { params: { page: this.page, size: this.size } })
                 .then(res => {
                   console.log(res)
                   this.$router.push({name: 'PostingDetail', params: {postingId: res.data[0].postingId}})
@@ -288,7 +288,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['host', 'imageInfo', 'userInfo'])
+    ...mapState(['hostUrl', 'imageInfo', 'userInfo'])
   },
 }
 </script>

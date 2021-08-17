@@ -152,7 +152,7 @@ export default {
       const targetId = e.target.parentNode.dataset.postingid
       axios ({
         method: 'DELETE',
-        url: `${this.host}/curations/${this.$route.params.id}/${targetId}`,
+        url: `${this.hostUrl}/curations/${this.$route.params.id}/${targetId}`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {  
@@ -175,7 +175,7 @@ export default {
     deleteCuration:  function () {
       axios ({
         method: 'DELETE',
-        url: `${this.host}/curations/${this.$route.params.id}`,
+        url: `${this.hostUrl}/curations/${this.$route.params.id}`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {  
@@ -229,7 +229,7 @@ export default {
 
           axios ({
             method: 'put',
-            url: `${this.host}/curations/${this.$route.params.id}`,
+            url: `${this.hostUrl}/curations/${this.$route.params.id}`,
             data: {
               color: this.color,
               title: this.title,
@@ -248,7 +248,7 @@ export default {
         } else {
           axios ({
             method: 'put',
-            url: `${this.host}/curations/${this.$route.params.id}`,
+            url: `${this.hostUrl}/curations/${this.$route.params.id}`,
             data: {
               color: this.color,
               title: this.title,
@@ -313,10 +313,10 @@ export default {
     },
   },
   computed: {
-    ...mapState(['host' ,'imageInfo' ,'userInfo' ]),
+    ...mapState(['hostUrl' ,'imageInfo' ,'userInfo' ]),
   },
   mounted: function () {
-    axios.get(`${this.host}/curations/detail/${this.$route.params.id}`)
+    axios.get(`${this.hostUrl}/curations/detail/${this.$route.params.id}`)
       .then(res => {
         this.curationImages = res.data.postings
         this.thumbnail = res.data.thumbnail

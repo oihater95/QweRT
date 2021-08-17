@@ -238,7 +238,7 @@ export default {
     emailcheck: function () {
       axios ({
         method: 'get',
-        url: `${this.host}/accounts/emailcheck/?email=${this.credentials.email}`
+        url: `${this.hostUrl}/accounts/emailcheck/?email=${this.credentials.email}`
       })
         .then(res => {
           console.log(res)
@@ -271,7 +271,7 @@ export default {
     nicknamecheck: function () {
       axios ({
         method: 'get',
-        url: `${this.host}/accounts/nicknamecheck/?nickname=${this.credentials.nickname}`
+        url: `${this.hostUrl}/accounts/nicknamecheck/?nickname=${this.credentials.nickname}`
       })
         .then(res => {
           console.log(res)
@@ -309,7 +309,7 @@ export default {
     signup: function () {
       axios ({
         method: 'post',
-        url: `${this.host}/accounts/signup/`,
+        url: `${this.hostUrl}/accounts/signup/`,
         data: this.credentials
       })
         .then(res => {
@@ -340,7 +340,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'host',
+      'hostUrl',
     ])
   },
   watch: {

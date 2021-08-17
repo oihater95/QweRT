@@ -256,7 +256,7 @@ export default {
       // 유저 정보 불러오기
       axios({
         method: 'get',
-        url: `${this.host}/profile/${this.$route.params.userId}/`,
+        url: `${this.hostUrl}/profile/${this.$route.params.userId}/`,
       })
         .then(res => {
           console.log(res)
@@ -277,7 +277,7 @@ export default {
       if (this.isLogon && this.userInfo.userId !== this.$route.params.userId) {
         axios({
           method: 'get',
-          url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
+          url: `${this.hostUrl}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
           headers: { token: localStorage.getItem('jwtToken') }
         })
           .then(res => {
@@ -324,7 +324,7 @@ export default {
     followToggle: function () {
       axios({
         method: 'put',
-        url: `${this.host}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
+        url: `${this.hostUrl}/follow/${this.userInfo.userId}/${this.$route.params.userId}`,
         headers: { token: localStorage.getItem('jwtToken') }
       })
         .then(res => {
@@ -344,7 +344,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'host',
+      'hostUrl',
       'isLogon',
       'userInfo',
     ])
