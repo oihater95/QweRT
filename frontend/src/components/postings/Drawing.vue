@@ -432,6 +432,8 @@ export default {
     // default 색상 검정색
     ctx.strokeStyle = "black" 
     ctx.fillStyle = "black"
+    // 마운트 시 현재 색상에 default 색상 넣기
+    this.currentColor = "black"
     ctx.lineWidth = 12.0
     ctx.filter = 'url(#remove-alpha)';
     this.canvasLineWidth = ctx.lineWidth
