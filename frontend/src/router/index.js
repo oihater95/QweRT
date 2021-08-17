@@ -21,8 +21,6 @@ import SearchPage from '@/views/search/SearchPage'
 import SearchCategory from '@/views/search/SearchCategory'
 import SearchKeyword from '@/views/search/SearchKeyword'
 
-import NotifyPage from '@/views/notify/NotifyPage'
-
 import NotFoundComponent from '@/views/NotFoundComponent'
 
 import store from "../vuex/store"
@@ -46,7 +44,6 @@ const routes = [
 
   { path: '/signup', name: 'Signup', component: Signup },
   { path: '/login', name: 'Login', component: Login },
-  { path: '/notify', name: 'NotifyPage', component: NotifyPage ,beforeEnter: authenticated },
 
   { path: '/profile/:userId', name: 'Profile', component: Profile },
   { path: '/profile/:userId/edit', name: 'ModifyProfile', component: ModifyProfile, beforeEnter: authenticated },

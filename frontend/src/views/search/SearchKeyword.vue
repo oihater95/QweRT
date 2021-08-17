@@ -5,9 +5,13 @@
       <span @click="clickImage">작품</span>
       <span @click="clickArtist">아티스트</span>
     </div>
-    <div class="d-flex flex-row-reverse search-keyword__tab">
+    <div v-if="first_tab===1" class="d-flex flex-row-reverse search-keyword__tab">
       <span @click="clickNew">최신순</span>
       <span @click="clickPopular">인기순</span>
+    </div>
+    <div v-else class="d-flex flex-row-reverse search-keyword__tab">
+      <span @click="clickNew">가입일순</span>
+      <span @click="clickPopular">팔로워순</span>
     </div>
     <!-- 작품 인기순 -->
     <v-row v-if="first_tab===1&&second_tab===1">
@@ -31,6 +35,7 @@
         v-for="(artist, idx) in popularArtists" 
         :key="3-idx"
         :artist="artist"
+        :tab=1
       />
     </v-row>
     <!-- 아티스트 최신순 -->
@@ -39,6 +44,7 @@
         v-for="(artist, idx) in newArtists" 
         :key="4-idx"
         :artist="artist"
+        :tab=2
       />
     </v-row>
   </div>
