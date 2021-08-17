@@ -120,7 +120,7 @@
       <!-- 팔로우 버튼 -->
       <v-col cols="2">
         <v-btn
-          v-if="($route.params.userId != userInfo.userId) && !followState"
+          v-if="isLogon && ($route.params.userId != userInfo.userId) && !followState"
           color="#AEA660"
           width="100"
           class="white--text"
@@ -129,7 +129,7 @@
           팔로우
         </v-btn>
         <v-btn
-          v-if="($route.params.userId != userInfo.userId) && followState"
+          v-if="isLogon && ($route.params.userId != userInfo.userId) && followState"
           color="#857B1A"
           width="100"
           outlined
