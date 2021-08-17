@@ -360,9 +360,9 @@ export default {
         undoListCnt = this.history.undoList.length
         // 이전 캔버스 이미지
         if (undoListCnt == 0) {
-          this.vueCanvas.clearRect(0, 0, 800, 600);
+          this.vueCanvas.clearRect(0, 0, 1600, 1200);
           this.vueCanvas.fillStyle = 'white'
-          this.vueCanvas.fillRect(0, 0, 800, 600)
+          this.vueCanvas.fillRect(0, 0, 1600, 1200)
           this.vueCanvas.fillStyle = this.currentColor
           document.getElementById("undoBtn").disabled = true
           document.getElementById("uploadBtn").disabled = true
@@ -375,9 +375,9 @@ export default {
           }
         }
       } else {
-        this.vueCanvas.clearRect(0, 0, 800, 600);
+        this.vueCanvas.clearRect(0, 0, 1600, 1200);
         this.vueCanvas.fillStyle = 'white'
-        this.vueCanvas.fillRect(0, 0, 800, 600)
+        this.vueCanvas.fillRect(0, 0, 1600, 1200)
         this.vueCanvas.fillStyle = this.currentColor
         document.getElementById("undoBtn").disabled = true
         document.getElementById("uploadBtn").disabled = true
@@ -432,6 +432,8 @@ export default {
     // default 색상 검정색
     ctx.strokeStyle = "black" 
     ctx.fillStyle = "black"
+    // 마운트 시 현재 색상에 default 색상 넣기
+    this.currentColor = "black"
     ctx.lineWidth = 12.0
     ctx.filter = 'url(#remove-alpha)';
     this.canvasLineWidth = ctx.lineWidth

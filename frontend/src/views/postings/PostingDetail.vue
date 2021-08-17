@@ -51,7 +51,17 @@
       >{{ selectedCategory }}</v-sheet>
     </v-card-title>
     <v-card-subtitle class="posting-content">{{ postingContent }}</v-card-subtitle>
-    <v-card-subtitle @click="userProfile" class="subtitle-2 posting-nickname">{{ postingUserNickname }}</v-card-subtitle>
+    <v-card-subtitle @click="userProfile" class="subtitle-2 posting-nickname">
+      <img 
+      v-if="userPostingProfileImg()"
+      :src="userPostingProfileImg()" 
+      class="profile-img" @click="userProfile">
+      <img 
+      v-else
+      src="@/assets/images/profile_image_default.png" 
+      class="profile-img" @click="userProfile">
+      <p class="d-inline user-profile__nickname" @click="userProfile">{{ postingUserNickname }}</p>
+    </v-card-subtitle>
   </v-card>
   <div id="posting-btns">
     <div id="posting-icon__forUser">
@@ -167,6 +177,7 @@ export default {
       selectedCategory: '',
       editPostingFlag: false,
       likeState: false,
+      profileImg: '',
     }
   },
 
@@ -370,6 +381,29 @@ export default {
       }
     },
 
+    getPostingProfileImg() {
+      this.getDetails()
+      axios ({
+          method: 'get',
+          url: `${this.host}/profile/${this.postingUserId}/`,
+        })
+          .then(res => {  
+            this.profileImg = res.data.profileImg
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    },
+
+    userPostingProfileImg(){
+      this.getPostingProfileImg()
+      if(this.profileImg === '') {
+        return false
+      } else {
+        return this.profileImg
+      }
+    },
+
 
   },
 
@@ -389,6 +423,7 @@ export default {
         return false
       }
     },
+
       ...mapState([
         'host',
         'userInfo',
@@ -399,7 +434,7 @@ export default {
   created() {
     this.getDetails()
     this.getLikeState()
-    this.getAvailableBtn()
+    this.getPostingProfileImg()
   },
   
 }

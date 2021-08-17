@@ -9,8 +9,8 @@ export default new Vuex.Store({
     createPersistedState(),
   ],
   state: {
-    host: 'http://localhost:8080/qwert',
-    // host: 'http://13.209.16.153:8080/qwert',
+    // host: 'http://localhost:8080/qwert',
+    host: 'http://13.209.16.153:8080/qwert',
     isLogon: false,
     userInfo: {
       userId: '',
