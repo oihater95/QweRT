@@ -328,7 +328,7 @@ export default {
       console.log(createDate)
       console.log(1)
       console.log(timeNow)
-      const milliSeconds = timeNow - Date.parse(createDate) - 60 * 60 * 9
+      const milliSeconds = timeNow - Date.parse(createDate)
       const seconds = milliSeconds / 1000
       if (seconds < 60) return `방금 전`
       const minutes = seconds / 60
