@@ -236,6 +236,7 @@ export default {
       type: Number
     }
   },
+
   data: function() {
     return {
       tab: 1,
@@ -328,7 +329,7 @@ export default {
       // console.log(createDate)
       // console.log(timeNow)
       const milliSeconds = timeNow - Date.parse(createDate) - 9 * 60 * 60 * 1000
-      console.log(milliSeconds)
+      // console.log(milliSeconds)
       const seconds = milliSeconds / 1000
       if (seconds < 60) return `방금 전`
       const minutes = seconds / 60
@@ -345,12 +346,19 @@ export default {
       return `${Math.floor(years)}년 전`
     },
     clickCommentBtn: function(e) {
-      if (this.commentFormToggle === false) {
-        e.target.style.color="skyblue"
-        this.commentFormToggle = true
+      if(this.isLogon === true) {
+        if (this.commentFormToggle === false) {
+          e.target.style.color="skyblue"
+          this.commentFormToggle = true
+        } else {
+          e.target.style.color=""
+          this.commentFormToggle = false
+        }
       } else {
-        e.target.style.color=""
-        this.commentFormToggle = false
+        if(confirm('로그인이 필요한 서비스입니다.\n로그인페이지로 이동하시겠습니까?')){
+          this.$router.push({ name: 'Login' })
+        }
+        
       }
     },
 
