@@ -1,28 +1,27 @@
 package com.web.qwert.model.user;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.ToString;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 
 
 
 @Valid
-@ToString
+@Data
 public class SignupRequest {
     @ApiModelProperty(required = true)
     @NotNull
     String email;
     @ApiModelProperty(required = true)
     @NotNull
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d$@$!%*#?&]{8,}$")
-    String password;
+    String nickname;
     @ApiModelProperty(required = true)
     @NotNull
-    String nickname;
+    String password;
+
 
     public String getEmail() {
         return email;
