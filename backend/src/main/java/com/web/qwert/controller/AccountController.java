@@ -1,9 +1,17 @@
 package com.web.qwert.controller;
 
 import java.util.HashMap;
+<<<<<<< HEAD
 import java.util.Map;
 import java.util.Optional;
 
+=======
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+>>>>>>> 92e8791e66bc203c11eb05d9f659d892d7293fec
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -26,7 +34,10 @@ import com.web.qwert.model.posting.Posting;
 import com.web.qwert.model.user.ChangeInfoRequest;
 import com.web.qwert.model.user.ChangePwdRequest;
 import com.web.qwert.model.user.LoginRequest;
+<<<<<<< HEAD
 import com.web.qwert.model.user.SignupRequest;
+=======
+>>>>>>> 92e8791e66bc203c11eb05d9f659d892d7293fec
 import com.web.qwert.model.user.User;
 import com.web.qwert.model.user.UserDto;
 import com.web.qwert.service.JwtService;
@@ -60,6 +71,7 @@ public class AccountController {
 
     @PostMapping("signup")
     @ApiOperation(value = "회원가입")
+<<<<<<< HEAD
     public Object signup(@Valid @RequestBody SignupRequest request) {
     	Optional<User> userOpt = userService.getUser(request.getEmail(), request.getNickname());
         System.out.println("회원가입");
@@ -68,6 +80,16 @@ public class AccountController {
     		User user = new User();
     		BeanUtils.copyProperties(request, user);
     		userService.setUser(user);
+=======
+    public Object signup(@Valid @RequestBody User request) {
+    	Optional<User> userOpt = userService.getUser(request.getEmail(), request.getNickname());
+        System.out.println("회원가입");
+        
+        // valid로 유효성 검증 실패시 403 return
+        
+    	if (!userOpt.isPresent()) { // 중복된 계정이 없다면
+    		userService.setUser(request);
+>>>>>>> 92e8791e66bc203c11eb05d9f659d892d7293fec
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);

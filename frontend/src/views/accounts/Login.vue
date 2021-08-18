@@ -148,7 +148,11 @@ export default {
     login: function () {
       axios ({
         method: 'post',
+<<<<<<< HEAD
         url: `${this.hostUrl}/accounts/login/`,
+=======
+        url: `${this.host}/accounts/login/`,
+>>>>>>> 92e8791e66bc203c11eb05d9f659d892d7293fec
         data: this.credentials
       })
         .then(res => {  
@@ -202,7 +206,11 @@ export default {
   },
   computed: {
     ...mapState([
+<<<<<<< HEAD
       'hostUrl',
+=======
+      'host',
+>>>>>>> 92e8791e66bc203c11eb05d9f659d892d7293fec
     ])
   },
   // cookie에 저장된 이메일이 있다면 자동으로 불러오기
