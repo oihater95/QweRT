@@ -326,9 +326,7 @@ export default {
     // 현재시간과 비교하여 몇분, 몇시간, 며칠 전인지 출력
     displayTimeAt: function(createDate) {  
       const timeNow = new Date() 
-      // console.log(createDate)
-      // console.log(timeNow)
-      const milliSeconds = timeNow - Date.parse(createDate) - 9 * 60 * 60 * 1000
+      const milliSeconds = timeNow - Date.parse(createDate) - 2 * 9 * 60 * 60 * 1000
       // console.log(milliSeconds)
       const seconds = milliSeconds / 1000
       if (seconds < 60) return `방금 전`
