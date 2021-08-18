@@ -37,6 +37,28 @@ FROM openjdk:8-jdk-alpine
 
 <br>
 
+![image-20210818165119919](porting_manual.assets/image-20210818165119919.png)
+
+exec 폴더에 첨부한 backup.sql 파일을 위 그림처럼 ubuntu에 넣으시고
+
+다음 명령어를 입력하면 데이터를 넣을 수 있습니다.
+
+```
+cat backup.sql | docker exec -i mysqldb /usr/bin/mysql -u root --password=root qwertdb
+```
+
+참고로 데이터를 export할 때 쓴 명령어는 다음과 같습니다.
+
+```
+docker exec mysqldb /usr/bin/mysqldump -u ssafy -pssafy qwertdb > backup.sql
+```
+
+
+
+<br>
+
+<br>
+
 - 배포한 방법
 
 1. EC2에 도커를 설치하고 젠킨스가 들어있는 컨테이너를 만들었는데 컨테이너 내부에서 도커 명령어를 쓸 수 있도록 설정했습니다.
