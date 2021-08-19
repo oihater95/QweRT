@@ -352,6 +352,7 @@ export default {
   watch: {
     // 라우터 파라미터가 변하면 (다른 유저의 프로필로 이동하면) 다시 프로필 정보 받아오기
     $route: function () {
+      this.showMore = false
       this.loadProfile()
     }
   },
