@@ -110,7 +110,7 @@ public class PostingServiceImpl implements PostingService {
 	
 	@Override
 	public List<Posting> getPopularPostings(int page, int size) {
-		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likeCnt").descending());
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("likeCnt").descending().and(Sort.by("createDate").descending()));
 		return postingDao.findAll(pageRequest).getContent();
 	}
 	
