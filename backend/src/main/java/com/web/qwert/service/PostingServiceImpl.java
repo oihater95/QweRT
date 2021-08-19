@@ -176,7 +176,7 @@ public class PostingServiceImpl implements PostingService {
 	@Override
 	public List<Posting> searchPopularByTerm(String term, int page, int size) {
 
-		Pageable pageable = PageRequest.of(page, size, Sort.by("likeCnt").descending());
+		Pageable pageable = PageRequest.of(page, size, Sort.by("likeCnt").descending().and(Sort.by("createDate").descending()));
 		return postingDao.findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(term, term, pageable);
 
 	}
