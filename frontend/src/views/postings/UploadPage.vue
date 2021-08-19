@@ -22,7 +22,6 @@
           maxlength="200"
           counter="200"
           v-model="postingData.postingContent"
-          :rules="[rules.required]"
           :placeholder="'설명\n\n도용 및 저작권 침해에 주의해주세요'"
           >
           </v-textarea>
@@ -199,6 +198,8 @@ export default {
     uploadImage: async function () {
       if (this.toggleCategoryId.length < 1) {
         alert('카테고리를 선택해주세요')
+      } else if(this.postingData.postingTitle === '' || this.postingData.postingContent === '') {
+        alert('제목과 내용을 입력해주세요')
       } else {
         if (this.imageInfo.filename.length > 0 || this.imageInfo.drawing === true) {
             const response = await axios({
