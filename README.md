@@ -260,7 +260,7 @@ $ npm run serve
 
   - Shaded: 마우스가 그리는 path 주변에 path 시작점을 추가하여 연결한다. 근처에 path가 있다면 선을 추가로 연결한다.
 
-    <img src="docs/README.assets/그림판쉐이드.gif" alt="그림판쉐이드"  />
+    ![그림판쉐이드](/uploads/4ceb0134cf51d817e59024e655a9aca8/그림판쉐이드.gif)
 
     - Shaded 활용 예시
 
