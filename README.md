@@ -264,7 +264,7 @@ $ npm run serve
 
     - Shaded 활용 예시
 
-    <img src="docs/README.assets/그림판쉐이드활용.gif" alt="그림판쉐이드활용"  />
+    ![그림판쉐이드활용](/uploads/2ad2249ce91fc3c8d732071fa9f703ad/그림판쉐이드활용.gif)
 
     
 
