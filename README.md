@@ -434,7 +434,7 @@ $ npm run serve
 
   - 작품 검색
 
-    <img src="docs/README.assets/검색페이지1.JPG" alt="검색페이지1"/>
+  <img src="docs/README.assets/검색페이지1.JPG" alt="검색페이지1"/>
 
     - 작품 제목이나 내용 또는 작성자 닉네임에 해당 검색어가 포함되는 게시물을 나열한다.
     - 게시물이 나열되는 순서는 인기순(좋아요순)이 default이며 최신순(작성일자순)으로 변경할 수 있다.
@@ -443,7 +443,7 @@ $ npm run serve
 
   - 아티스트 검색(사용자 검색)
 
-    <img src="docs/README.assets/검색페이지2-16292769178584.JPG" alt="검색페이지2"/>
+  <img src="docs/README.assets/검색페이지2-16292769178584.JPG" alt="검색페이지2"/>
 
     - 사용자 닉네임에 검색어가 포함되어 있는 경우 해당하는 사용자들을 나열한다.
     - 나열되는 순서는 팔로워순이 default 이며 가입일순으로 변경가능하다.
@@ -458,7 +458,7 @@ $ npm run serve
 
   - 검색 결과
 
-    <img src="docs/README.assets/검색페이지3.JPG" alt="검색페이지3"/>
+  <img src="docs/README.assets/검색페이지3.JPG" alt="검색페이지3"/>
 
     - 주어진 카테고리를 클릭하면 카테고리 검색이 이루어지고 선택한 카테고리에 해당하는 게시물들이 나열된다.
     - 나열되는 순서는 인기순이 default이며 최신순으로 변경할 수 있다.
